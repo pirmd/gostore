@@ -1,0 +1,52 @@
+package vfs
+
+import (
+	"io"
+	"os"
+	"path/filepath"
+)
+
+//Exists checks if a file or directory exists
+func (vfs *VFS) Exists(path string) (bool, error) {
+	_, err := vfs.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+
+	return false, err
+}
+
+//Import copies a Reader content to a file within the vfs.
+//dst file and its parent folders are create if they don't exist yet
+//Add does not prevent nor warn if dst is already existing
+func (vfs *VFS) Import(src io.Reader, dst string) error {
+	if err := vfs.MkdirAll(filepath.Dir(dst), 0777); err != nil {
+		return err
+	}
+
+	w, err := vfs.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
+
+	if _, err := io.Copy(w, src); err != nil {
+		_ = vfs.Remove(dst) //TODO: useful?
+		return err
+	}
+	return nil
+}
+
+//Move moves a file or folder to a new location. If destination
+//is in a non existing path, Move creates it first
+func (vfs *VFS) Move(src, dst string) error {
+	if err := vfs.MkdirAll(filepath.Dir(dst), 0777); err != nil {
+		return err
+	}
+
+	return vfs.Rename(src, dst)
+}

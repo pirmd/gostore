@@ -1,0 +1,87 @@
+.TH GOSTORE 1 "GOSTORE\-1"
+
+.SH Name
+.PP
+gostore \- A command\-line minimalist media collection manager.
+
+.SH Synopsis
+.PP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBhelp\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBversion\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBimport\fP [\-\-\fBedit\fP] [\-\-\fBdry\-run\fP] \fImedia\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBget\fP [\-\-\fBfrom\-file\fP] \fIname\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBlist\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBsearch\fP \fIquery\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBupdate\fP \fIname\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBdelete\fP \fIname\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBexport\fP \fIname\fP \fIdst\fP
+.br
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBcheck\fP
+
+.SH Description
+.PP
+A command\-line minimalist media collection manager.
+
+.SH Options
+
+.TP
+\-\-\fBdebug\fP
+Show debug information.
+
+.TP
+\-\-\fBroot\fP=\fIROOT\fP
+Path to the root of the collection.
+
+.TP
+\-\-\fBstyle\fP=\fIname|list|full|json\fP
+Style for printing records' details.
+
+.SH Commands
+
+.TP
+\fBhelp\fP
+Show usage information.
+
+.TP
+\fBversion\fP
+Show version information.
+
+.TP
+\fBimport\fP [<flags>] \fImedia\fP
+Import a new media into the collection.
+
+.TP
+\fBget\fP [<flags>] \fIname\fP
+retrieve information about any collection's record.
+
+.TP
+\fBlist\fP
+List all the records from the collection.
+
+.TP
+\fBsearch\fP \fIquery\fP
+Search the collection.
+
+.TP
+\fBupdate\fP \fIname\fP
+update an existing record from the collection.
+
+.TP
+\fBdelete\fP \fIname\fP
+delete a record from the collection.
+
+.TP
+\fBexport\fP \fIname\fP \fIdst\fP
+export a media from the collection to the given destination.
+
+.TP
+\fBcheck\fP
+Verify collection's consistency.
