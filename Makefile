@@ -4,13 +4,10 @@ BUILD=`git rev-parse --short HEAD`
 LDFLAGS=-ldflags "-s -w -X main.version=${VERSION} -X main.build=${BUILD}"
 
 build: deps
+	go fmt ./...
 	go build ${LDFLAGS} 
 
-check:
-	go fmt ./...
-	go vet ./...
-
-test: deps-test check
+test: deps-test
 	go test -cover -v ./...
 
 test-cover: check
@@ -34,6 +31,6 @@ deps:
 deps-test:
 	go test -i ./...
 
-.PHONY: build check test test-cover deps deps-test install clean
+.PHONY: build test test-cover deps deps-test install clean
 
 # vim: set noexpandtab shiftwidth=8 softtabstop=0:
