@@ -1,16 +1,10 @@
-PREFIX=/usr/local
-MANPREFIX=${PREFIX}/man
-
 VERSION=`git describe --tags`
 BUILD=`git rev-parse --short HEAD`
 
 LDFLAGS=-ldflags "-s -w -X main.version=${VERSION} -X main.build=${BUILD}"
 
-build: deps generate
+build: deps
 	go build ${LDFLAGS} 
-
-generate:
-	go generate ./...
 
 check:
 	go fmt ./...
@@ -24,9 +18,12 @@ test-cover: check
 	go tool cover -html=cover.out
 	unlink cover.out
 
+gostore.1:
+	go generate ./...
+
 install: deps gostore.1
 	go install ${LDFLAGS}
-	install -m 644 gostore.1 ${MANPREFIX}/man1/gostore.1
+	install -m 644 gostore.1 ${GOBIN}/../man/man1/
 
 clean:
 	go clean -i -x
@@ -37,6 +34,6 @@ deps:
 deps-test:
 	go test -i ./...
 
-.PHONY: build generate check test test-cover deps deps-test install clean
+.PHONY: build check test test-cover deps deps-test install clean
 
 # vim: set noexpandtab shiftwidth=8 softtabstop=0:
