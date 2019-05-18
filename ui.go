@@ -68,6 +68,10 @@ func EditAsJson(v interface{}) (interface{}, error) {
 	return input.EditAsJson(v, cfg.UIEditorCmd)
 }
 
+func MergeAsJson(v, w interface{}) (interface{}, interface{}, error) {
+	return input.MergeAsJson(v, w, cfg.UIMergerCmd)
+}
+
 func PrettyDiff(mediaL, mediaR map[string]interface{}, fields ...string) {
 	fmt.Println(pdiffers.MustFormatUsingType(mediasTypeOf([]map[string]interface{}{mediaL, mediaR}), struct{ L, R map[string]interface{} }{mediaL, mediaR}))
 }

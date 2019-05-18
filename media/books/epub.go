@@ -9,8 +9,12 @@ import (
 
 type epubHandler struct{}
 
-func (mh *epubHandler) Name() string {
+func (mh *epubHandler) Type() string {
 	return "epub"
+}
+
+func (mh *epubHandler) Mimetype() string {
+	return "application/epub+zip"
 }
 
 func (mh *epubHandler) GetMetadata(f media.File) (map[string]interface{}, error) {
@@ -19,6 +23,21 @@ func (mh *epubHandler) GetMetadata(f media.File) (map[string]interface{}, error)
 		return nil, err
 	}
 	return epub2map(mdata), nil
+}
+
+func (mh *epubHandler) FetchMetadata(mdata map[string]interface{}) (map[string]interface{}, error) {
+    fetcher := &googleBooks{}
+
+    found, err := fetcher.LookForBooks(mdata)
+    if err != nil {
+        return nil, err
+    }
+
+    if len(found) == 0 {
+        return nil, media.ErrNoMatchFound
+    }
+
+	return found[0], nil
 }
 
 func epub2map(mdata *epub.Metadata) map[string]interface{} {
@@ -56,7 +75,7 @@ func epub2map(mdata *epub.Metadata) map[string]interface{} {
 	for _, d := range mdata.Date {
 		if d.Event == "publication" {
 			if t, err := parseTime(d.Stamp); err == nil {
-				m["PublicationDate"] = t
+				m["PublishedDate"] = t
 			}
 			break
 		}
@@ -78,5 +97,5 @@ func epub2map(mdata *epub.Metadata) map[string]interface{} {
 }
 
 func init() {
-	media.RegisterHandler("application/epub+zip", &epubHandler{})
+	media.RegisterHandler(&epubHandler{})
 }

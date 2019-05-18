@@ -20,6 +20,7 @@ var (
 
 		// UI preference
 		UIEditorCmd   []string                     // Command line to open a text editor
+		UIMergerCmd   []string                     // Command line to open a text merger
 		UIFormatStyle string                       // Select the style of output to format answers (UIFormatters[UIFormatStyle])
 		UIFormatters  map[string]map[string]string // Templates to display information from the store.
 		// Templates are organized by output style
@@ -66,6 +67,7 @@ var (
 		},
 
 		UIEditorCmd: []string{os.Getenv("EDITOR")},
+		UIMergerCmd: []string{"vimdiff"},
 	}
 
 	debugger = log.New(ioutil.Discard, "DEBUG ", log.Ltime|log.Lshortfile)

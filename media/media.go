@@ -2,17 +2,22 @@ package media
 
 import (
 	"os"
+    "fmt"
 )
 
 //TypeField is the name of MediaFile.mdata key that contains
 //the type of the media file
 const TypeField = "Type"
 
-//GetMetadata reads metadata from the provided File and setup the proper media Type.
-//Reading metadata and setting the media type is done through the corresponfing
-//MediaHandlers
+var (
+    //No book found correponding to the given metadata set
+    ErrNoMatchFound = fmt.Errorf("No match found")
+)
+
+//GetMetadata reads metadata from the provided File and setup the proper media
+//Type if not done by the corresponding Handler.
 func GetMetadata(f File) (map[string]interface{}, error) {
-	mh, err := handlers.For(f)
+	mh, err := handlers.ForReader(f)
 	if err != nil {
 		return nil, err
 	}
@@ -23,11 +28,7 @@ func GetMetadata(f File) (map[string]interface{}, error) {
 	}
 
 	if _, exists := mdata[TypeField]; !exists {
-		mdata[TypeField] = mh.Name()
-	}
-
-	if _, ok := mdata[TypeField].(string); !ok {
-		panic("metadata type is not of type 'string'")
+		mdata[TypeField] = mh.Type()
 	}
 
 	return mdata, nil
@@ -42,4 +43,38 @@ func GetMetadataFromFile(path string) (map[string]interface{}, error) {
 	defer f.Close()
 
 	return GetMetadata(f)
+}
+
+//FetchMetadata retrieves the metadata from an external source (usually an
+//internet data base) that best correspond to the provided known data. It
+//provides its best guess or nil if nothing reasonable is found.
+//
+//FetchMetadata uses as input any known metadata to based its search on and
+//verifying that what it guesses is similar enough to its input to match.
+//Provided input shall provide a valid media Type otherwise FetchMetadata will
+//panic.
+//
+//FetchMetadata set the proper media Type if not done by the corresponding
+//Handler.
+func FetchMetadata(metadata map[string]interface{}) (map[string]interface{}, error) {
+	typ, ok := metadata[TypeField].(string)
+    if !ok {
+		panic("metadata type is unknown or not of type 'string'")
+	}
+
+	mh, err := handlers.ForType(typ)
+	if err != nil {
+		return nil, err
+	}
+
+	mdata, err := mh.FetchMetadata(metadata)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, exists := mdata[TypeField]; mdata != nil && !exists {
+		mdata[TypeField] = mh.Type()
+	}
+
+	return mdata, nil
 }

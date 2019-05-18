@@ -41,18 +41,29 @@ func init() {
 		}
 		defer f.Close()
 
-		mdata, err := media.GetMetadata(f)
+		mdataFromFile, err := media.GetMetadata(f)
 		if err != nil {
 			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
 		}
 
-		r := store.NewRecord(*importMedia, mdata)
-
-		if *importEdit {
-			if err := editRecord(r); err != nil {
-				return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
-			}
+        mdataFetched, err := media.FetchMetadata(mdataFromFile)
+		if err != nil && err != media.ErrNoMatchFound {
+			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
 		}
+        
+        var mdata map[string]interface{}
+		if *importEdit {
+            left, _, err := MergeAsJson(mdataFromFile, mdataFetched)
+            if err != nil {
+				return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+            }
+            mdata = left.(map[string]interface{})
+		} else {
+            mdata = mdataFetched
+            fmt.Printf("Merging metadata read from file and fetched:\n")
+            PrettyDiff(mdataFromFile, mdata)
+        }
+		r := store.NewRecord(*importMedia, mdata)
 
 		if err := processing.ProcessRecord(r); err != nil {
 			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
@@ -169,9 +180,11 @@ func init() {
 			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
 		}
 
-		if err := editRecord(r); err != nil {
+        mdata, err := EditAsJson(r.OrigValue())
+        if err != nil {
 			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
-		}
+        }
+        r.ReplaceValues(mdata.(map[string]interface{}))
 
 		if err := processing.ProcessRecord(r); err != nil {
 			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
@@ -269,15 +282,4 @@ func openStore() (*store.Store, error) {
 		store.UsingLogger(debugger),
 		store.UsingTypeField(media.TypeField),
 	)
-}
-
-//editRecord fires-up an editor to modify record's values
-func editRecord(r *store.Record) error {
-	mdata, err := EditAsJson(r.OrigValue())
-	if err != nil {
-		return fmt.Errorf("editing record's failed: %v", err)
-	}
-
-	r.ReplaceValues(mdata.(map[string]interface{}))
-	return nil
 }
