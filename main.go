@@ -2,7 +2,7 @@
 package main
 
 import (
-	_ "github.com/pirmd/gostore/media/epub"
+	_ "github.com/pirmd/gostore/media/books"
 )
 
 func main() {

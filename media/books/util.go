@@ -1,4 +1,4 @@
-package epub
+package books
 
 import (
 	"time"
