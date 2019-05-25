@@ -5,6 +5,8 @@ Format is based on [Keep a Changelog] (https://keepachangelog.com/en/1.0.0/).
 Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
+### Added
+- generate an help file in markdown format in addition to the manpage
 
 ## [0.1.0] - 2019-05-10
 ### Added

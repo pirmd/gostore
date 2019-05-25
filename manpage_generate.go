@@ -11,4 +11,5 @@ import (
 
 func main() {
 	app.GenerateManpage(gostore)
+	app.GenerateHelpFile(gostore)
 }
