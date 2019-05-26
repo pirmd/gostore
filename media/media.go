@@ -5,9 +5,11 @@ import (
     "fmt"
 )
 
-//TypeField is the name of MediaFile.mdata key that contains
-//the type of the media file
-const TypeField = "Type"
+const (
+    //TypeField is the name of the field that contains the type of the media
+    //file
+    TypeField = "Type"
+)
 
 var (
     //No book found correponding to the given metadata set

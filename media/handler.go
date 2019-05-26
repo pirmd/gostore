@@ -8,8 +8,8 @@ import (
 )
 
 const (
-    //DefaultMimetype is the fallback content type to identify file.
-    //The handler that supports DefaultMimetype, if any, is also the default
+    //DefaultMimetype is the fallback content type to identify file.  The
+    //handler that supports DefaultMimetype, if any, is also the default
     //handler should no handler be registered for a given Type or Mimetype.
     DefaultMimetype = "application/octet-stream"
 )
@@ -24,8 +24,9 @@ var (
 
 //Handler represents a media handler
 type Handler interface {
-    //Type provides the name of the handler. An handler's name is mainly used to
-    //identify a media type and adopt customized behavior based on a media type.
+    //Type provides the name of the handler. An handler's name is mainly used
+    //to identify a media type and adopt customized behavior based on a media
+    //type.
 	Type() string
 
     //Mimetype provides the mimetype that the handler can manage.
@@ -34,9 +35,9 @@ type Handler interface {
     //GetMetadata retrieves the metadata from a given file.
 	GetMetadata(File) (map[string]interface{}, error)
 
-    //FetchMetadata retrieves the metadata from an external source (usually
-    //an internet data base) that best correspond to the provided known data.
-    //It provides its best guess or nil if nothing reasonable is found.
+    //FetchMetadata retrieves the metadata from an external source (usually an
+    //internet data base) that best correspond to the provided known data.  It
+    //provides its best guess or nil if nothing reasonable is found.
     FetchMetadata(map[string]interface{}) (map[string]interface{}, error)
 }
 
@@ -62,9 +63,9 @@ func (h Handlers) ForReader(f io.Reader) (Handler, error) {
 	return h.defaultHandler()
 }
 
-//ForType retrieves the handler corresponding to the provided type.
-//Should no registered handler is found, the handler for DefaultType is
-//returned if it exists.
+//ForType retrieves the handler corresponding to the provided type.  Should no
+//registered handler is found, the handler for DefaultType is returned if it
+//exists.
 //
 //ErrUnknownMediaType is returned if no handler is found.
 func (h Handlers) ForType(typ string) (Handler, error) {
@@ -88,9 +89,8 @@ func (h Handlers) defaultHandler() (Handler, error) {
 	return nil, ErrUnknownMediaType
 }
 
-//RegisterHandler registers a new media handler
-//It will panic if a media handler with the same Type() or Mimetype() already
-//exists
+//RegisterHandler registers a new media handler It will panic if a media
+//handler with the same Type() or Mimetype() already exists
 func RegisterHandler(mh Handler) {
     for _, h := range handlers {
         if mh.Type() == h.Type() || mh.Mimetype() == h.Mimetype() {
@@ -101,7 +101,8 @@ func RegisterHandler(mh Handler) {
 	handlers = append(handlers, mh)
 }
 
-// Always returns a valid content-type by returning "application/octet-stream" if no others seemed to match.
+// Always returns a valid content-type by returning "application/octet-stream"
+// if no others seemed to match.
 func getMimetype(r io.Reader) (mime string, err error) {
 	mime, _, err = mimetype.DetectReader(r)
 	return

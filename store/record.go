@@ -8,24 +8,22 @@ import (
 )
 
 const (
-	//Name of the record's value field containing the record's key
-	//when exported through Fields()
+    //Name of the record's value field containing the record's key when
+    //exported through Fields()
 	KeyField = "Name"
-	//Name of the record's value field containint the time stamp
-	//corresponding to the record's creation
+    //Name of the record's value field containint the time stamp corresponding
+    //to the record's creation
 	CreatedAtField = "CreatedAt"
-	//Name of the record's value field containint the time stamp
-	//corresponding to the last known record's update
+    //Name of the record's value field containint the time stamp corresponding
+    //to the last known record's update
 	UpdatedAtField = "UpdatedAt"
 )
 
 type mdata map[string]interface{}
 
-//Add adds a new (key, value) to mdata, it tries to
-//ensure that timestamps are of time type.
-//Recognized time stamps should be in RFC3339 format, they are
-//for CreatedAtField, UpdatedAtField or any field ending with
-//"Date" keyword.
+//Add adds a new (key, value) to mdata, it tries to ensure that timestamps are
+//of time type.  Recognized time stamps should be in RFC3339 format, they are
+//for CreatedAtField, UpdatedAtField or any field ending with "Date" keyword.
 //If it fails to parse a time, it falls back to a string
 func (m mdata) Add(key string, value interface{}) {
 	if _, ok := value.(string); !ok {
@@ -44,9 +42,9 @@ func (m mdata) Add(key string, value interface{}) {
 	m[key] = value
 }
 
-//UnmarshalJSON personnalizes records retrieving from store
-//It mainly detects fields supposed to handle time-stamps or date
-//If it fails to parse a time, it falls back to a string
+//UnmarshalJSON personnalizes records retrieving from store It mainly detects
+//fields supposed to handle time-stamps or date If it fails to parse a time, it
+//falls back to a string
 func (m mdata) UnmarshalJSON(b []byte) error {
 	var raw map[string]interface{}
 
@@ -94,9 +92,9 @@ func (r *Record) SetKey(key string) {
 	r.stamp()
 }
 
-//Value returns a copy of all information stored about Record.
-//It contains the information supplied by the user at Record's creation
-//and auto-generated information like creation/update stamps.
+//Value returns a copy of all information stored about Record.  It contains the
+//information supplied by the user at Record's creation and auto-generated
+//information like creation/update stamps.
 func (r *Record) Value() map[string]interface{} {
 	val := make(map[string]interface{})
 	for k, v := range r.value {
@@ -114,26 +112,24 @@ func (r *Record) OrigValue() map[string]interface{} {
 	return orig
 }
 
-//Fields returns all Record's attributes in a single flat map
-//including the key value
+//Fields returns all Record's attributes in a single flat map including the key
+//value
 func (r *Record) Fields() map[string]interface{} {
 	fields := r.Value()
 	fields[KeyField] = r.key
 	return fields
 }
 
-//SetValue add/modified a record's value
-//SetValue ensures that fields supposed to host a time stamp or a date
-//are of time type.
-//SetValue creates or updates "CreatedAtField" and "UpdatedAtField"
+//SetValue add/modified a record's value SetValue ensures that fields supposed
+//to host a time stamp or a date are of time type.  SetValue creates or updates
+//"CreatedAtField" and "UpdatedAtField"
 func (r *Record) SetValue(k string, v interface{}) {
 	r.value.Add(k, v)
 	r.stamp()
 }
 
-//MergeValues updates record with the given fields' values.
-//MergeValues ensures that fields supposed to host a time stamp or a date
-//are of time type.
+//MergeValues updates record with the given fields' values.  MergeValues
+//ensures that fields supposed to host a time stamp or a date are of time type.
 //MergeValues creates or updates "CreatedAtField" and "UpdatedAtField"
 func (r *Record) MergeValues(fields map[string]interface{}) {
 	for k, v := range fields {
@@ -142,10 +138,9 @@ func (r *Record) MergeValues(fields map[string]interface{}) {
 	r.stamp()
 }
 
-//ReplaceValues replaces record's values with the given fields
-//CreatedAtField value is kept if not explicitly asked to be replaced
-//ReplaceValues ensures that fields supposed to host a time stamp or a date
-//are of time type.
+//ReplaceValues replaces record's values with the given fields CreatedAtField
+//value is kept if not explicitly asked to be replaced ReplaceValues ensures
+//that fields supposed to host a time stamp or a date are of time type.
 //ReplaceValues creates or updates "CreatedAtField" and "UpdatedAtField"
 func (r *Record) ReplaceValues(fields map[string]interface{}) {
 	createdAt := r.value[CreatedAtField]
@@ -189,8 +184,8 @@ func (r Records) Value() (v []map[string]interface{}) {
 	return
 }
 
-//Fields returns for each record in the collection their value and key in
-//a single flat map
+//Fields returns for each record in the collection their value and key in a
+//single flat map
 func (r Records) Fields() (v []map[string]interface{}) {
 	for _, i := range r {
 		v = append(v, i.Fields())
