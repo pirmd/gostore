@@ -6,13 +6,19 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 ### Added
-- add basic support to fetch metadata from google books api
-- generate an help file in markdown format in addition to the manpage
+- add basic support to fetch metadata from google books api.
+- generate an help file in markdown format in addition to the manpage.
+### Modified
+- change `import` behavior that, by default, ask the user to manually edit
+  metadata before storing them in the store. You can hav ethis done
+  automatically by using the `--auto`flag.
+  I change th eprevious behaviour as the new metadata fetching feature need
+  probably some more love before being blindly trusted.
 
 ## [0.1.0] - 2019-05-10
 ### Added
 - basic CRUD operation to manage the collection
-  (import/export/get/search/pdate/delete)
+  (import/export/get/search/pdate/delete).
 - basic CLI user interface with reasonable customization level of the output
-  format
-- support epub files
+  format.
+- support epub files.

@@ -29,7 +29,7 @@ func init() {
 	gostore.NewEnumFlagToVar(&cfg.UIFormatStyle, "style", "Style for printing records' details.", getUIFormatStyles(cfg.UIFormatters))
 
 	importCmd := gostore.NewCommand("import", "Import a new media into the collection.")
-	importEdit := importCmd.NewBoolFlag("edit", "Edit metadata before importing them in the collection.")
+	importAuto := importCmd.NewBoolFlag("auto", "Automatically fecth metadata before importing them in the collection.")
 	importDryRun := importCmd.NewBoolFlag("dry-run", "Simulate importing a new media in th ecollection (actually retrieveing metadata without inserting them into the store).")
 	importMedia := importCmd.NewStringArg("media", "Media to import into the collection.")
 	importCmd.Execute = func() error {
@@ -52,7 +52,7 @@ func init() {
 		}
         
         var mdata map[string]interface{}
-		if *importEdit {
+		if !*importAuto {
             left, _, err := MergeAsJson(mdataFromFile, mdataFetched)
             if err != nil {
 				return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
