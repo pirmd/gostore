@@ -1,22 +1,22 @@
 package media
 
 import (
+	"fmt"
+	"io"
 	"os"
-    "io"
-    "fmt"
 
-    "github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/store"
 )
 
 const (
-    //TypeField is the name of the field that contains the type of the media
-    //file
-    TypeField = "Type"
+	//TypeField is the name of the field that contains the type of the media
+	//file
+	TypeField = "Type"
 )
 
 var (
-    //Error when no Metadata found
-    ErrNoMetadataFound = fmt.Errorf("No metadata found")
+	//Error when no Metadata found
+	ErrNoMetadataFound = fmt.Errorf("No metadata found")
 )
 
 //mdata represents a set of media metadata, it is essentielly a set of (key,
@@ -72,7 +72,7 @@ func GetMetadataFromFile(path string) (Metadata, error) {
 //Handler.
 func FetchMetadata(metadata Metadata) (Metadata, error) {
 	typ, ok := metadata[TypeField].(string)
-    if !ok {
+	if !ok {
 		panic("metadata type is unknown or not of type 'string'")
 	}
 

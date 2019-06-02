@@ -1,0 +1,99 @@
+[
+  {
+    "Authors": [
+      "Lewis Carroll"
+    ],
+    "PublishedDate": "2008-06-27T00:00:00Z",
+    "Subject": [
+      "Fantasy"
+    ],
+    "Title": "Alice's Adventures in Wonderland",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "comtesse de Sophie Ségur"
+    ],
+    "PublishedDate": "2004-06-29T00:00:00Z",
+    "Subject": [
+      "Donkeys -- Juvenile fiction"
+    ],
+    "Title": "Les Mémoires d'un âne.",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Arthur Conan Doyle"
+    ],
+    "PublishedDate": "1999-03-01T00:00:00Z",
+    "Subject": [
+      "Holmes, Sherlock (Fictitious character) -- Fiction",
+      "Private investigators -- England -- Fiction",
+      "Detective and mystery stories, English"
+    ],
+    "Title": "The Adventures of Sherlock Holmes",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Cheng'en Wu"
+    ],
+    "PublishedDate": "2007-12-22T00:00:00Z",
+    "Subject": [
+      "Folklore -- China",
+      "Legends -- China",
+      "Xuanzang, approximately 596-664 -- Fiction",
+      "Chinese fiction -- Ming dynasty, 1368-1644"
+    ],
+    "Title": "西遊記",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Beatrix Potter"
+    ],
+    "PublishedDate": "2009-06-06T00:00:00Z",
+    "Subject": [
+      "Rabbits -- Juvenile fiction"
+    ],
+    "Title": "Histoire de Pierre Lapin",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Jules Verne"
+    ],
+    "PublishedDate": "2003-12-01T00:00:00Z",
+    "Subject": [
+      "Science fiction",
+      "Adventure stories",
+      "Earth (Planet) -- Core -- Fiction",
+      "Voyages, Imaginary -- Fiction"
+    ],
+    "Title": "Voyage au Centre de la Terre",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Gottfried August Bürger",
+      "Rudolf Erich Raspe"
+    ],
+    "PublishedDate": "2015-11-06T00:00:00Z",
+    "Subject": [
+      "Humorous stories",
+      "Voyages and travels -- Fiction",
+      "Voyages, Imaginary -- Fiction",
+      "Tall tales"
+    ],
+    "Title": "Aventures de Baron de Münchausen",
+    "Type": "epub"
+  },
+  {
+    "Authors": [
+      "Jules Verne"
+    ],
+    "PublishedDate": "2017-06-09T00:00:00Z",
+    "Title": "Vingt mille lieues sous les mers",
+    "Type": "epub"
+  }
+]

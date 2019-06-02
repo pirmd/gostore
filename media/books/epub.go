@@ -24,16 +24,16 @@ func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
 }
 
 func (mh *epubHandler) FetchMetadata(mdata media.Metadata) (media.Metadata, error) {
-    fetcher := &googleBooks{}
+	fetcher := &googleBooks{}
 
-    found, err := fetcher.LookForBooks(mdata)
-    if err != nil {
-        return nil, err
-    }
+	found, err := fetcher.LookForBooks(mdata)
+	if err != nil {
+		return nil, err
+	}
 
-    if len(found) == 0 {
-        return nil, media.ErrNoMetadataFound
-    }
+	if len(found) == 0 {
+		return nil, media.ErrNoMetadataFound
+	}
 
 	return found[0], nil
 }
@@ -57,9 +57,9 @@ func epub2mdata(epubData *epub.Metadata) media.Metadata {
 		mdata.Set("Description", epubData.Description[0])
 	}
 
-    if len(epubData.Subject) > 0 {
-        mdata.Set("Subject", epubData.Subject)
-    }
+	if len(epubData.Subject) > 0 {
+		mdata.Set("Subject", epubData.Subject)
+	}
 
 	for _, id := range epubData.Identifier {
 		if id.ID == "isbn" {
@@ -74,7 +74,7 @@ func epub2mdata(epubData *epub.Metadata) media.Metadata {
 
 	for _, d := range epubData.Date {
 		if d.Event == "publication" {
-            mdata.Set("PublishedDate", d.Stamp)
+			mdata.Set("PublishedDate", d.Stamp)
 		}
 	}
 
@@ -84,7 +84,7 @@ func epub2mdata(epubData *epub.Metadata) media.Metadata {
 			mdata.Set("Serie", meta.Content)
 
 		case "calibre:series_index":
-            mdata.Set("SeriePosition", meta.Content)
+			mdata.Set("SeriePosition", meta.Content)
 		}
 	}
 

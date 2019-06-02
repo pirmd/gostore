@@ -3,20 +3,20 @@ package store
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
-    "strconv"
-    "time"
+	"time"
 )
 
 const (
-    //Name of the record's value field containing the record's key when
-    //exported through Fields()
+	//Name of the record's value field containing the record's key when
+	//exported through Fields()
 	KeyField = "Name"
-    //Name of the record's value field containint the time stamp corresponding
-    //to the record's creation
+	//Name of the record's value field containint the time stamp corresponding
+	//to the record's creation
 	CreatedAtField = "CreatedAt"
-    //Name of the record's value field containint the time stamp corresponding
-    //to the last known record's update
+	//Name of the record's value field containint the time stamp corresponding
+	//to the last known record's update
 	UpdatedAtField = "UpdatedAt"
 )
 
@@ -111,14 +111,14 @@ func (r *Record) ReplaceValues(fields map[string]interface{}) {
 		r.value.Set(k, v)
 	}
 
-    r.value.SetIfNotExists(CreatedAtField, createdAt)
+	r.value.SetIfNotExists(CreatedAtField, createdAt)
 
 	r.stamp()
 }
 
 //stamp creates or updates "CreatedAtField" and "UpdatedAtField"
 func (r *Record) stamp() {
-    r.value.SetIfNotExists(CreatedAtField, time.Now())
+	r.value.SetIfNotExists(CreatedAtField, time.Now())
 	r.value.Set(UpdatedAtField, time.Now())
 }
 
@@ -155,7 +155,7 @@ type Value map[string]interface{}
 
 //Get retrieve a (key, value) information stored in a Value.
 func (val Value) Get(key string) interface{} {
-    return val[key]
+	return val[key]
 }
 
 //Set adds a new (key, value). It tries to ensure that:
@@ -163,7 +163,7 @@ func (val Value) Get(key string) interface{} {
 //for CreatedAtField, UpdatedAtField or any field ending with "edAt" or "Date"
 //keyword.
 //- indexes, rates are of float type. Recognized indexes or rate are any field
-//ending by "Index", "Position", "Rate" 
+//ending by "Index", "Position", "Rate"
 //If it fails to parse a time or float, it falls back to a string
 func (val Value) Set(key string, value interface{}) {
 	if _, ok := value.(string); !ok {
@@ -172,7 +172,7 @@ func (val Value) Set(key string, value interface{}) {
 	}
 
 	if key == CreatedAtField || key == UpdatedAtField ||
-       strings.HasSuffix(key, "Date") || strings.HasSuffix(key, "edAt") {
+		strings.HasSuffix(key, "Date") || strings.HasSuffix(key, "edAt") {
 		if t, err := parseTime(value.(string)); err == nil {
 			val[key] = t
 			return
@@ -180,11 +180,11 @@ func (val Value) Set(key string, value interface{}) {
 	}
 
 	if strings.HasSuffix(key, "Index") || strings.HasSuffix(key, "Position") ||
-       strings.HasSuffix(key, "Rate") {
-			if f, err := strconv.ParseFloat(value.(string), 32); err == nil {
-                val[key] = f
-                return
-			}
+		strings.HasSuffix(key, "Rate") {
+		if f, err := strconv.ParseFloat(value.(string), 32); err == nil {
+			val[key] = f
+			return
+		}
 	}
 
 	val[key] = value
@@ -193,9 +193,9 @@ func (val Value) Set(key string, value interface{}) {
 //SetIfNotExists adds a new (key, value) only if no value already exists for
 //the provided key
 func (val Value) SetIfNotExists(key string, value interface{}) {
-    if _, exists := val[key]; !exists {
-        val.Set(key, value)
-    }
+	if _, exists := val[key]; !exists {
+		val.Set(key, value)
+	}
 }
 
 //UnmarshalJSON personnalizes records retrieving from store It mainly detects
