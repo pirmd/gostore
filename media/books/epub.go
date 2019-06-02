@@ -1,8 +1,6 @@
 package books
 
 import (
-	"strconv"
-
 	"github.com/pirmd/epub"
 	"github.com/pirmd/gostore/media"
 )
@@ -17,15 +15,15 @@ func (mh *epubHandler) Mimetype() string {
 	return "application/epub+zip"
 }
 
-func (mh *epubHandler) GetMetadata(f media.File) (map[string]interface{}, error) {
-	mdata, err := epub.GetMetadata(f)
+func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
+	epubData, err := epub.GetMetadata(f)
 	if err != nil {
 		return nil, err
 	}
-	return epub2map(mdata), nil
+	return epub2mdata(epubData), nil
 }
 
-func (mh *epubHandler) FetchMetadata(mdata map[string]interface{}) (map[string]interface{}, error) {
+func (mh *epubHandler) FetchMetadata(mdata media.Metadata) (media.Metadata, error) {
     fetcher := &googleBooks{}
 
     found, err := fetcher.LookForBooks(mdata)
@@ -34,66 +32,63 @@ func (mh *epubHandler) FetchMetadata(mdata map[string]interface{}) (map[string]i
     }
 
     if len(found) == 0 {
-        return nil, media.ErrNoMatchFound
+        return nil, media.ErrNoMetadataFound
     }
 
 	return found[0], nil
 }
 
-func epub2map(mdata *epub.Metadata) map[string]interface{} {
-	m := make(map[string]interface{})
+func epub2mdata(epubData *epub.Metadata) media.Metadata {
+	mdata := make(media.Metadata)
 
-	if len(mdata.Title) > 0 {
-		m["Title"] = mdata.Title[0]
+	if len(epubData.Title) > 0 {
+		mdata.Set("Title", epubData.Title[0])
 	}
 
-	if len(mdata.Creator) > 0 {
+	if len(epubData.Creator) > 0 {
 		authors := []string{}
-		for _, c := range mdata.Creator {
+		for _, c := range epubData.Creator {
 			authors = append(authors, c.FullName)
 		}
-		m["Authors"] = authors
+		mdata.Set("Authors", authors)
 	}
 
-	if len(mdata.Description) > 0 {
-		m["Description"] = mdata.Description[0]
+	if len(epubData.Description) > 0 {
+		mdata.Set("Description", epubData.Description[0])
 	}
 
-	m["Subject"] = mdata.Subject
+    if len(epubData.Subject) > 0 {
+        mdata.Set("Subject", epubData.Subject)
+    }
 
-	for _, id := range mdata.Identifier {
+	for _, id := range epubData.Identifier {
 		if id.ID == "isbn" {
-			m["ISBN"] = id.Value
+			mdata.Set("ISBN", id.Value)
 			break
 		}
 	}
 
-	if len(mdata.Publisher) > 0 {
-		m["Publisher"] = mdata.Publisher[0]
+	if len(epubData.Publisher) > 0 {
+		mdata.Set("Publisher", epubData.Publisher[0])
 	}
 
-	for _, d := range mdata.Date {
+	for _, d := range epubData.Date {
 		if d.Event == "publication" {
-			if t, err := parseTime(d.Stamp); err == nil {
-				m["PublishedDate"] = t
-			}
-			break
+            mdata.Set("PublishedDate", d.Stamp)
 		}
 	}
 
-	for _, meta := range mdata.Meta {
+	for _, meta := range epubData.Meta {
 		switch meta.Name {
 		case "calibre:series":
-			m["Serie"] = meta.Content
+			mdata.Set("Serie", meta.Content)
 
 		case "calibre:series_index":
-			if pos, err := strconv.ParseFloat(meta.Content, 32); err == nil {
-				m["SeriePosition"] = pos
-			}
+            mdata.Set("SeriePosition", meta.Content)
 		}
 	}
 
-	return m
+	return mdata
 }
 
 func init() {

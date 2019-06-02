@@ -38,26 +38,11 @@ type identifier struct {
     Identifier string  `json:"identifier"`
 }
 
-func (vi *googleVolumeInfo) Isbn13() string {
-    for _, id := range vi.Identifier {
-        if id.Type == "ISBN_13" {
-            return id.Identifier
-        }
-    }
-    return ""
-}
 
-func (vi *googleVolumeInfo) PublishedDateAsTime() interface{} {
-    if t, err := parseTime(vi.PublishedDate); err == nil {
-        return t
-    }
-    return vi.PublishedDate
-}
-
-//Wraps google books api into a Fetcher
+//googleBooks wraps google books api into a Fetcher
 type googleBooks struct {}
 
-func (g *googleBooks) LookForBooks(mdata map[string]interface{}) ([]map[string]interface{}, error) {
+func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, error) {
     queryUrl, err := g.buildQueryUrl(mdata)
     if err != nil {
         return nil, err
@@ -70,7 +55,7 @@ func (g *googleBooks) LookForBooks(mdata map[string]interface{}) ([]map[string]i
     defer resp.Body.Close()
 
     if resp.StatusCode != 200 {
-        return nil, media.ErrNoMatchFound
+        return nil, media.ErrNoMetadataFound
     }
 
     data, err := ioutil.ReadAll(resp.Body)
@@ -83,22 +68,25 @@ func (g *googleBooks) LookForBooks(mdata map[string]interface{}) ([]map[string]i
         return nil, err
     }
 
-    metadata := g.vol2mdata(vol)
+    var metadata []media.Metadata
+    for _, v := range vol.Items {
+        metadata = append(metadata, g.vol2mdata(v.VolumeInfo))
+    }
 
     return metadata, nil
 }
 
-func (g *googleBooks) buildQueryUrl(mdata map[string]interface{}) (string, error) {
+func (g *googleBooks) buildQueryUrl(mdata media.Metadata) (string, error) {
     var query []string
-    if title, ok := mdata["Title"].(string); ok {
+    if title, ok := mdata.Get("Title").(string); ok {
         query = append(query, "intitle:"+title)
     }
     
-    if authors, ok := mdata["Authors"].([]string); ok {
+    if authors, ok := mdata.Get("Authors").([]string); ok {
         query = append(query, "inauthor:"+strings.Join(authors, "+"))
     }
 
-    if isbn, ok := mdata["ISBN"].(string); ok {
+    if isbn, ok := mdata.Get("ISBN").(string); ok {
         query = append(query, "isbn:"+isbn)
     }
 
@@ -116,20 +104,22 @@ func (g *googleBooks) buildQueryUrl(mdata map[string]interface{}) (string, error
     return googleBooksURL+"?"+q.Encode(), nil
 }
 
-func (g *googleBooks) vol2mdata(vol *googleVolumes) (mdata []map[string]interface{}) {
-    for _, v := range vol.Items {
-        mdata = append(mdata, map[string]interface{}{
-            "Title"        : v.VolumeInfo.Title,
-            "Authors"      : v.VolumeInfo.Authors,
-            "Description"  : v.VolumeInfo.Description,
-            "Subject"      : v.VolumeInfo.Subject,
-            "ISBN"         : v.VolumeInfo.Isbn13(),
-            "Publisher"    : v.VolumeInfo.Publisher,
-            "PublishedDate": v.VolumeInfo.PublishedDateAsTime(),
-            "PageCount"    : v.VolumeInfo.PageCount,
-            "Language"     : v.VolumeInfo.Language,
-        })
+func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
+    mdata := make(media.Metadata)
+    mdata.Set("Title",         vi.Title)
+    mdata.Set("Authors",       vi.Authors)
+    mdata.Set("Description",   vi.Description)
+    mdata.Set("Subject",       vi.Subject)
+    mdata.Set("Publisher",     vi.Publisher)
+    mdata.Set("PublishedDate", vi.PublishedDate)
+    mdata.Set("PageCount",     vi.PageCount)
+    mdata.Set("Language",      vi.Language)
+
+    for _, id := range vi.Identifier {
+        if id.Type == "ISBN_13" {
+            mdata.Set("ISBN", id.Identifier)
+        }
     }
 
-    return
+    return mdata
 }

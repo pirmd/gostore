@@ -33,12 +33,12 @@ type Handler interface {
     Mimetype() string
 
     //GetMetadata retrieves the metadata from a given file.
-	GetMetadata(File) (map[string]interface{}, error)
+	GetMetadata(File) (Metadata, error)
 
     //FetchMetadata retrieves the metadata from an external source (usually an
     //internet data base) that best correspond to the provided known data.  It
-    //provides its best guess or nil if nothing reasonable is found.
-    FetchMetadata(map[string]interface{}) (map[string]interface{}, error)
+    //provides its best guess or raise ErrNoMetadataFound
+    FetchMetadata(Metadata) (Metadata, error)
 }
 
 type Handlers []Handler
@@ -106,11 +106,4 @@ func RegisterHandler(mh Handler) {
 func getMimetype(r io.Reader) (mime string, err error) {
 	mime, _, err = mimetype.DetectReader(r)
 	return
-}
-
-//File represents a media file
-type File interface {
-	io.Reader
-	io.ReaderAt
-	io.Seeker
 }

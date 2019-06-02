@@ -2,7 +2,10 @@ package media
 
 import (
 	"os"
+    "io"
     "fmt"
+
+    "github.com/pirmd/gostore/store"
 )
 
 const (
@@ -12,13 +15,24 @@ const (
 )
 
 var (
-    //No book found correponding to the given metadata set
-    ErrNoMatchFound = fmt.Errorf("No match found")
+    //Error when no Metadata found
+    ErrNoMetadataFound = fmt.Errorf("No metadata found")
 )
+
+//mdata represents a set of media metadata, it is essentielly a set of (key,
+//values). mdata is an alias to store.Value to benefit of its helpers functions
+type Metadata = store.Value
+
+//File represents a media file
+type File interface {
+	io.Reader
+	io.ReaderAt
+	io.Seeker
+}
 
 //GetMetadata reads metadata from the provided File and setup the proper media
 //Type if not done by the corresponding Handler.
-func GetMetadata(f File) (map[string]interface{}, error) {
+func GetMetadata(f File) (Metadata, error) {
 	mh, err := handlers.ForReader(f)
 	if err != nil {
 		return nil, err
@@ -29,15 +43,13 @@ func GetMetadata(f File) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if _, exists := mdata[TypeField]; !exists {
-		mdata[TypeField] = mh.Type()
-	}
+	mdata.SetIfNotExists(TypeField, mh.Type())
 
 	return mdata, nil
 }
 
 //GetMetadataFromFile reads metadata from the provided filename
-func GetMetadataFromFile(path string) (map[string]interface{}, error) {
+func GetMetadataFromFile(path string) (Metadata, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -58,7 +70,7 @@ func GetMetadataFromFile(path string) (map[string]interface{}, error) {
 //
 //FetchMetadata set the proper media Type if not done by the corresponding
 //Handler.
-func FetchMetadata(metadata map[string]interface{}) (map[string]interface{}, error) {
+func FetchMetadata(metadata Metadata) (Metadata, error) {
 	typ, ok := metadata[TypeField].(string)
     if !ok {
 		panic("metadata type is unknown or not of type 'string'")
@@ -74,9 +86,7 @@ func FetchMetadata(metadata map[string]interface{}) (map[string]interface{}, err
 		return nil, err
 	}
 
-	if _, exists := mdata[TypeField]; mdata != nil && !exists {
-		mdata[TypeField] = mh.Type()
-	}
+	mdata.SetIfNotExists(TypeField, mh.Type())
 
 	return mdata, nil
 }
