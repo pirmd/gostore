@@ -9,10 +9,10 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
 - add basic support to fetch metadata from google books api.
 - generate an help file in markdown format in addition to the manpage.
 ### Modified
-- change `import` behavior that, by default, ask the user to manually edit
-  metadata before storing them in the store. You can hav ethis done
+- change `import` behavior that, by default, asks the user to manually edit
+  metadata before storing them in the store. You can have this done
   automatically by using the `--auto`flag.
-  I change th eprevious behaviour as the new metadata fetching feature need
+  I change the previous behaviour as the new metadata fetching feature need
   probably some more love before being blindly trusted.
 
 ## [0.1.0] - 2019-05-10
