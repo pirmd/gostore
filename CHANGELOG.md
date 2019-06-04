@@ -14,6 +14,9 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
   automatically by using the `--auto`flag.
   I change the previous behaviour as the new metadata fetching feature need
   probably some more love before being blindly trusted.
+- Replace the Makefile, which was over-enginneered (and probably badly done),
+  by a small shell script that wraps go binary to supply version information
+  and manpage generation/installation
 
 ## [0.1.0] - 2019-05-10
 ### Added

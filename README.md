@@ -12,7 +12,9 @@ less feature-full and mature at this time) but for books.
 
 # INSTALLATION
 Everything should work fine using go standard commands (`build`, `get`,
-`install`...). For simplicity, you can just run `make install` if you prefer
+`install`...). For simplicity, you can just run `sh ./go install` if you prefer
+(supplied o`is a small shell script on top of go binary that incorporates
+version information and takes care of manpage generation and installation).
 
 # USAGE
 An up-to-date manpage is provided within the package (use `man -l gostore.1` to
@@ -48,7 +50,7 @@ Once done, run `make install` and you're done.
 # MAIN GOALS
 Beside bug hunting and improved user experience, main functions planned to be
 developped (in no special order):
-    - scraper to retrieve metadata from known remote sites (like goodread)
+    - scrapers to retrieve metadata from known remote sites (like goodread)
     - offering more record's metadata processings alowing further cleaning and
       quality of collection content 
     - allowing syncing file's embedded metatdata with cleaned and completed
