@@ -64,11 +64,11 @@ func AddPrettyDiffer(name string, text string) {
 	pdiffers.Register(name, formatter.TemplateFormatter(differTmpl.New(name), text))
 }
 
-func EditAsJson(v interface{}) (interface{}, error) {
+func Edit(v interface{}) (interface{}, error) {
 	return input.EditAsJson(v, cfg.UIEditorCmd)
 }
 
-func MergeAsJson(v, w interface{}) (interface{}, interface{}, error) {
+func Merge(v, w interface{}) (interface{}, interface{}, error) {
 	return input.MergeAsJson(v, w, cfg.UIMergerCmd)
 }
 

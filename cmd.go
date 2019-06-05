@@ -53,7 +53,7 @@ func init() {
 
 		var mdata media.Metadata
 		if !*importAuto {
-			left, _, err := MergeAsJson(mdataFromFile, mdataFetched)
+			left, _, err := Merge(mdataFromFile, mdataFetched)
 			if err != nil {
 				return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
 			}
@@ -180,7 +180,7 @@ func init() {
 			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
 		}
 
-		mdata, err := EditAsJson(r.OrigValue())
+		mdata, err := Edit(r.OrigValue())
 		if err != nil {
 			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
 		}
