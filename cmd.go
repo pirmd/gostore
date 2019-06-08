@@ -16,14 +16,9 @@ import (
 
 var (
 	gostore = app.New("gostore", "A command-line minimalist media collection manager.")
-
-	version = "v?.?.?" //should be set-up at compile-time through ldflags -X main.version
-	build   = "?"      //should be set-up at compile-time through ldflags -X main.build
 )
 
 func init() {
-	gostore.Version = fmt.Sprintf("%s (build %s)", version, build)
-
 	gostore.NewBoolFlagToVar(&cfg.LogDebug, "debug", "Show debug information.")
 	gostore.NewStringFlagToVar(&cfg.StoreRoot, "root", "Path to the root of the collection.")
 	gostore.NewEnumFlagToVar(&cfg.UIFormatStyle, "style", "Style for printing records' details.", getUIFormatStyles(cfg.UIFormatters))
