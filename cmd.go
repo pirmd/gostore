@@ -88,33 +88,33 @@ func init() {
 		return nil
 	}
 
-	getCmd := gostore.NewCommand("get", "retrieve information about any collection's record.")
-	getFromFile := getCmd.NewBoolFlag("from-file", "retrieve information from media file rather than from database.")
-	getKey := getCmd.NewStringArg("name", "name of the record to get information about.")
-	getCmd.Execute = func() error {
+	infoCmd := gostore.NewCommand("info", "retrieve information about any collection's record.")
+	infoFromFile := infoCmd.NewBoolFlag("from-file", "retrieve information from media file rather than from database.")
+	infoKey := infoCmd.NewStringArg("name", "name of the record to get information about.")
+	infoCmd.Execute = func() error {
 		configure()
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("Retrieving information about '%s' failed: %s", *getKey, err)
+			return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
 		}
 		defer s.Close()
 
-		r, err := s.Read(*getKey)
+		r, err := s.Read(*infoKey)
 		if err != nil {
-			return fmt.Errorf("Retrieving information about '%s' failed: %s", *getKey, err)
+			return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
 		}
 
-		if *getFromFile {
-			f, err := s.OpenRecord(*getKey)
+		if *infoFromFile {
+			f, err := s.OpenRecord(*infoKey)
 			if err != nil {
-				return fmt.Errorf("Retrieving information about '%s' failed: %s", *getKey, err)
+				return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
 			}
 			defer f.Close()
 
 			mdata, err := media.GetMetadata(f)
 			if err != nil {
-				return fmt.Errorf("Retrieving information about '%s' failed: %s", *getKey, err)
+				return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
 			}
 
 			PrettyDiff(r.OrigValue(), mdata)

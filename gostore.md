@@ -3,16 +3,16 @@
 gostore - A command-line minimalist media collection manager.
 
 # SYNOPSIS
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **help**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **version**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **import** [--**auto**] [--**dry-run**] **media**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **get** [--**from-file**] **name**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **list**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **search** **query**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **edit** **name**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **delete** **name**
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **export** **name** *dst*
-**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**full|json|name|list**] **check**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **help**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **version**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **import** [--**auto**] [--**dry-run**] **media**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **info** [--**from-file**] **name**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **list**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **search** **query**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **edit** **name**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **delete** **name**
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **export** **name** *dst*
+**gostore** [--**debug**] [--**root**=**ROOT**] [--**style**=**list|full|json|name**] **check**
 
 # DESCRIPTION
 A command-line minimalist media collection manager.
@@ -24,7 +24,7 @@ A command-line minimalist media collection manager.
 --**root**=**ROOT**
 : Path to the root of the collection.
 
---**style**=**full|json|name|list**
+--**style**=**list|full|json|name**
 : Style for printing records' details.
 
 # COMMANDS
@@ -37,7 +37,7 @@ A command-line minimalist media collection manager.
 **import** [<flags>] **media**
 : Import a new media into the collection.
 
-**get** [<flags>] **name**
+**info** [<flags>] **name**
 : retrieve information about any collection's record.
 
 **list**

@@ -30,7 +30,7 @@ To get a flavor of available commmands:
       based on [bleve](https://blevesearch.com/) and adopt its
       [query](https://blevesearch.com/docs/Query-String-Query/) language
     - `list`: list all records stores in the collection
-    - `get`: get the information known about the given record
+    - `info`: get the information known about the given record
     - `edit`: offer the user to edit information stored about the given
       record
     - `delete`: remove a record from the collection
