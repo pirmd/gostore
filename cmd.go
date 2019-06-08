@@ -164,34 +164,34 @@ func init() {
 		return nil
 	}
 
-	updateCmd := gostore.NewCommand("update", "update an existing record from the collection.")
-	updateKey := updateCmd.NewStringArg("name", "name of the record to update.")
-	updateCmd.Execute = func() error {
+	editCmd := gostore.NewCommand("edit", "edit an existing record from the collection.")
+	editKey := editCmd.NewStringArg("name", "name of the record to edit.")
+	editCmd.Execute = func() error {
 		configure()
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
+			return fmt.Errorf("editing %s failed: %s", *editKey, err)
 		}
 		defer s.Close()
 
-		r, err := s.Read(*updateKey)
+		r, err := s.Read(*editKey)
 		if err != nil {
-			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
+			return fmt.Errorf("editing %s failed: %s", *editKey, err)
 		}
 
 		mdata, err := Edit(r.OrigValue())
 		if err != nil {
-			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
+			return fmt.Errorf("editing %s failed: %s", *editKey, err)
 		}
 		r.ReplaceValues(mdata.(map[string]interface{}))
 
 		if err := processing.ProcessRecord(r); err != nil {
-			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
+			return fmt.Errorf("editing %s failed: %s", *editKey, err)
 		}
 
-		if err := s.Update(*updateKey, r); err != nil {
-			return fmt.Errorf("updating %s failed: %s", *updateKey, err)
+		if err := s.Update(*editKey, r); err != nil {
+			return fmt.Errorf("editing %s failed: %s", *editKey, err)
 		}
 
 		PrettyPrint(r.Fields())

@@ -31,7 +31,7 @@ To get a flavor of available commmands:
       [query](https://blevesearch.com/docs/Query-String-Query/) language
     - `list`: list all records stores in the collection
     - `get`: get the information known about the given record
-    - `update`: offer the user to edit information stored about the given
+    - `edit`: offer the user to edit information stored about the given
       record
     - `delete`: remove a record from the collection
     - `check`: verify the store's consistency (between file

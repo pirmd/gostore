@@ -6,25 +6,25 @@ gostore \- A command\-line minimalist media collection manager.
 
 .SH Synopsis
 .PP
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBhelp\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBhelp\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBversion\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBversion\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBimport\fP [\-\-\fBedit\fP] [\-\-\fBdry\-run\fP] \fImedia\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBimport\fP [\-\-\fBauto\fP] [\-\-\fBdry\-run\fP] \fImedia\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBget\fP [\-\-\fBfrom\-file\fP] \fIname\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBget\fP [\-\-\fBfrom\-file\fP] \fIname\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBlist\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBlist\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBsearch\fP \fIquery\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBsearch\fP \fIquery\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBupdate\fP \fIname\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBedit\fP \fIname\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBdelete\fP \fIname\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBdelete\fP \fIname\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBexport\fP \fIname\fP \fIdst\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBexport\fP \fIname\fP \fIdst\fP
 .br
-\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIname|list|full|json\fP] \fBcheck\fP
+\fBgostore\fP [\-\-\fBdebug\fP] [\-\-\fBroot\fP=\fIROOT\fP] [\-\-\fBstyle\fP=\fIfull|json|name|list\fP] \fBcheck\fP
 
 .SH Description
 .PP
@@ -41,7 +41,7 @@ Show debug information.
 Path to the root of the collection.
 
 .TP
-\-\-\fBstyle\fP=\fIname|list|full|json\fP
+\-\-\fBstyle\fP=\fIfull|json|name|list\fP
 Style for printing records' details.
 
 .SH Commands
@@ -71,8 +71,8 @@ List all the records from the collection.
 Search the collection.
 
 .TP
-\fBupdate\fP \fIname\fP
-update an existing record from the collection.
+\fBedit\fP \fIname\fP
+edit an existing record from the collection.
 
 .TP
 \fBdelete\fP \fIname\fP
