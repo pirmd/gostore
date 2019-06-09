@@ -1,4 +1,8 @@
-# INTRODUCTION
+# GOSTORE
+
+[![GoDoc](https://godoc.org/github.com/pirmd/gostore?status.svg)](https://godoc.org/github.com/pirmd/gostore)&nbsp; 
+[![Go Report Card](https://goreportcard.com/badge/github.com/pirmd/gostore)](https://goreportcard.com/report/github.com/pirmd/gostore)&nbsp;
+
 `gostore` is a command line tool aiming at providing facilities to manage one
 or more collections of media files, keeping track of their metadata and/or
 additional information.
@@ -10,15 +14,10 @@ collections but should be extendable to accomodate others kind of media files
 You can think of `gostore` as something close to [beets](http://beets.io/) (but
 less feature-full and mature at this time) but for books.
 
-# INSTALLATION
-Everything should work fine using go standard commands (`build`, `get`,
-`install`...). For simplicity, you can just run `sh ./go install` if you prefer
-(supplied o`is a small shell script on top of go binary that incorporates
-version information and takes care of manpage generation and installation).
 
-# USAGE
-An up-to-date manpage is provided within the package (use `man -l gostore.1` to
-browse it without installing).
+## USAGE
+An up-to-date manpage is provided with the package (use `man -l gostore.1` to
+browse it without installing) or in a [text format](./gostore.md).
 
 To get a flavor of available commmands:
     - `import`: add te given media files to the collection, extracting its
@@ -41,13 +40,19 @@ Different output style can be customized/chosen allowing different
 presentation and level of information feedbacked by the tool. You might want
 also to pipe output of the tool to some standard unix tool (like `less`).
 
-# CUSTOMIZATION
+## CUSTOMIZATION
 I don't feel the need to have a config file (yet), you'll have to modify the
 code for that in the `config.go`, which is hopefully commented enough to have
 you play with customizations (even for someone not familiar with golang).
 Once done, run `make install` and you're done.
 
-# MAIN GOALS
+## INSTALLATION
+Everything should work fine using go standard commands (`build`, `get`,
+`install`...). For simplicity, you can just run `sh ./go install` if you prefer
+(supplied o`is a small shell script on top of go binary that incorporates
+version information and takes care of manpage generation and installation).
+
+## MAIN GOALS
 Beside bug hunting and improved user experience, main functions planned to be
 developped (in no special order):
     - scrapers to retrieve metadata from known remote sites (like goodread)
@@ -61,8 +66,7 @@ developped (in no special order):
       cleaver stemmers)
     - new media familly to be supported (like mp3)
 
-
-# CONTRIBUTION
+## CONTRIBUTION
 If you feel like to contribute, just follow github guidelines on
 [forking](https://help.github.com/articles/fork-a-repo/) then [send a pull
 request](https://help.github.com/articles/creating-a-pull-request/)
