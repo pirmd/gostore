@@ -83,10 +83,10 @@ func TestFSForbiddenPath(t *testing.T) {
 	fs := newFS(tstDir.Root, validFn)
 	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale
 
-	tstCases_unauthorized := []string{"folder_toFilter", "folder_toFilter/file.txt", "folder/file_toFilter.txt"}
+	tstCasesUnauthorized := []string{"folder_toFilter", "folder_toFilter/file.txt", "folder/file_toFilter.txt"}
 
 	t.Run("Test Put()", func(t *testing.T) {
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if err := fs.Put(NewRecord(tc, nil), verify.IOReader("")); err != os.ErrPermission {
 				t.Errorf("Succeed to create '%v' that is forbidden", tc)
 			}
@@ -94,7 +94,7 @@ func TestFSForbiddenPath(t *testing.T) {
 	})
 
 	tstDir.Populate(tstCases)
-	tstDir.Populate(tstCases_unauthorized)
+	tstDir.Populate(tstCasesUnauthorized)
 
 	t.Run("Test Get()", func(t *testing.T) {
 		for _, tc := range tstCases {
@@ -103,7 +103,7 @@ func TestFSForbiddenPath(t *testing.T) {
 			}
 		}
 
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if _, err := fs.Get(tc); err != os.ErrPermission {
 				t.Errorf("Can retrieve '%s'", tc)
 			}
@@ -121,7 +121,7 @@ func TestFSForbiddenPath(t *testing.T) {
 			}
 		}
 
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			_, err := fs.Exists(tc)
 			if err != os.ErrPermission {
 				t.Errorf("Acess to '%s' is not forbidden", tc)
@@ -139,7 +139,7 @@ func TestFSForbiddenPath(t *testing.T) {
 			}
 		}
 
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if err := fs.Move(tc, NewRecord(tc+"_moved", nil)); err == nil {
 				t.Errorf("Can move '%s'", tc)
 			}
@@ -162,7 +162,7 @@ func TestFSForbiddenPath(t *testing.T) {
 			tstDir.ShouldNotHaveFile("moved/"+tc, "storefs cannot delete files")
 		}
 
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if err := fs.Delete(tc); err == nil {
 				t.Errorf("Can delete '%s'", tc)
 			}

@@ -5,12 +5,14 @@ import (
 	"time"
 )
 
-//The filterfs filters access to files according to a validating function (func(string) bool).
-//Any file with a path, for which the validating function returns false, will not be allowed.
-//Typical use is with a regexp validating function (using regexp.MatchString() for example)
+//The filterfs filters access to files according to a validating function
+//(func(string) bool).  Any file with a path, for which the validating function
+//returns false, will not be allowed.  Typical use is with a regexp validating
+//function (using regexp.MatchString() for example)
 //
-//filterfs is not a standalone filesystem as it passes all operation to an underlying filesystem,
-//it only checks that the given path is not filtered before cascading it to its wrapped file-system
+//filterfs is not a standalone filesystem as it passes all operation to an
+//underlying filesystem, it only checks that the given path is not filtered
+//before cascading it to its wrapped file-system
 //
 //Symlinks are not recognized
 type filterfs struct {
@@ -18,13 +20,13 @@ type filterfs struct {
 	validfn   func(string) bool
 }
 
-//Newfilterfs creates a new filterfs that relies on a validating function to
+//NewFilterfs creates a new filterfs that relies on a validating function to
 //allow or not access to file-system files depending on their name.
 //
 //The validating function should, if appropriate, make sure that the forbidden
-//name can be embedded in a full path name (filterfs does not take care of that).
-//For example, disallowing access to hidden files should consider ".name", "folder/.name"
-//and "folder/.name/file"
+//name can be embedded in a full path name (filterfs does not take care of
+//that).  For example, disallowing access to hidden files should consider
+//".name", "folder/.name" and "folder/.name/file"
 func NewFilterfs(validfn func(string) bool, wrappedfs *VFS) *VFS {
 	return &VFS{
 		&filterfs{
@@ -73,9 +75,10 @@ func (fs *filterfs) Stat(name string) (os.FileInfo, error) {
 	return nil, os.ErrPermission
 }
 
-//Lstat is here to fulfill Fs interface but we don't allow to follow symlink here
+//Lstat is here to fulfill Fs interface but we don't allow to follow symlink
+//here
 func (fs *filterfs) Lstat(name string) (os.FileInfo, error) {
-	return fs.Stat(name)
+    return fs.Stat(name)
 }
 
 func (fs *filterfs) Chmod(name string, mode os.FileMode) error {

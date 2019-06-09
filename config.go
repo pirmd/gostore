@@ -75,7 +75,7 @@ var (
 
 func configure() {
 	for typ, txt := range cfg.StoreNamingSchemes {
-		processing.AddNamer(typ, txt)
+		processing.AddRenamer(typ, txt)
 	}
 
 	processing.RecordProcessings = cfg.StoreRecordProcessings
@@ -96,7 +96,7 @@ func configure() {
 }
 
 func getUIFormatStyles(m map[string]map[string]string) (styles []string) {
-	for k, _ := range m {
+	for k := range m {
 		styles = append(styles, k)
 	}
 	return

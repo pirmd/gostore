@@ -10,7 +10,7 @@ var (
 	//RecordProcessors contains all known Record's processors
 	RecordProcessors = make(map[string]processFn)
 
-	//RecordProcess contains list of Record treatments to be
+	//RecordProcessings contains list of Record treatments to be
 	//systematically applied to a record before importing it
 	//(or updating) into the store
 	RecordProcessings = []string{}

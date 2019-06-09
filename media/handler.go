@@ -41,6 +41,7 @@ type Handler interface {
 	FetchMetadata(Metadata) (Metadata, error)
 }
 
+//Handlers represent th elist of known media handlers
 type Handlers []Handler
 
 //ForReader retrieves the handler for corresponding to the given file based on

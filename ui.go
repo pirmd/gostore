@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	NoOrEmptyValue = "<no value>"
-	TimeStampFmt   = time.RFC1123Z
-	DateFmt        = "1976-01-17"
+	noOrEmptyValue = "<no value>"
+	timeStampFmt   = time.RFC1123Z
+	dateFmt        = "2006-01-02"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 		"style": styleSlice,
 		"colorMissing": func(txt string) string {
 			mkup := style.Markup{
-				regexp.MustCompile(`(` + NoOrEmptyValue + `)`): style.FmtRed,
+				regexp.MustCompile(`(` + noOrEmptyValue + `)`): style.FmtRed,
 			}
 
 			return mkup.Render(style.ColorTerm)(txt)
@@ -56,26 +56,32 @@ var (
 	}
 )
 
+//AddPrettyPrinter registers a new pretty printer
 func AddPrettyPrinter(name string, text string) {
 	pprinters.Register(name, formatter.TemplateFormatter(printerTmpl.New(name), text))
 }
 
+//AddPrettyDiffer registers a new pretty differ
 func AddPrettyDiffer(name string, text string) {
 	pdiffers.Register(name, formatter.TemplateFormatter(differTmpl.New(name), text))
 }
 
+//Edit fires-up a new editor to modif v
 func Edit(v interface{}) (interface{}, error) {
 	return input.EditAsJson(v, cfg.UIEditorCmd)
 }
 
+//Merge fires-up a new editor to merge v and w
 func Merge(v, w interface{}) (interface{}, interface{}, error) {
 	return input.MergeAsJson(v, w, cfg.UIMergerCmd)
 }
 
+//PrettyDiff shows in a pleasant manner differences between two metadata sets
 func PrettyDiff(mediaL, mediaR map[string]interface{}, fields ...string) {
 	fmt.Println(pdiffers.MustFormatUsingType(mediasTypeOf([]map[string]interface{}{mediaL, mediaR}), struct{ L, R map[string]interface{} }{mediaL, mediaR}))
 }
 
+//PrettyPrint shows in a pleasant manner a metadata set
 func PrettyPrint(medias ...map[string]interface{}) {
 	fmt.Println(pprinters.MustFormatUsingType(mediasTypeOf(medias), medias))
 }
@@ -170,7 +176,7 @@ func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 		switch f {
 		case "*":
 			for _, m := range maps {
-				for k, _ := range m {
+				for k := range m {
 					if !isInSlice(k, fields) && !isInSlice(k, keys) {
 						keys = append(keys, k)
 					}
@@ -196,7 +202,7 @@ func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []stri
 			//We only keep keys that are present in all maps, then we pass the "*"
 			//So that possiblt additional fields of a given maps can be extracted too
 			if len(maps) > 0 {
-				for k, _ := range maps[0] {
+				for k := range maps[0] {
 					if !isInSlice(k, fields) && !isInSlice(k, keys) &&
 						hasKey(k, maps[1:]...) {
 						keys = append(keys, k)
@@ -217,7 +223,7 @@ func getValues(m map[string]interface{}, fields ...string) (values []string) {
 	for _, f := range fields {
 		switch f {
 		case "*":
-			for k, _ := range m {
+			for k := range m {
 				if !isInSlice(k, fields) {
 					values = append(values, get(m, k))
 				}
@@ -235,10 +241,10 @@ func get(m map[string]interface{}, k string) string {
 		if t, ok := v.(time.Time); ok {
 			//Only a date
 			if strings.HasSuffix(k, "Date") {
-				return t.Format(DateFmt)
+				return t.Format(dateFmt)
 			}
 			//Stamp
-			return t.Format(TimeStampFmt)
+			return t.Format(timeStampFmt)
 		}
 
 		if value := fmt.Sprintf("%v", v); value != "" {
@@ -246,7 +252,7 @@ func get(m map[string]interface{}, k string) string {
 		}
 	}
 
-	return NoOrEmptyValue
+	return noOrEmptyValue
 }
 
 func isInSlice(s string, slice []string) bool {

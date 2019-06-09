@@ -8,7 +8,7 @@ import (
 	"github.com/pirmd/verify"
 )
 
-func setup_idx(tb testing.TB) (*storeidx, func()) {
+func setupIdx(tb testing.TB) (*storeidx, func()) {
 	tstDir := verify.NewTestField(tb)
 
 	idx := newIdx(filepath.Join(tstDir.Root, "idxtest"))
@@ -23,7 +23,7 @@ func setup_idx(tb testing.TB) (*storeidx, func()) {
 	}
 }
 
-func populate_idx(tb testing.TB, idx *storeidx) (keys []string) {
+func populateIdx(tb testing.TB, idx *storeidx) (keys []string) {
 	for _, td := range testData {
 		r := NewRecord(buildKey(td), td)
 		if err := idx.Put(r); err != nil {
@@ -35,11 +35,11 @@ func populate_idx(tb testing.TB, idx *storeidx) (keys []string) {
 }
 
 func TestIndexSearch(t *testing.T) {
-	idx, cleanFn := setup_idx(t)
+	idx, cleanFn := setupIdx(t)
 	defer cleanFn()
 
 	idx.Mapping.DefaultAnalyzer = fr.AnalyzerName
-	keys := populate_idx(t, idx)
+	keys := populateIdx(t, idx)
 
 	testCases := []struct {
 		name string
@@ -76,10 +76,10 @@ func TestIndexSearch(t *testing.T) {
 }
 
 func TestIndexWalk(t *testing.T) {
-	idx, cleanFn := setup_idx(t)
+	idx, cleanFn := setupIdx(t)
 	defer cleanFn()
 
-	keys := populate_idx(t, idx)
+	keys := populateIdx(t, idx)
 
 	out := []string{}
 	if err := idx.Walk(func(key string) error {
@@ -93,22 +93,22 @@ func TestIndexWalk(t *testing.T) {
 }
 
 func BenchmarkIndexCreationWithDefaultAnalyzer(b *testing.B) {
-	idx, cleanFn := setup_idx(b)
+	idx, cleanFn := setupIdx(b)
 	defer cleanFn()
 
 	for n := 0; n < b.N; n++ {
-		_ = populate_idx(b, idx)
+		_ = populateIdx(b, idx)
 	}
 
 }
 
 func BenchmarkIndexCreateWithfrAnalyzer(b *testing.B) {
-	idx, cleanFn := setup_idx(b)
+	idx, cleanFn := setupIdx(b)
 	defer cleanFn()
 
 	idx.Mapping.DefaultAnalyzer = fr.AnalyzerName
 
 	for n := 0; n < b.N; n++ {
-		_ = populate_idx(b, idx)
+		_ = populateIdx(b, idx)
 	}
 }

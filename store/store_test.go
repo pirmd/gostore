@@ -8,7 +8,7 @@ import (
 	"github.com/pirmd/verify"
 )
 
-func setup_store(tb testing.TB) (*Store, func()) {
+func setupStore(tb testing.TB) (*Store, func()) {
 	tstDir := verify.NewTestField(tb)
 
 	s, err := Open(tstDir.Root)
@@ -23,7 +23,7 @@ func setup_store(tb testing.TB) (*Store, func()) {
 	}
 }
 
-func populate_store(tb testing.TB, s *Store) (keys []string) {
+func populateStore(tb testing.TB, s *Store) (keys []string) {
 	for _, td := range testData {
 		r := NewRecord(buildKey(td), td)
 		if err := s.Create(r, verify.IOReader("")); err != nil {
@@ -35,14 +35,14 @@ func populate_store(tb testing.TB, s *Store) (keys []string) {
 }
 
 func TestCreateAndRead(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	t.Run("Can create a new record", func(t *testing.T) {
 		for _, k := range keys {
-			should_exist_in_store(t, s, k)
+			shouldExistInStore(t, s, k)
 		}
 	})
 
@@ -53,7 +53,7 @@ func TestCreateAndRead(t *testing.T) {
 				t.Errorf("Fail to retrieve '%s': %s", keys[i], err)
 				continue
 			}
-			same_record_data(t, r, tc, "Mismatch between stored data and added data")
+			sameRecordData(t, r, tc, "Mismatch between stored data and added data")
 		}
 	})
 
@@ -77,17 +77,17 @@ func TestCreateAndRead(t *testing.T) {
 		}
 
 		for _, k := range keys {
-			should_exist_in_store(t, s, k)
+			shouldExistInStore(t, s, k)
 		}
 	})
 
 }
 
 func TestDelete(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	testCases := []int{1, 3, 5, 11}
 	for _, i := range testCases {
@@ -96,20 +96,20 @@ func TestDelete(t *testing.T) {
 		}
 	}
 
-	for i, _ := range testCases {
+	for i := range testCases {
 		if isIntInList(i, testCases) {
-			should_not_exist_in_store(t, s, keys[i])
+			shouldNotExistInStore(t, s, keys[i])
 		} else {
-			should_exist_in_store(t, s, keys[i])
+			shouldExistInStore(t, s, keys[i])
 		}
 	}
 }
 
 func TestUpdate(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	for _, td := range testData {
 		td["updated"] = true
@@ -129,7 +129,7 @@ func TestUpdate(t *testing.T) {
 				continue
 			}
 
-			same_record_data(t, r, td, "Mismatch between stored data and updated data")
+			sameRecordData(t, r, td, "Mismatch between stored data and updated data")
 		}
 	})
 
@@ -143,15 +143,15 @@ func TestUpdate(t *testing.T) {
 		}
 
 		for i, td := range testData {
-			should_not_exist_in_store(t, s, keys[i])
-			should_exist_in_store(t, s, newkeys[i])
+			shouldNotExistInStore(t, s, keys[i])
+			shouldExistInStore(t, s, newkeys[i])
 
 			r, err := s.Read(newkeys[i])
 			if err != nil {
 				t.Errorf("Fail to retrieve test case '%s': %s", newkeys[i], err)
 				continue
 			}
-			same_record_data(t, r, td, "Mismatch between stored data and added data")
+			sameRecordData(t, r, td, "Mismatch between stored data and added data")
 		}
 	})
 
@@ -169,14 +169,14 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestSearch(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
 	if err := UsingDefaultAnalyzer(fr.AnalyzerName)(s); err != nil {
 		t.Fatalf("Cannot choose 'fr' as default index analyzer: %v", err)
 	}
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	testCases := []struct {
 		in  string
@@ -200,10 +200,10 @@ func TestSearch(t *testing.T) {
 }
 
 func TestCheckAndRepair(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	testCases := []int{0, 2, 4, 6, 8}
 	testCasesAfterDelete := []int{1, 3, 5, 7}
@@ -222,8 +222,8 @@ func TestCheckAndRepair(t *testing.T) {
 		}
 		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
 
-		for i, _ := range testData {
-			should_exist_in_store(t, s, keys[i])
+		for i := range testData {
+			shouldExistInStore(t, s, keys[i])
 		}
 	})
 
@@ -240,11 +240,11 @@ func TestCheckAndRepair(t *testing.T) {
 		}
 		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
 
-		for i, _ := range testData {
+		for i := range testData {
 			if isIntInList(i, testCases) {
-				should_not_exist_in_store(t, s, keys[i])
+				shouldNotExistInStore(t, s, keys[i])
 			} else {
-				should_exist_in_store(t, s, keys[i])
+				shouldExistInStore(t, s, keys[i])
 			}
 		}
 	})
@@ -263,7 +263,7 @@ func TestCheckAndRepair(t *testing.T) {
 		}
 		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
 
-		for i, _ := range testData {
+		for i := range testData {
 			if isIntInList(i, testCasesAfterDelete) {
 				exists, err := s.idx.Exists(keys[i])
 				if err != nil {
@@ -273,35 +273,35 @@ func TestCheckAndRepair(t *testing.T) {
 					t.Errorf("'%s' was not cleared from the index", keys[i])
 				}
 			} else if isIntInList(i, testCases) {
-				should_not_exist_in_store(t, s, keys[i])
+				shouldNotExistInStore(t, s, keys[i])
 			} else {
-				should_exist_in_store(t, s, keys[i])
+				shouldExistInStore(t, s, keys[i])
 			}
 		}
 	})
 }
 
 func TestRebuildIndex(t *testing.T) {
-	s, cleanFn := setup_store(t)
+	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
-	keys := populate_store(t, s)
+	keys := populateStore(t, s)
 
 	err := s.RebuildIndex()
 	if err != nil {
 		t.Fatalf("Rebuild index failed: %v", err)
 	}
 
-	for i, _ := range testData {
-		should_exist_in_store(t, s, keys[i])
+	for i := range testData {
+		shouldExistInStore(t, s, keys[i])
 	}
 }
 
-func same_record_data(tb testing.TB, r *Record, m map[string]interface{}, message string) {
+func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message string) {
 	verify.EqualAsJson(tb, r.Value(), m, message)
 }
 
-func should_exist_in_store(tb testing.TB, s *Store, key string) {
+func shouldExistInStore(tb testing.TB, s *Store, key string) {
 	exists, err := s.Exists(key)
 	if err != nil {
 		tb.Errorf("Cannot check existence of '%s': %v", key, err)
@@ -312,7 +312,7 @@ func should_exist_in_store(tb testing.TB, s *Store, key string) {
 	}
 }
 
-func should_not_exist_in_store(tb testing.TB, s *Store, key string) {
+func shouldNotExistInStore(tb testing.TB, s *Store, key string) {
 	exists, err := s.Exists(key)
 	if err != nil {
 		tb.Errorf("Cannot check existence of '%s': %v", key, err)

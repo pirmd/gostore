@@ -19,7 +19,8 @@ var (
 	namers    = formatter.Formatters{}
 )
 
-func AddNamer(name string, text string) {
+//AddRenamer register a new namer
+func AddRenamer(name string, text string) {
 	namers.Register(name, formatter.TemplateFormatter(namerTmpl.New(name), text))
 }
 

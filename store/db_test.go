@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func setup_db(tb testing.TB) (*storedb, func()) {
+func setupDb(tb testing.TB) (*storedb, func()) {
 	tstDir := verify.NewTestField(tb)
 
 	db := newDB(filepath.Join(tstDir.Root, "test.db"))
@@ -21,7 +21,7 @@ func setup_db(tb testing.TB) (*storedb, func()) {
 	}
 }
 
-func populate_db(tb testing.TB, db *storedb) (keys []string) {
+func populateDb(tb testing.TB, db *storedb) (keys []string) {
 	for _, td := range testData {
 		r := NewRecord(buildKey(td), td)
 
@@ -35,10 +35,10 @@ func populate_db(tb testing.TB, db *storedb) (keys []string) {
 }
 
 func TestDBWalk(t *testing.T) {
-	db, cleanFn := setup_db(t)
+	db, cleanFn := setupDb(t)
 	defer cleanFn()
 
-	keys := populate_db(t, db)
+	keys := populateDb(t, db)
 
 	out := []string{}
 	if err := db.Walk(func(key string) error {

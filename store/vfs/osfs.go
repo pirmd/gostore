@@ -5,10 +5,12 @@ import (
 	"time"
 )
 
-//osfs is a vfs.filesystem implementation that give access to the underlying os file-system
-//It basically wraps-up "os" package to meet vfs.filesystem interface
+//osfs is a vfs.filesystem implementation that give access to the underlying os
+//file-system It basically wraps-up "os" package to meet vfs.filesystem
+//interface
 type osfs struct{}
 
+//NewOsfs creates a vfs for the underlying os file-system
 func NewOsfs() *VFS {
 	return &VFS{&osfs{}}
 }

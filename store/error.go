@@ -4,12 +4,17 @@ import (
 	"fmt"
 )
 
+//NonBlockingErrors represents a collection of errors that don't require to
+//stop current activities and can be reported later
 type NonBlockingErrors []error
 
+//Add adds a new error to the non-blocking error collection
 func (c *NonBlockingErrors) Add(err error) {
 	*c = append(*c, err)
 }
 
+//Error concatenate all errors in th ecollection. It allows to satisfy error
+//interface
 func (c *NonBlockingErrors) Error() (s string) {
 	for i := range *c {
 		if i == 0 {
@@ -22,6 +27,8 @@ func (c *NonBlockingErrors) Error() (s string) {
 	return s
 }
 
+//Err return nil if the non-blocking errors collection is empty or nil, it
+//returns itself otherwise
 func (c *NonBlockingErrors) Err() error {
 	if c == nil {
 		return nil

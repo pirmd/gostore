@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	tstCases_unauthorized = []string{
+	tstCasesUnauthorized = []string{
 		"file_toFilter.txt",
 		"folder/subfolder_toFilter",
 		"folder_toFilter",
@@ -25,7 +25,7 @@ func TestFilterfsRead(t *testing.T) {
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
-	tstDir.Populate(tstCases_unauthorized)
+	tstDir.Populate(tstCasesUnauthorized)
 
 	fs := NewFilterfs(validFn, NewOsfs())
 
@@ -38,7 +38,7 @@ func TestFilterfsRead(t *testing.T) {
 	})
 
 	t.Run("OpenFile unauthorized", func(t *testing.T) {
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if _, err := fs.OpenFile(tstDir.Fullpath(tc), os.O_RDONLY, 0777); err != os.ErrPermission {
 				t.Errorf("Succeed to read unauthorized file '%s': %s", tc, err)
 			}
@@ -60,7 +60,7 @@ func TestFilterfsPopulateAndWalk(t *testing.T) {
 	})
 
 	t.Run("Populate filtered files", func(t *testing.T) {
-		for _, tc := range tstCases_unauthorized {
+		for _, tc := range tstCasesUnauthorized {
 			if _, err := fs.Create(tstDir.Fullpath(tc)); err != os.ErrPermission {
 				t.Errorf("Succeed to create an unauthorized file '%s'", tc)
 			}
@@ -69,7 +69,7 @@ func TestFilterfsPopulateAndWalk(t *testing.T) {
 	})
 
 	t.Run("Walk with non filtered files", func(t *testing.T) {
-		tstDir.Populate(tstCases_unauthorized)
+		tstDir.Populate(tstCasesUnauthorized)
 
 		ls, err := ListFs(fs, tstDir.Root)
 		if err != nil {
@@ -85,7 +85,7 @@ func TestFilterfsRemove(t *testing.T) {
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
-	tstDir.Populate(tstCases_unauthorized)
+	tstDir.Populate(tstCasesUnauthorized)
 
 	fs := NewFilterfs(validFn, NewOsfs())
 
@@ -99,7 +99,7 @@ func TestFilterfsRemove(t *testing.T) {
 	})
 
 	t.Run("Remove unauthorized file", func(t *testing.T) {
-		tc := tstCases_unauthorized[3]
+		tc := tstCasesUnauthorized[3]
 		if err := fs.Remove(tstDir.Fullpath(tc)); err != os.ErrPermission {
 			t.Errorf("Succeed to remove unauthorized file %s", tc)
 		}
@@ -115,7 +115,7 @@ func TestFilterfsRemove(t *testing.T) {
 	})
 
 	t.Run("Remove unauthorized folder", func(t *testing.T) {
-		tc := tstCases_unauthorized[0]
+		tc := tstCasesUnauthorized[0]
 		if err := fs.Remove(tstDir.Fullpath(tc)); err != os.ErrPermission {
 			t.Errorf("Succeed to remove unauthorized file %s", tc)
 		}
@@ -136,7 +136,7 @@ func TestFilterfsRemoveAll(t *testing.T) {
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
-	tstDir.Populate(tstCases_unauthorized)
+	tstDir.Populate(tstCasesUnauthorized)
 
 	fs := NewFilterfs(validFn, NewOsfs())
 
@@ -159,7 +159,7 @@ func TestFilterfsRename(t *testing.T) {
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
-	tstDir.Populate(tstCases_unauthorized)
+	tstDir.Populate(tstCasesUnauthorized)
 
 	fs := NewFilterfs(validFn, NewOsfs())
 
@@ -174,7 +174,7 @@ func TestFilterfsRename(t *testing.T) {
 	})
 
 	t.Run("Rename filtered file", func(t *testing.T) {
-		tc := tstCases_unauthorized[0]
+		tc := tstCasesUnauthorized[0]
 		if err := fs.Rename(tstDir.Fullpath(tc), tstDir.Fullpath(tc+"_renamed")); err != os.ErrPermission {
 			t.Errorf("Succeed to rename unauthorized file %s", tc)
 		}

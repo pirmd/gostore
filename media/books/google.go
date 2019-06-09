@@ -42,12 +42,12 @@ type identifier struct {
 type googleBooks struct{}
 
 func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, error) {
-	queryUrl, err := g.buildQueryUrl(mdata)
+	queryURL, err := g.buildQueryURL(mdata)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Get(queryUrl)
+	resp, err := http.Get(queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, erro
 	return metadata, nil
 }
 
-func (g *googleBooks) buildQueryUrl(mdata media.Metadata) (string, error) {
+func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	var query []string
 	if title, ok := mdata.Get("Title").(string); ok {
 		query = append(query, "intitle:"+title)

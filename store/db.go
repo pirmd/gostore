@@ -8,10 +8,11 @@ import (
 )
 
 const (
-	BucketName = "gostore"
+	bucketName = "gostore"
 )
 
 var (
+    //ErrRecordNotFoundInDb alerts if no record is found
 	ErrRecordNotFoundInDb = fmt.Errorf("Record not found")
 )
 
@@ -32,7 +33,7 @@ func (s *storedb) Open() (err error) {
 	}
 
 	return s.db.Update(func(tx *bolt.Tx) error {
-		_, err = tx.CreateBucketIfNotExists([]byte(BucketName))
+		_, err = tx.CreateBucketIfNotExists([]byte(bucketName))
 		return err
 	})
 }
@@ -50,7 +51,7 @@ func (s *storedb) Put(r *Record) error {
 	}
 
 	if err := s.db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(BucketName))
+		b := tx.Bucket([]byte(bucketName))
 		return b.Put([]byte(r.key), buf)
 	}); err != nil {
 		return err
@@ -62,7 +63,7 @@ func (s *storedb) Put(r *Record) error {
 //Delete remove a Record entry from the database
 func (s *storedb) Delete(key string) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(BucketName))
+		b := tx.Bucket([]byte(bucketName))
 		return b.Delete([]byte(key))
 	})
 }
@@ -71,7 +72,7 @@ func (s *storedb) Delete(key string) error {
 func (s *storedb) Get(key string) (*Record, error) {
 	var buf []byte
 	if err := s.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(BucketName))
+		b := tx.Bucket([]byte(bucketName))
 		buf = b.Get([]byte(key))
 		return nil
 	}); err != nil {
@@ -95,7 +96,7 @@ func (s *storedb) Exists(key string) (bool, error) {
 
 	//TODO: check if something better than Get can be used
 	if err := s.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(BucketName))
+		b := tx.Bucket([]byte(bucketName))
 		buf = b.Get([]byte(key))
 		return nil
 	}); err != nil {
@@ -117,7 +118,7 @@ func (s *storedb) Walk(walkFn func(string) error) error {
 
 	keys := []string{}
 	if err := s.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(BucketName))
+		b := tx.Bucket([]byte(bucketName))
 		return b.ForEach(func(k, v []byte) error {
 			keys = append(keys, string(k))
 			return nil
