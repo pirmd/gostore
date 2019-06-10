@@ -39,7 +39,7 @@ var (
 		"slice":  func(s ...string) []string { return s },
 		"newRow": func(r []string) [][]string { return append([][]string{}, r) },
 		"addRow": func(a [][]string, s []string) [][]string { return append(a, s) },
-		"table":  func(r [][]string) string { return text.Table().Rows(r...).String() },
+		"table":  func(r [][]string) string { return text.NewTable().Rows(r...).String() },
 	})
 
 	pprinters = formatter.Formatters{
@@ -68,12 +68,12 @@ func AddPrettyDiffer(name string, text string) {
 
 //Edit fires-up a new editor to modif v
 func Edit(v interface{}) (interface{}, error) {
-	return input.EditAsJson(v, cfg.UIEditorCmd)
+	return input.EditAsJSON(v, cfg.UIEditorCmd)
 }
 
 //Merge fires-up a new editor to merge v and w
 func Merge(v, w interface{}) (interface{}, interface{}, error) {
-	return input.MergeAsJson(v, w, cfg.UIMergerCmd)
+	return input.MergeAsJSON(v, w, cfg.UIMergerCmd)
 }
 
 //PrettyDiff shows in a pleasant manner differences between two metadata sets
@@ -128,7 +128,7 @@ func showMetadata(medias []map[string]interface{}, fields ...string) string {
 }
 
 func listByRows(medias []map[string]interface{}, fields ...string) string {
-	table := text.Table()
+	table := text.NewTable()
 
 	keys := getKeys(medias, fields...)
 	table.Rows(styleSlice(keys, "Bold"))
@@ -141,7 +141,7 @@ func listByRows(medias []map[string]interface{}, fields ...string) string {
 }
 
 func listByColumns(medias []map[string]interface{}, fields ...string) string {
-	table := text.Table()
+	table := text.NewTable()
 
 	keys := getKeys(medias, fields...)
 	table.Col(styleSlice(keys, "Bold"))
@@ -159,12 +159,12 @@ func diffMedias(mediaL, mediaR map[string]interface{}, fields ...string) string 
 
 	dT, dL, dR := text.ColorDiff.Slices(valL, valR)
 
-	return text.Table().Col(styleSlice(keys, "Bold"), dL, dT, dR).Draw()
+	return text.NewTable().Col(styleSlice(keys, "Bold"), dL, dT, dR).Draw()
 }
 
 func diff(l, r interface{}) string {
 	dT, dL, dR := text.ColorDiff.Anything(l, r)
-	return text.Table().Col(dL, dT, dR).Draw()
+	return text.NewTable().Col(dL, dT, dR).Draw()
 }
 
 func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
