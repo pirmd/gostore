@@ -15,12 +15,12 @@ const (
 )
 
 var (
-    //ErrKeyIsNotValid raises an error if provided key is invalid
-	ErrKeyIsNotValid       = fmt.Errorf("key is invalid")
-    //ErrRecordAlreadyExists raises an error if a record already exits
+	//ErrKeyIsNotValid raises an error if provided key is invalid
+	ErrKeyIsNotValid = fmt.Errorf("key is invalid")
+	//ErrRecordAlreadyExists raises an error if a record already exits
 	ErrRecordAlreadyExists = fmt.Errorf("record already exists")
-    //ErrRecordDoesNotExist raises an error is a record does not exist
-	ErrRecordDoesNotExist  = fmt.Errorf("record does not exist")
+	//ErrRecordDoesNotExist raises an error is a record does not exist
+	ErrRecordDoesNotExist = fmt.Errorf("record does not exist")
 )
 
 //Store represents the actual storing engine It is made of a filesystem, a

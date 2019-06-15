@@ -78,7 +78,7 @@ func (fs *filterfs) Stat(name string) (os.FileInfo, error) {
 //Lstat is here to fulfill Fs interface but we don't allow to follow symlink
 //here
 func (fs *filterfs) Lstat(name string) (os.FileInfo, error) {
-    return fs.Stat(name)
+	return fs.Stat(name)
 }
 
 func (fs *filterfs) Chmod(name string, mode os.FileMode) error {

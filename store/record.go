@@ -9,14 +9,14 @@ import (
 )
 
 const (
-    //KeyField contains the name of the record's value field containing the
-    //record's key when exported through Fields()
+	//KeyField contains the name of the record's value field containing the
+	//record's key when exported through Fields()
 	KeyField = "Name"
-    //CreatedAtField contains the name of the record's value field containint
-    //the time stamp corresponding to the record's creation
+	//CreatedAtField contains the name of the record's value field containint
+	//the time stamp corresponding to the record's creation
 	CreatedAtField = "CreatedAt"
-    //UpdatedAtField conatins the name of the record's value field containint
-    //the time stamp corresponding to the last known record's update
+	//UpdatedAtField conatins the name of the record's value field containint
+	//the time stamp corresponding to the last known record's update
 	UpdatedAtField = "UpdatedAt"
 )
 

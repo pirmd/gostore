@@ -12,7 +12,7 @@ const (
 )
 
 var (
-    //ErrRecordNotFoundInDb alerts if no record is found
+	//ErrRecordNotFoundInDb alerts if no record is found
 	ErrRecordNotFoundInDb = fmt.Errorf("Record not found")
 )
 

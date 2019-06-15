@@ -298,7 +298,7 @@ func TestRebuildIndex(t *testing.T) {
 }
 
 func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message string) {
-	verify.EqualAsJson(tb, r.Value(), m, message)
+	verify.EqualAsJSON(tb, r.Value(), m, message)
 }
 
 func shouldExistInStore(tb testing.TB, s *Store, key string) {
