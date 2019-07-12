@@ -42,23 +42,23 @@ var (
 		UIFormatStyle: "name",
 
 		UIFormatters: map[string]map[string]string{
-			"name": map[string]string{
+			"name": {
 				"_default": "{{range $i, $m := .}}{{if $i}}\n{{end}}{{$m.Name}}{{end}}",
 			},
 
-			"list": map[string]string{
+			"list": {
 				"_default": `{{ listMedia . "Name" "Title" "Authors" }}`,
 				"[]epub":   `{{ listMedia . "Name" "Title" "Serie" "SeriePosition" "Authors" }}`,
 				"empty":    `no match`,
 			},
 
-			"full": map[string]string{
-				"_default": `{{ showMetadata . "Title" "*" "Name" | colorMissing }}`,
-				"[]epub":   `{{ showMetadata . "Name" "Title" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" | colorMissing }}`,
+			"full": {
+				"_default": `{{ showMetadata . "Title" "*" "Name" }}`,
+				"[]epub":   `{{ showMetadata . "Name" "Title" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
 				"empty":    `no match`,
 			},
 
-			"json": map[string]string{},
+			"json": {},
 		},
 
 		UIDiffers: map[string]string{

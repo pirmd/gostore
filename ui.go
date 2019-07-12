@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -21,18 +20,8 @@ const (
 
 var (
 	printerTmpl = template.New("ui").Funcs(map[string]interface{}{
-		//TODO: come on you can do better, name of func are terrible!
 		"showMetadata": showMetadata,
 		"listMedia":    listByRows,
-
-		"style": styleSlice,
-		"colorMissing": func(txt string) string {
-			mkup := style.Markup{
-				regexp.MustCompile(`(` + noOrEmptyValue + `)`): style.FmtRed,
-			}
-
-			return mkup.Render(style.ColorTerm)(txt)
-		},
 
 		"values": getValues,
 		"keys":   getKeys,
@@ -100,15 +89,9 @@ func mediasTypeOf(medias []map[string]interface{}) string {
 	return "[]" + typ
 }
 
-//FuncMaps
-func styleSlice(s []string, st string) (ss []string) {
-	fn := style.ColorTerm.FuncMap()[st].(func(string, ...interface{}) string)
-	if fn == nil {
-		return s
-	}
-
+func styleSlice(s []string, fn func(string) string) (ss []string) {
 	for _, txt := range s {
-		ss = append(ss, fn("%s", txt))
+		ss = append(ss, fn(txt))
 	}
 	return
 }
@@ -131,7 +114,7 @@ func listByRows(medias []map[string]interface{}, fields ...string) string {
 	table := text.NewTable()
 
 	keys := getKeys(medias, fields...)
-	table.Rows(styleSlice(keys, "Bold"))
+	table.Rows(styleSlice(keys, style.CurrentStyler.Bold))
 
 	for _, m := range medias {
 		table.Rows(getValues(m, keys...))
@@ -144,7 +127,7 @@ func listByColumns(medias []map[string]interface{}, fields ...string) string {
 	table := text.NewTable()
 
 	keys := getKeys(medias, fields...)
-	table.Col(styleSlice(keys, "Bold"))
+	table.Col(styleSlice(keys, style.CurrentStyler.Bold))
 
 	for _, m := range medias {
 		table.Col(getValues(m, keys...))
@@ -159,7 +142,7 @@ func diffMedias(mediaL, mediaR map[string]interface{}, fields ...string) string 
 
 	dT, dL, dR := text.ColorDiff.Slices(valL, valR)
 
-	return text.NewTable().Col(styleSlice(keys, "Bold"), dL, dT, dR).Draw()
+	return text.NewTable().Col(styleSlice(keys, style.CurrentStyler.Bold), dL, dT, dR).Draw()
 }
 
 func diff(l, r interface{}) string {
