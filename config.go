@@ -84,7 +84,7 @@ func configure() {
 		debugger.SetOutput(os.Stderr)
 	}
 
-	style.CurrentStyler = style.ColorTerm
+	style.CurrentStyler = style.NewColorterm()
 
 	for typ, txt := range cfg.UIFormatters[cfg.UIFormatStyle] {
 		AddPrettyPrinter(typ, txt)
