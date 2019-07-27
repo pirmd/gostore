@@ -2,8 +2,11 @@ package processing
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
+	"unicode"
 
 	"github.com/pirmd/cli/formatter"
 	"github.com/pirmd/gostore/store"
@@ -49,6 +52,33 @@ func RenameRecord(r *store.Record) error {
 	return nil
 }
 
+//DetoxRecordName replaces some unreasable rune from a record's name in the
+//hope to sore it with a cleaned filename. It borrows some basic rules from
+//detox tool.
+func DetoxRecordName(r *store.Record) error {
+	r.SetKey(pathSanitizer(r.Key()))
+	return nil
+}
+
+//pathSanitizer filters some unreasonable rune from a path name
+func pathSanitizer(path string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) ||
+			r == '_' || r == '-' ||
+			r == '.' || r == os.PathSeparator {
+			return r
+		}
+		if unicode.IsSpace(r) {
+			return '_'
+		}
+		if unicode.In(r, unicode.Hyphen) || r == '\'' {
+			return '-'
+		}
+		return -1
+	}, path)
+}
+
 func init() {
 	RecordProcessors["rename"] = RenameRecord
+	RecordProcessors["detox"] = DetoxRecordName
 }

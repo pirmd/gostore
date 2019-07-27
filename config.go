@@ -37,6 +37,7 @@ var (
 
 		StoreRecordProcessings: []string{
 			"rename",
+			"detox",
 			"html2md",
 		},
 
