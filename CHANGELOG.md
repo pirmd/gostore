@@ -8,6 +8,8 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
 ### Added
 - add basic support to fetch metadata from google books api.
 - generate an help file in markdown format in addition to the manpage.
+- processing module that clean epub description from any html formatting
+  by converting them into markdown.
 ### Modified
 - change `import` behavior that, by default, asks the user to manually edit
   metadata before storing them in the store. You can have this done

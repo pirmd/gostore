@@ -37,6 +37,7 @@ var (
 
 		StoreRecordProcessings: []string{
 			"rename",
+			"html2md",
 		},
 
 		UIFormatStyle: "name",
