@@ -120,39 +120,22 @@ func init() {
 		return nil
 	}
 
-	listCmd := gostore.NewCommand("list", "List all the records from the collection.")
-	listCmd.Execute = func() error {
-		configure()
-
-		s, err := openStore()
-		if err != nil {
-			return fmt.Errorf("listing collection's content failed: %s", err)
-		}
-		defer s.Close()
-
-		r, err := s.ReadAll()
-		if err != nil {
-			return fmt.Errorf("listing collection's content failed: %s", err)
-		}
-
-		PrettyPrint(r.Fields()...)
-		return nil
-	}
-
-	searchCmd := gostore.NewCommand("search", "Search the collection.")
-	searchQuery := searchCmd.NewStringArg("query", "Query to look for.")
+	searchCmd := gostore.NewCommand("list", "List the the records that match the given query. If no query is provied, list all records")
+	searchQuery := "*"
+	searchCmd.NewStringArgToVar(&searchQuery, "query", "Query to look for.")
+	searchCmd.CanRunWithoutArg = true
 	searchCmd.Execute = func() error {
 		configure()
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("searching for '%s' failed: %s", *searchQuery, err)
+			return fmt.Errorf("searching for '%s' failed: %s", searchQuery, err)
 		}
 		defer s.Close()
 
-		r, err := s.Search(*searchQuery)
+		r, err := s.Search(searchQuery)
 		if err != nil {
-			return fmt.Errorf("searching for '%s' failed: %s", *searchQuery, err)
+			return fmt.Errorf("searching for '%s' failed: %s", searchQuery, err)
 		}
 
 		PrettyPrint(r.Fields()...)
