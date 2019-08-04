@@ -66,7 +66,7 @@ func Merge(v, w interface{}) (interface{}, interface{}, error) {
 }
 
 //PrettyDiff shows in a pleasant manner differences between two metadata sets
-func PrettyDiff(mediaL, mediaR map[string]interface{}, fields ...string) {
+func PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	fmt.Println(pdiffers.MustFormatUsingType(mediasTypeOf([]map[string]interface{}{mediaL, mediaR}), struct{ L, R map[string]interface{} }{mediaL, mediaR}))
 }
 
