@@ -15,7 +15,7 @@ const (
 	//CreatedAtField contains the name of the record's value field containint
 	//the time stamp corresponding to the record's creation
 	CreatedAtField = "CreatedAt"
-	//UpdatedAtField conatins the name of the record's value field containint
+	//UpdatedAtField contains the name of the record's value field containint
 	//the time stamp corresponding to the last known record's update
 	UpdatedAtField = "UpdatedAt"
 )

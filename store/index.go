@@ -70,7 +70,7 @@ func (s *storeidx) Exists(key string) (bool, error) {
 	return (doc != nil), nil
 }
 
-//Delete supresses Record from the index
+//Delete suppresses Record from the index
 func (s *storeidx) Delete(key string) error {
 	return s.idx.Delete(key)
 }

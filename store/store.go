@@ -322,7 +322,7 @@ func (s *Store) Search(query string) (Records, error) {
 
 //RebuildIndex deletes then rebuild the index from scratch based on the
 //database content It can be used for example to implement a new mapping
-//stratégy or if things are realy going bad
+//stratégy or if things are really going bad
 func (s *Store) RebuildIndex() error {
 	logger.Printf("Create a new index from scratch")
 	if err := s.idx.Empty(); err != nil {

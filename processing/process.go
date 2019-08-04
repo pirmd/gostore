@@ -21,7 +21,7 @@ type processFn func(*store.Record) error
 //ProcessRecord applies the specified series of systematic treatments
 //to a record. The list of treatments is taken from RecordProcessings
 //It fails and exists if a specified processors is unknown or if an
-//error occured.
+//error occurred.
 func ProcessRecord(r *store.Record) error {
 	for _, p := range RecordProcessings {
 		fn, exists := RecordProcessors[p]

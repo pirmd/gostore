@@ -98,7 +98,7 @@ func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	q.Set("orderBy", "relevance")
 	q.Set("printType", "books")
 	q.Set("maxResults", "5") //TODO: config this part
-	//TODO: q.Set("langRestrict", "fr") Is it realy needed?
+	//TODO: q.Set("langRestrict", "fr") Is it really needed?
 
 	return googleBooksURL + "?" + q.Encode(), nil
 }

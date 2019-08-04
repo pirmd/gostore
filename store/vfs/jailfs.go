@@ -9,7 +9,7 @@ import (
 //The jailfs restricts all operations to a given path within a fileSystem.
 //
 //Name given to the jailfs operation are considered as relative to the jail's
-//root (exemple: ../test1 -> root/test1) Therefore, any file name pointing
+//root (example: ../test1 -> root/test1) Therefore, any file name pointing
 //outside the jail root path will most of the time found to be non existing
 //file.
 //

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# go.sh is a simple wrapper arround go to override some operation, for example to enforce some ldflags
+# go.sh is a simple wrapper around go to override some operation, for example to enforce some ldflags
 
 VERSION=$(git describe --tags 2>/dev/null)
 BUILD=$(git rev-parse --short HEAD 2>/dev/null)

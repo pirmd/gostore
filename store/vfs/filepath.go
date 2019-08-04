@@ -64,7 +64,7 @@ func walk(vfs *VFS, path string, info os.FileInfo, walkFn filepath.WalkFunc) err
 }
 
 //copied from https://golang.org/src/path/filepath/path.go
-//with small adpatation to accomodate Readdir instead of Readdirnames
+//with small adaptation to accommodate Readdir instead of Readdirnames
 func readDirNames(vfs *VFS, dirname string) ([]string, error) {
 	f, err := vfs.Open(dirname)
 	if err != nil {

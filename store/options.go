@@ -54,7 +54,7 @@ func UsingIndexingScheme(idxMappings *mapping.IndexMappingImpl) Option {
 
 //UsingTypeField custumizes the name of the field used to identified the type
 //of the stored record. Default is "_type". Type is used to implement specific
-//indexing scheme that can be custumized with UsingIndexingScheme
+//indexing scheme that can be customized with UsingIndexingScheme
 //
 //UsingTypeField shall be used after UsingIndexingScheme
 func UsingTypeField(name string) Option {
