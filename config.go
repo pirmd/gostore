@@ -50,13 +50,13 @@ var (
 
 			"list": {
 				"_default": `{{ listMedia . "Name" "Title" "Authors" }}`,
-				"[]epub":   `{{ listMedia . "Name" "Title" "Serie" "SeriePosition" "Authors" }}`,
+				"[]epub":   `{{ listMedia . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}`,
 				"empty":    `no match`,
 			},
 
 			"full": {
 				"_default": `{{ showMetadata . "Title" "*" "Name" }}`,
-				"[]epub":   `{{ showMetadata . "Name" "Title" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
+				"[]epub":   `{{ showMetadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
 				"empty":    `no match`,
 			},
 
@@ -65,7 +65,7 @@ var (
 
 		UIDiffers: map[string]string{
 			"_default": `{{ diffMedias .L .R "Title" "*" "Name" }}`,
-			"[]epub":   `{{ diffMedias .L .R "Title" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" }}`,
+			"[]epub":   `{{ diffMedias .L .R "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" }}`,
 		},
 
 		UIEditorCmd: []string{os.Getenv("EDITOR")},

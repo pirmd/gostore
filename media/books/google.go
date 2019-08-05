@@ -6,12 +6,28 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/pirmd/gostore/media"
 )
 
-const googleBooksURL = "https://www.googleapis.com/books/v1/volumes"
+const (
+	googleBooksURL = "https://www.googleapis.com/books/v1/volumes"
+)
+
+var (
+	//TODO: should be configurable
+	//reSerieGuesser is a collection of regexp to extract series information
+	//from title/subtitles.
+	//It should be made of 3 named capturing groups (title, serie, serie number).
+	reSerieGuesser = []*regexp.Regexp{
+		regexp.MustCompile(`^(?P<title>.+)\s\((?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)\)$`),
+		regexp.MustCompile(`^(?P<title>.+)\s-\s(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),
+		regexp.MustCompile(`^(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),
+		regexp.MustCompile(`^Book\s(?P<seriePos>\d+)\sof\s(?P<serie>.+)$`),
+	}
+)
 
 type googleVolumes struct {
 	Items []*googleVolume `json:"items"`
@@ -23,6 +39,7 @@ type googleVolume struct {
 
 type googleVolumeInfo struct {
 	Title         string       `json:"title"`
+	SubTitle      string       `json:"subtitle"`
 	Language      string       `json:"language"`
 	Identifier    []identifier `json:"industryIdentifiers"`
 	Authors       []string     `json:"authors"`
@@ -105,7 +122,12 @@ func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 
 func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	mdata := make(media.Metadata)
-	mdata.Set("Title", vi.Title)
+	title, subtitle, serie, seriePos := g.parseTitle(vi)
+
+	mdata.Set("Title", title)
+	mdata.Set("SubTitle", subtitle)
+	mdata.Set("Serie", serie)
+	mdata.Set("SeriePosition", seriePos)
 	mdata.Set("Authors", vi.Authors)
 	mdata.Set("Description", vi.Description)
 	mdata.Set("Subject", vi.Subject)
@@ -121,4 +143,34 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	}
 
 	return mdata
+}
+
+//parseTitle use a simple heuristic to decipher google books information aout
+//series hidden in title/subtitle volume information
+func (g *googleBooks) parseTitle(vi *googleVolumeInfo) (title string, subtitle string, serieName string, seriePos string) {
+	for _, re := range reSerieGuesser {
+		if r := submatchMap(re, vi.Title); len(r) > 0 {
+			return r["title"], vi.SubTitle, r["serie"], r["seriePos"]
+		}
+
+		if r := submatchMap(re, vi.SubTitle); len(r) > 0 {
+			return vi.Title, r["title"], r["serie"], r["seriePos"]
+		}
+	}
+
+	return vi.Title, vi.SubTitle, "", ""
+}
+
+func submatchMap(re *regexp.Regexp, s string) map[string]string {
+	names := re.SubexpNames()
+	matches := re.FindStringSubmatch(s)
+
+	r := make(map[string]string)
+	for i := range matches {
+		if i > 0 {
+			r[names[i]] = matches[i]
+		}
+	}
+
+	return r
 }
