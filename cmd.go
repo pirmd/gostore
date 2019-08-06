@@ -215,18 +215,18 @@ func init() {
 		defer r.Close()
 
 		if err := os.MkdirAll(filepath.Dir(dst), 0777); err != nil {
-			return err
+			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 
 		w, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
-			return err
+			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 		defer w.Close()
 
 		if _, err := io.Copy(w, r); err != nil {
 			_ = os.Remove(dst)
-			return err
+			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 
 		return nil
