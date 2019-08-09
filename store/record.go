@@ -177,6 +177,7 @@ func (val Value) Set(key string, value interface{}) {
 			val[key] = t
 			return
 		}
+		//TODO: do someting if date is not readable
 	}
 
 	if strings.HasSuffix(key, "Index") || strings.HasSuffix(key, "Position") ||

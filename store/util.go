@@ -6,11 +6,12 @@ import (
 
 //stampFormats lists all time formats that are recognized by ParseTime
 var stampFormats = []string{
+	time.RFC3339,
+	time.RFC850,
+	time.ANSIC,
 	"2006",
 	"2006-01",
 	"2006-01-02",
-	time.RFC850,
-	time.ANSIC,
 }
 
 //parseTime parses a time stamp, trying different time format from StampFormats

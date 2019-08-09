@@ -14,7 +14,7 @@ import (
 
 const (
 	noOrEmptyValue = "<no value>"
-	timeStampFmt   = time.RFC1123Z
+	timeStampFmt   = time.ANSIC
 	dateFmt        = "2006-01-02"
 )
 
