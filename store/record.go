@@ -81,7 +81,12 @@ func (r *Record) Fields() map[string]interface{} {
 	return fields
 }
 
-//SetValue add/modified a record's value. SetValue ensures that fields supposed
+//GetValue retrieves a record's value.
+func (r *Record) GetValue(k string) interface{} {
+	return r.value.Get(k)
+}
+
+//SetValue adds/modifies a record's value. SetValue ensures that fields supposed
 //to host a time stamp or a date are of time type.  SetValue creates or updates
 //"CreatedAtField" and "UpdatedAtField"
 func (r *Record) SetValue(k string, v interface{}) {
@@ -153,7 +158,7 @@ func (r Records) Fields() (v []map[string]interface{}) {
 //Value represents a set of information recorded in the store
 type Value map[string]interface{}
 
-//Get retrieve a (key, value) information stored in a Value.
+//Get retrieves a (key, value) information stored in a Value.
 func (val Value) Get(key string) interface{} {
 	return val[key]
 }

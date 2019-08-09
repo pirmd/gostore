@@ -32,9 +32,15 @@ func DeHTMLizeRecord(r *store.Record) error {
 	//TODO(pirmd): Clean Record API to obtain a value
 	//TODO(pirmd): Allow configuration of which field to clean (maybe depending
 	//on Record's Type like renamer)
-	desc := r.Value()["Description"].(string)
+	desc := r.GetValue("Description")
+	if desc == nil {
+		return nil //No Description field, nothing to do
+	}
 
-	root, err := html.Parse(strings.NewReader(desc))
+	//TODO(pirmd): we are lead to make a lot of assumption of the type of
+	//stored attribute, need to do something beeter than map[string]interface{}
+	//I guess
+	root, err := html.Parse(strings.NewReader(desc.(string)))
 	if err != nil {
 		return err
 	}
