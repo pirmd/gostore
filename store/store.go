@@ -97,17 +97,17 @@ func (s *Store) Close() error {
 
 	logger.Printf("Closing store's filesystem")
 	if e := s.fs.Close(); e != nil {
-		err.Add(fmt.Errorf("Fail to close store's filesystem: %s", e))
+		err.Add(fmt.Errorf("fail to close store's filesystem: %s", e))
 	}
 
 	logger.Printf("Closing store's database")
 	if e := s.db.Close(); e != nil {
-		err.Add(fmt.Errorf("Fail to close store's database: %s", e))
+		err.Add(fmt.Errorf("fail to close store's database: %s", e))
 	}
 
 	logger.Printf("Closing store's index")
 	if e := s.idx.Close(); e != nil {
-		err.Add(fmt.Errorf("Fail to close store's index: %s", e))
+		err.Add(fmt.Errorf("fail to close store's index: %s", e))
 	}
 
 	return err.Err()
@@ -260,12 +260,12 @@ func (s *Store) Update(key string, r *Record) error {
 
 		logger.Printf("Clean old entry '%s' in the store's db", key)
 		if err := s.db.Delete(key); err != nil {
-			errDel.Add(fmt.Errorf("Fail to clean db from old entry: %s", err))
+			errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
 		}
 
 		logger.Printf("Clean old entry '%s' in the store's idx", key)
 		if err := s.idx.Delete(key); err != nil {
-			errDel.Add(fmt.Errorf("Fail to clean idx from old entry: %s", err))
+			errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
 		}
 
 		return errDel.Err()
@@ -287,12 +287,12 @@ func (s *Store) Delete(key string) error {
 
 	logger.Printf("Deleting record from store's db")
 	if err := s.db.Delete(key); err != nil {
-		errDel.Add(fmt.Errorf("Fail to clean db from old entry: %s", err))
+		errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
 	}
 
 	logger.Printf("Deleting record from store's idx")
 	if err := s.idx.Delete(key); err != nil {
-		errDel.Add(fmt.Errorf("Fail to clean idx from old entry: %s", err))
+		errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
 	}
 
 	return errDel.Err()

@@ -32,25 +32,25 @@ func init() {
 
 		f, err := os.Open(*importMedia)
 		if err != nil {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 		defer f.Close()
 
 		mdataFromFile, err := media.GetMetadata(f)
 		if err != nil {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 
 		mdataFetched, err := media.FetchMetadata(mdataFromFile)
 		if err != nil && err != media.ErrNoMetadataFound {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 
 		var mdata media.Metadata
 		if !*importAuto {
 			left, _, err := Merge(mdataFromFile, mdataFetched)
 			if err != nil {
-				return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+				return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 			}
 			mdata = left.(map[string]interface{})
 		} else {
@@ -61,7 +61,7 @@ func init() {
 		r := store.NewRecord(*importMedia, mdata)
 
 		if err := processing.ProcessRecord(r); err != nil {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 
 		if *importDryRun {
@@ -71,12 +71,12 @@ func init() {
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 		defer s.Close()
 
 		if err := s.Create(r, f); err != nil {
-			return fmt.Errorf("Importing '%s' failed: %s", *importMedia, err)
+			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
 		}
 
 		PrettyPrint(r.Fields())
@@ -91,25 +91,25 @@ func init() {
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
+			return fmt.Errorf("retrieving information about '%s' failed: %s", *infoKey, err)
 		}
 		defer s.Close()
 
 		r, err := s.Read(*infoKey)
 		if err != nil {
-			return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
+			return fmt.Errorf("retrieving information about '%s' failed: %s", *infoKey, err)
 		}
 
 		if *infoFromFile {
 			f, err := s.OpenRecord(*infoKey)
 			if err != nil {
-				return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
+				return fmt.Errorf("retrieving information about '%s' failed: %s", *infoKey, err)
 			}
 			defer f.Close()
 
 			mdata, err := media.GetMetadata(f)
 			if err != nil {
-				return fmt.Errorf("Retrieving information about '%s' failed: %s", *infoKey, err)
+				return fmt.Errorf("retrieving information about '%s' failed: %s", *infoKey, err)
 			}
 
 			PrettyDiff(r.OrigValue(), mdata)
@@ -204,29 +204,29 @@ func init() {
 
 		s, err := openStore()
 		if err != nil {
-			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
+			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 		defer s.Close()
 
 		r, err := s.OpenRecord(*exportKey)
 		if err != nil {
-			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
+			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 		defer r.Close()
 
 		if err := os.MkdirAll(filepath.Dir(dst), 0777); err != nil {
-			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
+			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 
 		w, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
-			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
+			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 		defer w.Close()
 
 		if _, err := io.Copy(w, r); err != nil {
 			_ = os.Remove(dst)
-			return fmt.Errorf("Exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
+			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
 		}
 
 		return nil

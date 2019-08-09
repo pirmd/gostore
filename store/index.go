@@ -134,11 +134,11 @@ func (s *storeidx) matchAll() ([]string, error) {
 
 	keys := []string{}
 	id, err := reader.Next()
-	for id != nil {
-		if err != nil {
-			return nil, err
-		}
+	if err != nil {
+		return nil, err
+	}
 
+	for id != nil {
 		i, err := idxReader.ExternalID(id)
 		if err != nil {
 			return nil, err
@@ -147,6 +147,9 @@ func (s *storeidx) matchAll() ([]string, error) {
 		keys = append(keys, i)
 
 		id, err = reader.Next()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return keys, nil

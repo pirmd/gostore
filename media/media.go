@@ -16,7 +16,7 @@ const (
 
 var (
 	//ErrNoMetadataFound reports an error when no Metadata found
-	ErrNoMetadataFound = fmt.Errorf("No metadata found")
+	ErrNoMetadataFound = fmt.Errorf("no metadata found")
 )
 
 //Metadata represents a set of media metadata, it is essentielly a set of (key,

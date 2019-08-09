@@ -107,7 +107,7 @@ func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	}
 
 	if len(query) == 0 {
-		return "", fmt.Errorf("Empty query")
+		return "", fmt.Errorf("empty query")
 	}
 
 	q := url.Values{}
