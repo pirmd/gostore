@@ -15,10 +15,12 @@ var (
 	cfg = struct {
 		// Configuration for storage
 		StoreRoot              string            // Path to the datastore
+		StoreReadOnly          bool              // Flag to switch the store into read only operation mode
 		StoreNamingSchemes     map[string]string // Template to save a book to disk
 		StoreRecordProcessings []string          // List of processings to be applied when importing or updating a record
 
 		// UI preference
+		UIAuto        bool                         // Flag to switch between automatic or manual actions when editing or merging records' attributes
 		UIEditorCmd   []string                     // Command line to open a text editor
 		UIMergerCmd   []string                     // Command line to open a text merger
 		UIFormatStyle string                       // Select the style of output to format answers (UIFormatters[UIFormatStyle])
@@ -88,13 +90,6 @@ func configure() {
 
 	style.CurrentStyler = style.NewColorterm()
 
-	for typ, txt := range cfg.UIFormatters[cfg.UIFormatStyle] {
-		AddPrettyPrinter(typ, txt)
-	}
-
-	for typ, txt := range cfg.UIDiffers {
-		AddPrettyDiffer(typ, txt)
-	}
 }
 
 func getUIFormatStyles(m map[string]map[string]string) (styles []string) {

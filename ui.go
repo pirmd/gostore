@@ -12,81 +12,161 @@ import (
 	"github.com/pirmd/cli/style/text"
 )
 
+var (
+	_ UserInterfacer = (*CLI)(nil)      //Makes sure that CLI implements UserInterfacer
+	_ UserInterfacer = (*NoUserUI)(nil) //Makes sure that NoUserUI implements UserInterfacer
+)
+
 const (
 	noOrEmptyValue = "<no value>"
-	timeStampFmt   = time.ANSIC
+	timeStampFmt   = time.RFC1123Z
 	dateFmt        = "2006-01-02"
+
+	diffMediaTypePreffix     = "diff_of_"
+	emptyMediaType           = "empty"
+	multipleMediaTypePreffix = "[]"
+	genericMediaType         = "media"
 )
 
-var (
-	printerTmpl = template.New("ui").Funcs(map[string]interface{}{
+//UserInterfacer represents any User Interface.
+type UserInterfacer interface {
+	//Printf displays a message to the user (has same behaviour than fmt.Printf)
+	Printf(string, ...interface{})
+
+	//PrettyPrint displays values from the provided map
+	PrettyPrint(...map[string]interface{})
+
+	//PrettyDiff displays povided maps, higlighting their differences
+	PrettyDiff(map[string]interface{}, map[string]interface{})
+
+	//Edit spawns an editor dialog to modified provided map
+	Edit(map[string]interface{}) (map[string]interface{}, error)
+
+	//Merge spawns a dialog to merge two maps into one
+	Merge(map[string]interface{}, map[string]interface{}) (map[string]interface{}, error)
+}
+
+//NewUI creates a new user interface.
+//If auto flag is on, the returned User Interface will avoid any interaction
+//with the user (like automatically merging metadata or skipping editing steps)
+func NewUI(auto bool) UserInterfacer {
+	//XXX: should be done at each NewCLI level (using cfg UIAuto flag ?)
+	ui := newCLI()
+	if auto {
+		return &NoUserUI{UserInterfacer: ui}
+	}
+	return ui
+}
+
+//NoUserUI is a UserInterfacer that doesn't require any user interaction,
+//notably it automatically merges metadata.
+type NoUserUI struct{ UserInterfacer }
+
+//Edit does nothing.
+func (ui *NoUserUI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
+	return m, nil
+}
+
+//Merge completes m with n content with the following logic: values of m are
+//copied, values of n that are not in m are added.
+func (ui *NoUserUI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
+	merged := make(map[string]interface{})
+
+	for k, v := range m {
+		merged[k] = v
+	}
+
+	for k, v := range n {
+		if _, exist := merged[k]; !exist {
+			merged[k] = v
+		}
+	}
+
+	return merged, nil
+}
+
+//CLI is a user interface built for the command line.
+type CLI struct {
+	editor []string
+	merger []string
+
+	printers formatter.Formatters
+}
+
+func newCLI() *CLI {
+	ui := &CLI{
+		editor: cfg.UIEditorCmd,
+		merger: cfg.UIMergerCmd,
+
+		printers: formatter.Formatters{
+			formatter.DefaultFormatter: formatter.JSONFormatter,
+		},
+	}
+
+	tmpl := template.New("ui").Funcs(map[string]interface{}{
 		"showMetadata": showMetadata,
 		"listMedia":    listByRows,
-
-		"values": getValues,
-		"keys":   getKeys,
-		"slice":  func(s ...string) []string { return s },
-		"newRow": func(r []string) [][]string { return append([][]string{}, r) },
-		"addRow": func(a [][]string, s []string) [][]string { return append(a, s) },
-		"table":  func(r [][]string) string { return text.NewTable().Rows(r...).String() },
+		"diff":         diff,
+		"diffMedias":   diffMedias,
 	})
 
-	pprinters = formatter.Formatters{
-		formatter.DefaultFormatter: formatter.JSONFormatter,
+	for typ, txt := range cfg.UIFormatters[cfg.UIFormatStyle] {
+		fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
+		ui.printers.Register(typ, fmtFn)
 	}
 
-	differTmpl = template.New("ui").Funcs(map[string]interface{}{
-		"diff":       diff,
-		"diffMedias": diffMedias,
-	})
-
-	pdiffers = formatter.Formatters{
-		formatter.DefaultFormatter: formatter.JSONFormatter,
+	for typ, txt := range cfg.UIDiffers {
+		diffType := diffMediaTypePreffix + typ
+		fmtFn := formatter.TemplateFormatter(tmpl.New(diffType), txt)
+		ui.printers.Register(diffType, fmtFn)
 	}
-)
 
-//AddPrettyPrinter registers a new pretty printer
-func AddPrettyPrinter(name string, text string) {
-	pprinters.Register(name, formatter.TemplateFormatter(printerTmpl.New(name), text))
+	return ui
 }
 
-//AddPrettyDiffer registers a new pretty differ
-func AddPrettyDiffer(name string, text string) {
-	pdiffers.Register(name, formatter.TemplateFormatter(differTmpl.New(name), text))
-}
-
-//Edit fires-up a new editor to modif v
-func Edit(v interface{}) (interface{}, error) {
-	return input.EditAsJSON(v, cfg.UIEditorCmd)
-}
-
-//Merge fires-up a new editor to merge v and w
-func Merge(v, w interface{}) (interface{}, interface{}, error) {
-	return input.MergeAsJSON(v, w, cfg.UIMergerCmd)
-}
-
-//PrettyDiff shows in a pleasant manner differences between two metadata sets
-func PrettyDiff(mediaL, mediaR map[string]interface{}) {
-	fmt.Println(pdiffers.MustFormatUsingType(mediasTypeOf([]map[string]interface{}{mediaL, mediaR}), struct{ L, R map[string]interface{} }{mediaL, mediaR}))
+//Printf displays a message to the user (has same behaviour than fmt.Printf)
+func (ui *CLI) Printf(format string, a ...interface{}) {
+	fmt.Printf(format, a...)
 }
 
 //PrettyPrint shows in a pleasant manner a metadata set
-func PrettyPrint(medias ...map[string]interface{}) {
-	fmt.Println(pprinters.MustFormatUsingType(mediasTypeOf(medias), medias))
+func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
+	typ := mediasTypeOf(medias...)
+	fmt.Println(ui.printers.MustFormatUsingType(typ, medias))
 }
 
-func mediasTypeOf(medias []map[string]interface{}) string {
+//PrettyDiff shows in a pleasant manner differences between two metadata sets
+func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
+	typ := diffMediaTypePreffix + mediasTypeOf(mediaL, mediaR)
+	fmt.Println(ui.printers.MustFormatUsingType(typ, struct{ L, R map[string]interface{} }{mediaL, mediaR}))
+}
+
+//Edit fires-up a new editor to modif v
+func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
+	edited, err := input.EditAsJSON(m, ui.editor)
+	return edited.(map[string]interface{}), err
+}
+
+//Merge fires-up a new editor to merge v and w
+func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
+	merged, _, err := input.MergeAsJSON(m, n, ui.merger)
+	return merged.(map[string]interface{}), err
+}
+
+func mediasTypeOf(medias ...map[string]interface{}) string {
 	if len(medias) == 0 {
-		return "empty"
+		return emptyMediaType
 	}
 
 	typ := formatter.TypeOf(medias[0])
+
 	for _, m := range medias {
 		if formatter.TypeOf(m) != typ {
-			return "[]media"
+			// provided medias list is of various type, return generic name
+			return multipleMediaTypePreffix + genericMediaType
 		}
 	}
-	return "[]" + typ
+	return multipleMediaTypePreffix + typ
 }
 
 func styleSlice(s []string, fn func(string) string) (ss []string) {

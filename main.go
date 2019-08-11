@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	gostore.MustRun()
+	gostoreApp.MustRun()
 }
