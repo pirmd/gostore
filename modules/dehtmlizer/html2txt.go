@@ -1,12 +1,4 @@
-package processing
-
-// Package dehtmlizer proposes tools to convert text in html format to
-// something more reasonable like pure text or markdown.
-//
-// dehtmlier is pretty basic so only a sub-part of html formats are correctly
-// interpreted (table are not properly considered, neither order lists). It
-// might comes in a future version though, if I get convinced that metadata
-// containing html formatted descriptions are relying on such formatting.
+package dehtmlizer
 
 import (
 	"regexp"
@@ -16,8 +8,6 @@ import (
 	"golang.org/x/net/html/atom"
 
 	"github.com/pirmd/cli/style"
-
-	"github.com/pirmd/gostore/store"
 )
 
 var (
@@ -26,30 +16,15 @@ var (
 	reRedundantSpaces = regexp.MustCompile(`[\s\p{Zs}]{2,}`)
 )
 
-//DeHTMLizeRecord transforms any frmatting in TML format into markdown
-//DeHTMLizeRecord cleans only Record's "Description" field if any.
-func DeHTMLizeRecord(r *store.Record) error {
-	//TODO(pirmd): Clean Record API to obtain a value
-	//TODO(pirmd): Allow configuration of which field to clean (maybe depending
-	//on Record's Type like renamer)
-	desc := r.GetValue("Description")
-	if desc == nil {
-		return nil //No Description field, nothing to do
-	}
-
-	//TODO(pirmd): we are lead to make a lot of assumption of the type of
-	//stored attribute, need to do something beeter than map[string]interface{}
-	//I guess
-	root, err := html.Parse(strings.NewReader(desc.(string)))
+//html2txt converts input string containing html tags into a simple text using
+//the given syle.Styler
+func html2txt(s string, st style.Styler) (string, error) {
+	root, err := html.Parse(strings.NewReader(s))
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	//TODO(pirmd): change HTML2Markdown to accept string as input?
-	mkd := HTML2Markdown(root)
-
-	r.SetValue("Description", mkd)
-	return nil
+	return renderNode(root, st), nil
 }
 
 //renderNode returns text from all root's descendant text nodes
@@ -186,11 +161,6 @@ func renderNode(root *html.Node, st style.Styler) string {
 	return txt
 }
 
-//HTML2Markdown filters any supplied html into a markdown
-func HTML2Markdown(root *html.Node) string {
-	return renderNode(root, style.NewMarkdown())
-}
-
 //getAttr returns the value of an HTML node attribute.  If no attribute exists
 //corresponding to the given name, returns an empty string
 func getAttr(node *html.Node, attr string) string {
@@ -200,8 +170,4 @@ func getAttr(node *html.Node, attr string) string {
 		}
 	}
 	return ""
-}
-
-func init() {
-	RecordProcessors["html2md"] = DeHTMLizeRecord
 }

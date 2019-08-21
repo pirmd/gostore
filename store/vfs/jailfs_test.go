@@ -1,10 +1,11 @@
 package vfs
 
 import (
-	"github.com/pirmd/verify"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 func TestJailfsPath(t *testing.T) {

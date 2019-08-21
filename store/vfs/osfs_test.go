@@ -1,9 +1,10 @@
 package vfs
 
 import (
-	"github.com/pirmd/verify"
 	"os"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 func TestOsfsRead(t *testing.T) {

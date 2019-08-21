@@ -47,12 +47,13 @@ type UserInterfacer interface {
 }
 
 //NewUI creates a new user interface.
-//If auto flag is on, the returned User Interface will avoid any interaction
+//XXX. move this to uiConfig
+//If cfg.Auto flag is on, the returned User Interface will avoid any interaction
 //with the user (like automatically merging metadata or skipping editing steps)
-func NewUI(auto bool) UserInterfacer {
+func NewUI(cfg *uiConfig) UserInterfacer {
 	//XXX: should be done at each NewCLI level (using cfg UIAuto flag ?)
-	ui := newCLI()
-	if auto {
+	ui := newCLI(cfg)
+	if cfg.Auto {
 		return &NoUserUI{UserInterfacer: ui}
 	}
 	return ui
@@ -93,35 +94,37 @@ type CLI struct {
 	printers formatter.Formatters
 }
 
-func newCLI() *CLI {
-	ui := &CLI{
-		editor: cfg.UIEditorCmd,
-		merger: cfg.UIMergerCmd,
+func newCLI(cfg *uiConfig) *CLI {
+	//XXX: add a color configuration directive (?)
+	style.CurrentStyler = style.NewColorterm()
 
-		printers: formatter.Formatters{
-			formatter.DefaultFormatter: formatter.JSONFormatter,
-		},
-	}
-
-	tmpl := template.New("ui").Funcs(map[string]interface{}{
+	tmpl := template.New("UI").Funcs(map[string]interface{}{
 		"showMetadata": showMetadata,
 		"listMedia":    listByRows,
 		"diff":         diff,
 		"diffMedias":   diffMedias,
 	})
 
-	for typ, txt := range cfg.UIFormatters[cfg.UIFormatStyle] {
-		fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
-		ui.printers.Register(typ, fmtFn)
+	printers := formatter.Formatters{
+		formatter.DefaultFormatter: formatter.JSONFormatter,
 	}
 
-	for typ, txt := range cfg.UIDiffers {
+	for typ, txt := range cfg.Formatters[cfg.FormatStyle] {
+		fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
+		printers.Register(typ, fmtFn)
+	}
+
+	for typ, txt := range cfg.Differs {
 		diffType := diffMediaTypePreffix + typ
 		fmtFn := formatter.TemplateFormatter(tmpl.New(diffType), txt)
-		ui.printers.Register(diffType, fmtFn)
+		printers.Register(diffType, fmtFn)
 	}
 
-	return ui
+	return &CLI{
+		editor:   cfg.EditorCmd,
+		merger:   cfg.MergerCmd,
+		printers: printers,
+	}
 }
 
 //Printf displays a message to the user (has same behaviour than fmt.Printf)

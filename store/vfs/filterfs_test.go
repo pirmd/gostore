@@ -1,10 +1,11 @@
 package vfs
 
 import (
-	"github.com/pirmd/verify"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 var (

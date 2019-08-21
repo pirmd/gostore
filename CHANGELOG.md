@@ -5,8 +5,13 @@ Format is based on [Keep a Changelog] (https://keepachangelog.com/en/1.0.0/).
 Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
+### Modified
+- refactor gostore cli commands definition, separate core functions from ui and
+  cli application definition.
+- refactor gostore configuration as well as processing modules for hopefully
+  better modularity.
 
-## [0.2.0] - 2019.08.11œ
+## [0.2.0] - 2019.08.11
 ### Added
 - add basic support to fetch metadata from google books api.
 - add a processing module that cleans epub description from any html formatting
@@ -33,3 +38,6 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
 - basic CLI user interface with reasonable customization level of the output
   format.
 - support epub files.
+
+
+[modeline]: # ( vim: set fenc=utf-8 spell spl=en: )

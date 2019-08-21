@@ -1,8 +1,9 @@
 package vfs
 
 import (
-	"github.com/pirmd/verify"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 func TestCreate(t *testing.T) {

@@ -1,13 +1,13 @@
-package processing
+package dehtmlizer
 
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"golang.org/x/net/html"
 
+	"github.com/pirmd/cli/style"
 	"github.com/pirmd/verify"
 )
 
@@ -165,12 +165,12 @@ Col1.2 Col2.2
 	}
 
 	for _, tc := range testCases {
-		root, err := html.Parse(strings.NewReader(tc.in))
+		got, err := html2txt(tc.in, style.NewMarkdown())
 		if err != nil {
-			t.Errorf("Fail to parse input %s: %v", tc.in, err)
+			t.Errorf("Fail to render %s to Markdown: %v", tc.in, err)
 		}
 
-		verify.EqualString(t, HTML2Markdown(root), tc.want, "Fail to render %s to Markdown.", tc.in)
+		verify.EqualString(t, got, tc.want, "Fail to render %s to Markdown.", tc.in)
 	}
 }
 
@@ -192,7 +192,7 @@ func TestRenderFullHtml(t *testing.T) {
 				t.Errorf("Fail to parse input %s: %v", tc, err)
 			}
 
-			got := HTML2Markdown(root)
+			got := renderNode(root, style.NewMarkdown())
 			verify.MatchGolden(t, got, "Generated Markdown is not as expected.")
 		})
 	}

@@ -12,15 +12,18 @@ var (
 
 func init() {
 	gostoreApp.NewBoolFlagToVar(&cfg.LogDebug, "debug", "Show debug information.")
-	gostoreApp.NewStringFlagToVar(&cfg.StoreRoot, "root", "Path to the root of the collection.")
-	gostoreApp.NewBoolFlagToVar(&cfg.StoreReadOnly, "pretend", "Simulate operation on the database (actually retrieveing metadata without inserting them into the store).")
-	gostoreApp.NewBoolFlagToVar(&cfg.UIAuto, "auto", "Automatically fecth metadata before importing them in the collection.")
-	gostoreApp.NewEnumFlagToVar(&cfg.UIFormatStyle, "style", "Style for printing records' details.", getUIFormatStyles(cfg.UIFormatters))
+	gostoreApp.NewStringFlagToVar(&cfg.Store.Root, "root", "Path to the root of the collection.")
+	gostoreApp.NewBoolFlagToVar(&cfg.Store.ReadOnly, "pretend", "Simulate operation on the database (actually retrieveing metadata without inserting them into the store).")
+	gostoreApp.NewBoolFlagToVar(&cfg.UI.Auto, "auto", "Automatically fecth metadata before importing them in the collection.")
+	gostoreApp.NewEnumFlagToVar(&cfg.UI.FormatStyle, "style", "Style for printing records' details.", cfg.UI.ListStyles())
 
 	importCmd := gostoreApp.NewCommand("import", "Import a new media into the collection.")
 	importMedia := importCmd.NewStringArg("media", "Media to import into the collection.")
 	importCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.Import(*importMedia); err != nil {
 			return fmt.Errorf("importing '%s' failed: %s", *importMedia, err)
@@ -32,7 +35,10 @@ func init() {
 	infoFromFile := infoCmd.NewBoolFlag("from-file", "Retrieve information from media file rather than from database.")
 	infoKey := infoCmd.NewStringArg("name", "Name of the record to get information about.")
 	infoCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.Info(*infoKey, *infoFromFile); err != nil {
 			return fmt.Errorf("getting information about '%s' failed: %s", *infoKey, err)
@@ -44,7 +50,10 @@ func init() {
 	listPattern := listCmd.NewStringArg("pattern", "Pattern to match records against. Pattern follows blevesearch query language (https://blevesearch.com/docs/Query-String-Query/).")
 	listCmd.CanRunWithoutArg = true
 	listCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if *listPattern != "" && *listPattern != "*" {
 			if err := gs.ListAll(); err != nil {
@@ -59,10 +68,14 @@ func init() {
 		return nil
 	}
 
+	//XXX: complete description saying that we trigger an editor and so on. Same for Merge hereafter
 	editCmd := gostoreApp.NewCommand("edit", "Edit an existing record from the collection.")
 	editKey := editCmd.NewStringArg("name", "Name of the record to edit.")
 	editCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.Edit(*editKey); err != nil {
 			return fmt.Errorf("editing '%s' failed: %s", *editKey, err)
@@ -73,7 +86,10 @@ func init() {
 	delCmd := gostoreApp.NewCommand("delete", "Delete a record from the collection.")
 	delKey := delCmd.NewStringArg("name", "Name of the record to delete.")
 	delCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.Delete(*delKey); err != nil {
 			return fmt.Errorf("deleting '%s' failed: %s", *delKey, err)
@@ -85,7 +101,10 @@ func init() {
 	exportKey := exportCmd.NewStringArg("name", "Name of the record to export.")
 	exportDst := exportCmd.NewStringArg("dst", "Destination folder where the record needs to be exported.")
 	exportCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.Export(*exportKey, *exportDst); err != nil {
 			return fmt.Errorf("exporting '%s' to '%s' failed: %s", *exportKey, *exportDst, err)
@@ -95,7 +114,10 @@ func init() {
 
 	checkCmd := gostoreApp.NewCommand("check", "Verify collection's consistency and repairs or reports found inconsistencies.")
 	checkCmd.Execute = func() error {
-		gs := newGostore()
+		gs, err := newGostore(cfg)
+		if err != nil {
+			return err
+		}
 
 		if err := gs.CheckAndRepair(); err != nil {
 			return fmt.Errorf("checking collection failed: %s", err)

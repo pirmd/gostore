@@ -7,31 +7,59 @@ import (
 	"strings"
 
 	"github.com/pirmd/gostore/media"
-	"github.com/pirmd/gostore/processing"
+	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
 )
 
 type gostore struct {
-	root string
-	ui   UserInterfacer
+	//XXX: switch all to private
+	Store         *store.Store
+	UI            UserInterfacer
+	ImportModules []modules.Module
+	UpdateModules []modules.Module
 }
 
-func newGostore() *gostore {
-	configure() //XXX: clean all of that once config has ben restructured
+func newGostore(cfg *gostoreConfig) (*gostore, error) {
+	logger := cfg.Log.Logger()
 
-	return &gostore{
-		root: cfg.StoreRoot,
-		ui:   NewUI(cfg.UIAuto),
-	}
-}
-
-func (gs *gostore) open() (*store.Store, error) {
-	//TODO: introduce a read-ony / dry-run / pretend mode)
-	return store.Open(
-		gs.root,
-		store.UsingLogger(debugger),
+	s, err := store.New(
+		cfg.Store.Root,
+		store.UsingLogger(logger),
 		store.UsingTypeField(media.TypeField),
 	)
+	if err != nil {
+		return nil, err
+	}
+
+	var impMods []modules.Module
+	for _, modName := range cfg.ImportModules {
+		//XXX: test empty config (nil)
+		m, err := modules.New(modName, cfg.Modules[modName], logger)
+		if err != nil {
+			return nil, err
+		}
+
+		impMods = append(impMods, m)
+	}
+
+	var upMods []modules.Module
+	for _, modName := range cfg.UpdateModules {
+		//XXX: test empty config (nil)
+		m, err := modules.New(modName, cfg.Modules[modName], logger)
+		if err != nil {
+			return nil, err
+		}
+
+		upMods = append(upMods, m)
+	}
+
+	return &gostore{
+		Store: s,
+		UI:    NewUI(cfg.UI),
+
+		ImportModules: impMods,
+		UpdateModules: upMods,
+	}, nil
 }
 
 // Import adds a new media into the collection
@@ -52,7 +80,7 @@ func (gs *gostore) Import(path string) error {
 		return err
 	}
 
-	mdata, err := gs.ui.Merge(mdataFromFile, mdataFetched)
+	mdata, err := gs.UI.Merge(mdataFromFile, mdataFetched)
 	if err != nil {
 		return err
 	}
@@ -60,21 +88,20 @@ func (gs *gostore) Import(path string) error {
 	//XXX: change path to filepath.Base(path)?
 	r := store.NewRecord(path, mdata)
 
-	if err := processing.ProcessRecord(r); err != nil {
+	if err := modules.ProcessRecord(r, gs.ImportModules); err != nil {
 		return err
 	}
 
-	collection, err := gs.open()
-	if err != nil {
+	if err := gs.Store.Open(); err != nil {
 		return err
 	}
-	defer collection.Close()
+	defer gs.Store.Close()
 
-	if err := collection.Create(r, f); err != nil {
+	if err := gs.Store.Create(r, f); err != nil {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.UI.PrettyPrint(r.Fields())
 	return nil
 }
 
@@ -82,19 +109,18 @@ func (gs *gostore) Import(path string) error {
 //If fromFile flag is set, Info also displays actual metadata stored in the
 //media file
 func (gs *gostore) Info(key string, fromFile bool) error {
-	collection, err := gs.open()
-	if err != nil {
+	if err := gs.Store.Open(); err != nil {
 		return err
 	}
-	defer collection.Close()
+	defer gs.Store.Close()
 
-	r, err := collection.Read(key)
+	r, err := gs.Store.Read(key)
 	if err != nil {
 		return err
 	}
 
 	if fromFile {
-		f, err := collection.OpenRecord(key)
+		f, err := gs.Store.OpenRecord(key)
 		if err != nil {
 			return err
 		}
@@ -105,89 +131,85 @@ func (gs *gostore) Info(key string, fromFile bool) error {
 			return err
 		}
 
-		gs.ui.PrettyDiff(r.OrigValue(), mdata)
+		gs.UI.PrettyDiff(r.OrigValue(), mdata)
 		return nil
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.UI.PrettyPrint(r.Fields())
 	return nil
 }
 
 //ListAll lists all collection's records
 func (gs *gostore) ListAll() error {
-	collection, err := gs.open()
+	if err := gs.Store.Open(); err != nil {
+		return err
+	}
+	defer gs.Store.Close()
+
+	r, err := gs.Store.ReadAll()
 	if err != nil {
 		return err
 	}
-	defer collection.Close()
 
-	r, err := collection.ReadAll()
-	if err != nil {
-		return err
-	}
-
-	gs.ui.PrettyPrint(r.Fields()...)
+	gs.UI.PrettyPrint(r.Fields()...)
 	return nil
 }
 
 // Search the collection for records matching given query. Query follows
 // blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
 func (gs *gostore) Search(query string) error {
-	collection, err := gs.open()
+	if err := gs.Store.Open(); err != nil {
+		return err
+	}
+	defer gs.Store.Close()
+
+	r, err := gs.Store.Search(query)
 	if err != nil {
 		return err
 	}
-	defer collection.Close()
 
-	r, err := collection.Search(query)
-	if err != nil {
-		return err
-	}
-
-	gs.ui.PrettyPrint(r.Fields()...)
+	gs.UI.PrettyPrint(r.Fields()...)
 	return nil
 }
 
 // Edit updates an existing record from the collection
 func (gs *gostore) Edit(key string) error {
-	collection, err := gs.open()
+	if err := gs.Store.Open(); err != nil {
+		return err
+	}
+	defer gs.Store.Close()
+
+	r, err := gs.Store.Read(key)
 	if err != nil {
 		return err
 	}
-	defer collection.Close()
 
-	r, err := collection.Read(key)
-	if err != nil {
-		return err
-	}
-
-	mdata, err := gs.ui.Edit(r.OrigValue())
+	mdata, err := gs.UI.Edit(r.OrigValue())
 	if err != nil {
 		return err
 	}
 	r.ReplaceValues(mdata)
 
-	if err := processing.ProcessRecord(r); err != nil {
+	if err := modules.ProcessRecord(r, gs.UpdateModules); err != nil {
 		return err
 	}
 
-	if err := collection.Update(key, r); err != nil {
+	if err := gs.Store.Update(key, r); err != nil {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.UI.PrettyPrint(r.Fields())
 	return nil
 }
 
 // Delete removes a record from the collection.
 func (gs *gostore) Delete(key string) error {
-	collection, err := gs.open()
-	if err != nil {
+	if err := gs.Store.Open(); err != nil {
 		return err
 	}
-	defer collection.Close()
+	defer gs.Store.Close()
 
-	if err := collection.Delete(key); err != nil {
+	if err := gs.Store.Delete(key); err != nil {
 		return err
 	}
 
@@ -201,13 +223,12 @@ func (gs *gostore) Delete(key string) error {
 func (gs *gostore) Export(key, dstFolder string) error {
 	dstPath := filepath.Join(key, dstFolder)
 
-	collection, err := gs.open()
-	if err != nil {
+	if err := gs.Store.Open(); err != nil {
 		return err
 	}
-	defer collection.Close()
+	defer gs.Store.Close()
 
-	r, err := collection.OpenRecord(key)
+	r, err := gs.Store.OpenRecord(key)
 	if err != nil {
 		return err
 	}
@@ -234,20 +255,19 @@ func (gs *gostore) Export(key, dstFolder string) error {
 
 // Repair verifies collection's consistency and repairs or reports found inconsistencies.
 func (gs *gostore) CheckAndRepair() error {
-	collection, err := gs.open()
-	if err != nil {
+	if err := gs.Store.Open(); err != nil {
 		return err
 	}
-	defer collection.Close()
+	defer gs.Store.Close()
 
-	orphans, err := collection.CheckAndRepair()
+	orphans, err := gs.Store.CheckAndRepair()
 	if err != nil {
 		return err
 	}
 
 	if len(orphans) > 0 {
 		//TODO: use PrettyPrint to show list of orphans?
-		gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
+		gs.UI.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
 	}
 	return nil
 }

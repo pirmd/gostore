@@ -1,9 +1,10 @@
 package store
 
 import (
-	"github.com/pirmd/verify"
 	"path/filepath"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 func setupDb(tb testing.TB) (*storedb, func()) {

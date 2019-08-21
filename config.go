@@ -7,94 +7,144 @@ import (
 	"log"
 	"os"
 
-	"github.com/pirmd/cli/style"
-	"github.com/pirmd/gostore/processing"
+	//XXX: It i snot convenient to have to imports all modules
+	"github.com/pirmd/gostore/modules/dehtmlizer"
+	"github.com/pirmd/gostore/modules/organizer"
 )
 
-var (
-	cfg = struct {
-		// Configuration for storage
-		StoreRoot              string            // Path to the datastore
-		StoreReadOnly          bool              // Flag to switch the store into read only operation mode
-		StoreNamingSchemes     map[string]string // Template to save a book to disk
-		StoreRecordProcessings []string          // List of processings to be applied when importing or updating a record
+type gostoreConfig struct {
+	Store         *storeConfig
+	Log           *logConfig
+	UI            *uiConfig
+	ImportModules []string // List of processings to be applied when importing a record
+	UpdateModules []string // List of processings to be applied when updating a record
+	Modules       map[string]interface{}
 
-		// UI preference
-		UIAuto        bool                         // Flag to switch between automatic or manual actions when editing or merging records' attributes
-		UIEditorCmd   []string                     // Command line to open a text editor
-		UIMergerCmd   []string                     // Command line to open a text merger
-		UIFormatStyle string                       // Select the style of output to format answers (UIFormatters[UIFormatStyle])
-		UIFormatters  map[string]map[string]string // Templates to display information from the store.
-		// Templates are organized by output style
-		UIDiffers map[string]string // Templates to display differences between two records or two records versions
-
-		// Logging
-		LogVerbose bool
-		LogDebug   bool
-	}{
-		StoreRoot: ".", //Current working directory
-		StoreNamingSchemes: map[string]string{
-			"_default": "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}",
-		},
-
-		StoreRecordProcessings: []string{
-			"rename",
-			"detox",
-			"html2md",
-		},
-
-		UIFormatStyle: "name",
-
-		UIFormatters: map[string]map[string]string{
-			"name": {
-				"_default": "{{range $i, $m := .}}{{if $i}}\n{{end}}{{$m.Name}}{{end}}",
-			},
-
-			"list": {
-				"_default": `{{ listMedia . "Name" "Title" "Authors" }}`,
-				"[]epub":   `{{ listMedia . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}`,
-				"empty":    `no match`,
-			},
-
-			"full": {
-				"_default": `{{ showMetadata . "Title" "*" "Name" }}`,
-				"[]epub":   `{{ showMetadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
-				"empty":    `no match`,
-			},
-
-			"json": {},
-		},
-
-		UIDiffers: map[string]string{
-			"_default": `{{ diffMedias .L .R "Title" "*" "Name" }}`,
-			"[]epub":   `{{ diffMedias .L .R "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" }}`,
-		},
-
-		UIEditorCmd: []string{os.Getenv("EDITOR")},
-		UIMergerCmd: []string{"vimdiff"},
-	}
-
-	debugger = log.New(ioutil.Discard, "DEBUG ", log.Ltime|log.Lshortfile)
-)
-
-func configure() {
-	for typ, txt := range cfg.StoreNamingSchemes {
-		processing.AddRenamer(typ, txt)
-	}
-
-	processing.RecordProcessings = cfg.StoreRecordProcessings
-
-	if cfg.LogDebug {
-		debugger.SetOutput(os.Stderr)
-	}
-
-	style.CurrentStyler = style.NewColorterm()
-
+	// Logging
+	LogVerbose bool
+	LogDebug   bool
 }
 
-func getUIFormatStyles(m map[string]map[string]string) (styles []string) {
-	for k := range m {
+// Configuration for storage
+type storeConfig struct {
+	//Root contains the path to the datastore
+	Root string
+	//ReadOnly is the flag to switch the store into read only operation mode
+	//XXX it is not implemented
+	ReadOnly bool
+}
+
+// Configuration for User Interface
+type uiConfig struct {
+	// Flag to switch between automatic or manual actions when editing or
+	// merging records' attributes
+	Auto bool
+
+	// Command line to open a text editor
+	EditorCmd []string
+
+	// Command line to open a text merger
+	MergerCmd []string
+
+	// Select the style of output to format answers (UIFormatters[UIFormatStyle])
+	FormatStyle string
+
+	// Templates to display information from the store.
+	// Templates are organized by output style
+	Formatters map[string]map[string]string
+	//XXX: simplify fomrat for style output (see go list -f FORMAT)
+
+	// Templates to display differences between two records or two records versions
+	Differs map[string]string
+}
+
+// ListStyles lists all available styles for printing records' details.
+func (cfg *uiConfig) ListStyles() (styles []string) {
+	for k := range cfg.Formatters {
 		styles = append(styles, k)
 	}
 	return
 }
+
+// Logger configuration
+type logConfig struct {
+	Debug bool
+}
+
+// Logger creates a new logger corresponding to the logConfig parameters
+func (cfg *logConfig) Logger() *log.Logger {
+	//XXX: change name to Logger instead of debugger
+	//XXX: simplify debugger using standard log feature (?)
+	//XXX: improve logger module (more customization maybe)
+	//XXX: change logger into a module (?)
+	if cfg.Debug {
+		return log.New(os.Stderr, "DEBUG ", log.Ltime|log.Lshortfile)
+	}
+
+	return log.New(ioutil.Discard, "DEBUG ", log.Ltime|log.Lshortfile)
+}
+
+var (
+	cfg = &gostoreConfig{
+		Store: &storeConfig{Root: "."}, //Current working directory
+
+		Log: &logConfig{},
+
+		UI: &uiConfig{
+			FormatStyle: "name",
+
+			Formatters: map[string]map[string]string{
+				"name": {
+					"_default": "{{range $i, $m := .}}{{if $i}}\n{{end}}{{$m.Name}}{{end}}",
+				},
+
+				"list": {
+					"_default": `{{ listMedia . "Name" "Title" "Authors" }}`,
+					"[]epub":   `{{ listMedia . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}`,
+					"empty":    `no match`,
+				},
+
+				"full": {
+					"_default": `{{ showMetadata . "Title" "*" "Name" }}`,
+					"[]epub":   `{{ showMetadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
+					"empty":    `no match`,
+				},
+
+				"json": {},
+			},
+
+			//XXX: is it really needed? can live on top of Formatter?
+			Differs: map[string]string{
+				"_default": `{{ diffMedias .L .R "Title" "*" "Name" }}`,
+				"[]epub":   `{{ diffMedias .L .R "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" }}`,
+			},
+
+			EditorCmd: []string{os.Getenv("EDITOR")},
+			MergerCmd: []string{"vimdiff"},
+		},
+
+		ImportModules: []string{
+			"organizer",
+			"dehtmlizer",
+		},
+
+		UpdateModules: []string{
+			"organizer",
+			"dehtmlizer",
+		},
+
+		Modules: map[string]interface{}{
+			"organizer": &organizer.Config{
+				NamingSchemes: map[string]string{
+					"_default": "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}",
+				},
+				Sanitizer: "detox",
+			},
+
+			"dehtmlizer": &dehtmlizer.Config{
+				Fields2Clean: []string{"Description"},
+				OutputStyle:  "markdown",
+			},
+		},
+	}
+)
