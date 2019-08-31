@@ -10,6 +10,9 @@ if [ $# -gt 0 ]; then CMD=$1; shift; fi
 
 case ${CMD:-} in
     (build)
+        dirs=$(go list -f {{.Dir}} ./...)
+        for d in $dirs; do goimports -w $d/*.go; done
+        for d in $dirs; do misspell -w $d/*.go; done
         #Nota: if another ldflags directive is given from the command line, it
         #will override this directive, it can be nice to have if you like
         #another set-up for initiliazing version variables but can be annoying
