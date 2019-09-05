@@ -1,7 +1,7 @@
-// Package dehtmlizer proposes to convert text in html format to something more
-// reasonable like pure text or markdown.
+// Package dehtmlizer converts text in html format to something more reasonable
+// for metadata like pure text or markdown.
 //
-// dehtmlier is pretty basic so only a sub-part of html formats are correctly
+// dehtmlizer is pretty basic so only a sub-part of html formats are correctly
 // interpreted.
 package dehtmlizer
 
@@ -24,9 +24,9 @@ var (
 	_ modules.Module = (*dehtmlizer)(nil)
 )
 
-//Config defines the different configurations that can be used to customized
+//config defines the different configurations that can be used to customized
 //the behavior of a dehtmlizer module.
-type Config struct {
+type config struct {
 	//Fields2Clean lists the record's fields that should be dehtlmized.
 	//Non-existing fields are ignored.
 	Fields2Clean []string
@@ -46,16 +46,23 @@ type dehtmlizer struct {
 	outputStyle style.Styler
 }
 
-//New creates a new dehtmlizer module
-func New(config interface{}, logger *log.Logger) (modules.Module, error) {
+//New creates a new dehtmlizer module whose configuration information is
+//supplied in a text-based format, whose encoding/idiom should be the
+//understood by modules.ConfUnmarshal
+func New(conf []byte, log *log.Logger) (modules.Module, error) {
+	cfg := &config{}
+	if err := modules.ConfUnmarshal(conf, cfg); err != nil {
+		return nil, fmt.Errorf("module '%s': bad configuration", moduleName)
+	}
+
+	return newDehtmlizer(cfg, log)
+}
+
+//newDehtmlizer creates a new dehtmlizer module
+func newDehtmlizer(cfg *config, logger *log.Logger) (modules.Module, error) {
 	d := &dehtmlizer{
 		log:         logger,
 		outputStyle: style.NewPlaintext(),
-	}
-
-	cfg, ok := config.(Config)
-	if !ok {
-		return nil, fmt.Errorf("%s: wrong configuration format", moduleName)
 	}
 
 	switch cfg.OutputStyle {
@@ -65,7 +72,7 @@ func New(config interface{}, logger *log.Logger) (modules.Module, error) {
 	case "markdown":
 		d.outputStyle = style.NewMarkdown()
 	default:
-		return nil, fmt.Errorf("%s: %s style is not supported", moduleName, cfg.OutputStyle)
+		return nil, fmt.Errorf("module '%s': bad configuration: '%s' style is not supported", moduleName, cfg.OutputStyle)
 	}
 
 	return d, nil

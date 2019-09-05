@@ -26,9 +26,9 @@ var (
 	ErrEmptyName = fmt.Errorf("generated name is empty")
 )
 
-//Config defines the different configurations that can be used to customized
+//config defines the different configurations that can be used to customized
 //the behavior of an organizer module.
-type Config struct {
+type config struct {
 	//NamingSchemes defines, for each record's type, the templates to rename a
 	//record according to its attribute.  You can define a default naming
 	//scheme for all record's type not defined in NamingScheme using the
@@ -38,8 +38,6 @@ type Config struct {
 	//Sanitizer defines the name of the path sanitizer to use.
 	//Available sanitizers are "none" (or ""), "standard", "nospace"
 	Sanitizer string
-
-	//XXX: see beets ou polochon to get inspired by names (NamingScheme + Sanitizer)
 }
 
 type organizer struct {
@@ -49,17 +47,23 @@ type organizer struct {
 	sanitizer func(string) string
 }
 
-//New creates a new organizer module
-func New(config interface{}, logger *log.Logger) (modules.Module, error) {
-	o := &organizer{
-		namers:    formatter.Formatters{},
-		sanitizer: func(s string) string { return s },
-		log:       logger,
+//New creates a new organizer module whose configuration information is
+//supplied in a text-based format, whose encoding/idiom should be the
+//understood by modules.ConfUnmarshal
+func New(conf []byte, log *log.Logger) (modules.Module, error) {
+	cfg := &config{}
+	if err := modules.ConfUnmarshal(conf, cfg); err != nil {
+		return nil, fmt.Errorf("module '%s': bad configuration", moduleName)
 	}
 
-	cfg, ok := config.(Config)
-	if !ok {
-		return nil, fmt.Errorf("%s: wrong configuration format", moduleName)
+	return newOrganizer(cfg, log)
+}
+
+//newOrganizer creates a new organizer module
+func newOrganizer(cfg *config, logger *log.Logger) (*organizer, error) {
+	o := &organizer{
+		namers: formatter.Formatters{},
+		log:    logger,
 	}
 
 	tmpl := template.New("organizer").Funcs(map[string]interface{}{
@@ -77,7 +81,7 @@ func New(config interface{}, logger *log.Logger) (modules.Module, error) {
 	case "nospace":
 		o.sanitizer = nospaceSanitizer
 	default:
-		return nil, fmt.Errorf("%s: sanitizer '%s' is unknown (can be none, standard or nospace)", moduleName, cfg.Sanitizer)
+		return nil, fmt.Errorf("module '%s': bad configuration format: sanitizer '%s' is unknown (can be none, standard or nospace)", moduleName, cfg.Sanitizer)
 	}
 
 	return o, nil
@@ -101,6 +105,10 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 	//name should be relative to the collection's root, clean
 	//unuseful cruft.
 	name = filepath.ToSlash(filepath.Clean("/" + name))[1:]
+
+	if o.sanitizer != nil {
+		name = o.sanitizer(name)
+	}
 
 	r.SetKey(name)
 	return nil

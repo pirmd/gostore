@@ -19,8 +19,8 @@ var (
 	ErrNoMetadataFound = fmt.Errorf("no metadata found")
 )
 
-//Metadata represents a set of media metadata, it is essentielly a set of (key,
-//values). It is an alias to store.Value to benefit of its helpers functions
+//Metadata represents a set of media's metadata, it is essentially a set of (key,
+//value). It is an alias to store.Value to benefit of its helpers functions
 type Metadata = store.Value
 
 //File represents a media file

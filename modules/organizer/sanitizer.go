@@ -1,6 +1,7 @@
 package organizer
 
 import (
+	"os"
 	"strings"
 	"unicode"
 )
@@ -12,13 +13,12 @@ func pathSanitizer(path string) string {
 			unicode.IsDigit(r) ||
 			unicode.IsMark(r) ||
 			r == '.' ||
-			r == '/' ||
-			r == '\\' ||
 			r == '_' ||
 			r == '-' ||
 			r == '%' ||
+			r == '#' ||
 			r == ' ' ||
-			r == '#' {
+			r == os.PathSeparator {
 			return r
 		}
 
@@ -41,12 +41,11 @@ func nospaceSanitizer(path string) string {
 			unicode.IsDigit(r) ||
 			unicode.IsMark(r) ||
 			r == '.' ||
-			r == '/' ||
-			r == '\\' ||
 			r == '_' ||
 			r == '-' ||
 			r == '%' ||
-			r == '#' {
+			r == '#' ||
+			r == os.PathSeparator {
 			return r
 		}
 

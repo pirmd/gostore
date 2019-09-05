@@ -2,68 +2,73 @@ package main
 
 import (
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
 )
 
-type gostore struct {
-	//XXX: switch all to private
-	Store         *store.Store
-	UI            UserInterfacer
-	ImportModules []modules.Module
-	UpdateModules []modules.Module
+// Gostore represents the main collection manager.
+type Gostore struct {
+	log           *log.Logger
+	store         *store.Store
+	ui            UserInterfacer
+	importModules []modules.Module
+	updateModules []modules.Module
 }
 
-func newGostore(cfg *gostoreConfig) (*gostore, error) {
-	logger := cfg.Log.Logger()
+//XXX: default IMportModule
+func newGostore(cfg *config) (*Gostore, error) {
+	gs := &Gostore{
+		log: log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		ui:  NewCLI(cfg.UI),
+	}
 
-	s, err := store.New(
+	if cfg.ShowLog {
+		gs.log.SetOutput(os.Stderr)
+	}
+
+	var err error
+	gs.store, err = store.New(
+		//XXX: check what is happening if Root is empty (expected behaviour: use current dir)
 		cfg.Store.Root,
-		store.UsingLogger(logger),
+		store.UsingLogger(gs.log),
 		store.UsingTypeField(media.TypeField),
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	var impMods []modules.Module
 	for _, modName := range cfg.ImportModules {
-		//XXX: test empty config (nil)
-		m, err := modules.New(modName, cfg.Modules[modName], logger)
+		m, err := modules.New(modName, cfg.Modules[modName], gs.log)
 		if err != nil {
 			return nil, err
 		}
 
-		impMods = append(impMods, m)
+		gs.importModules = append(gs.importModules, m)
 	}
 
-	var upMods []modules.Module
 	for _, modName := range cfg.UpdateModules {
-		//XXX: test empty config (nil)
-		m, err := modules.New(modName, cfg.Modules[modName], logger)
+		m, err := modules.New(modName, cfg.Modules[modName], gs.log)
 		if err != nil {
 			return nil, err
 		}
 
-		upMods = append(upMods, m)
+		gs.updateModules = append(gs.updateModules, m)
 	}
 
-	return &gostore{
-		Store: s,
-		UI:    NewUI(cfg.UI),
-
-		ImportModules: impMods,
-		UpdateModules: upMods,
-	}, nil
+	return gs, nil
 }
 
 // Import adds a new media into the collection
-func (gs *gostore) Import(path string) error {
+func (gs *Gostore) Import(path string) error {
 	f, err := os.Open(path)
 	if err != nil {
 		return err
@@ -80,7 +85,7 @@ func (gs *gostore) Import(path string) error {
 		return err
 	}
 
-	mdata, err := gs.UI.Merge(mdataFromFile, mdataFetched)
+	mdata, err := gs.ui.Merge(mdataFromFile, mdataFetched)
 	if err != nil {
 		return err
 	}
@@ -88,39 +93,39 @@ func (gs *gostore) Import(path string) error {
 	//XXX: change path to filepath.Base(path)?
 	r := store.NewRecord(path, mdata)
 
-	if err := modules.ProcessRecord(r, gs.ImportModules); err != nil {
+	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return err
 	}
 
-	if err := gs.Store.Open(); err != nil {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	if err := gs.Store.Create(r, f); err != nil {
+	if err := gs.store.Create(r, f); err != nil {
 		return err
 	}
 
-	gs.UI.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Fields())
 	return nil
 }
 
 //Info retrieves information about any collection's record.
 //If fromFile flag is set, Info also displays actual metadata stored in the
 //media file
-func (gs *gostore) Info(key string, fromFile bool) error {
-	if err := gs.Store.Open(); err != nil {
+func (gs *Gostore) Info(key string, fromFile bool) error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	r, err := gs.Store.Read(key)
+	r, err := gs.store.Read(key)
 	if err != nil {
 		return err
 	}
 
 	if fromFile {
-		f, err := gs.Store.OpenRecord(key)
+		f, err := gs.store.OpenRecord(key)
 		if err != nil {
 			return err
 		}
@@ -131,85 +136,85 @@ func (gs *gostore) Info(key string, fromFile bool) error {
 			return err
 		}
 
-		gs.UI.PrettyDiff(r.OrigValue(), mdata)
+		gs.ui.PrettyDiff(r.OrigValue(), mdata)
 		return nil
 	}
 
-	gs.UI.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Fields())
 	return nil
 }
 
 //ListAll lists all collection's records
-func (gs *gostore) ListAll() error {
-	if err := gs.Store.Open(); err != nil {
+func (gs *Gostore) ListAll() error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	r, err := gs.Store.ReadAll()
+	r, err := gs.store.ReadAll()
 	if err != nil {
 		return err
 	}
 
-	gs.UI.PrettyPrint(r.Fields()...)
+	gs.ui.PrettyPrint(r.Fields()...)
 	return nil
 }
 
 // Search the collection for records matching given query. Query follows
 // blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
-func (gs *gostore) Search(query string) error {
-	if err := gs.Store.Open(); err != nil {
+func (gs *Gostore) Search(query string) error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	r, err := gs.Store.Search(query)
+	r, err := gs.store.Search(query)
 	if err != nil {
 		return err
 	}
 
-	gs.UI.PrettyPrint(r.Fields()...)
+	gs.ui.PrettyPrint(r.Fields()...)
 	return nil
 }
 
 // Edit updates an existing record from the collection
-func (gs *gostore) Edit(key string) error {
-	if err := gs.Store.Open(); err != nil {
+func (gs *Gostore) Edit(key string) error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	r, err := gs.Store.Read(key)
+	r, err := gs.store.Read(key)
 	if err != nil {
 		return err
 	}
 
-	mdata, err := gs.UI.Edit(r.OrigValue())
+	mdata, err := gs.ui.Edit(r.OrigValue())
 	if err != nil {
 		return err
 	}
 	r.ReplaceValues(mdata)
 
-	if err := modules.ProcessRecord(r, gs.UpdateModules); err != nil {
+	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
 		return err
 	}
 
-	if err := gs.Store.Update(key, r); err != nil {
+	if err := gs.store.Update(key, r); err != nil {
 		return err
 	}
 
-	gs.UI.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Fields())
 	return nil
 }
 
 // Delete removes a record from the collection.
-func (gs *gostore) Delete(key string) error {
-	if err := gs.Store.Open(); err != nil {
+func (gs *Gostore) Delete(key string) error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	if err := gs.Store.Delete(key); err != nil {
+	if err := gs.store.Delete(key); err != nil {
 		return err
 	}
 
@@ -220,15 +225,15 @@ func (gs *gostore) Delete(key string) error {
 // Destination is considered as a folder where the record's media file will be
 // copied to (final file's will be dst/key, keeping any sub-folder(s) coming
 // with the record's key name).
-func (gs *gostore) Export(key, dstFolder string) error {
+func (gs *Gostore) Export(key, dstFolder string) error {
 	dstPath := filepath.Join(key, dstFolder)
 
-	if err := gs.Store.Open(); err != nil {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	r, err := gs.Store.OpenRecord(key)
+	r, err := gs.store.OpenRecord(key)
 	if err != nil {
 		return err
 	}
@@ -253,21 +258,26 @@ func (gs *gostore) Export(key, dstFolder string) error {
 	return nil
 }
 
-// Repair verifies collection's consistency and repairs or reports found inconsistencies.
-func (gs *gostore) CheckAndRepair() error {
-	if err := gs.Store.Open(); err != nil {
+// CheckAndRepair verifies collection's consistency and repairs or reports found inconsistencies.
+func (gs *Gostore) CheckAndRepair() error {
+	if err := gs.store.Open(); err != nil {
 		return err
 	}
-	defer gs.Store.Close()
+	defer gs.store.Close()
 
-	orphans, err := gs.Store.CheckAndRepair()
+	orphans, err := gs.store.CheckAndRepair()
 	if err != nil {
 		return err
 	}
 
 	if len(orphans) > 0 {
 		//TODO: use PrettyPrint to show list of orphans?
-		gs.UI.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
+		gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
 	}
 	return nil
+}
+
+func init() {
+	//XXX: or in config.ModuleConifg(name string) -> Module ??
+	modules.ConfUnmarshal = yaml.Unmarshal
 }

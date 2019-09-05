@@ -11,11 +11,11 @@ var (
 )
 
 func init() {
-	gostoreApp.NewBoolFlagToVar(&cfg.LogDebug, "debug", "Show debug information.")
+	gostoreApp.NewBoolFlagToVar(&cfg.ShowLog, "debug", "Show debug information.")
 	gostoreApp.NewStringFlagToVar(&cfg.Store.Root, "root", "Path to the root of the collection.")
 	gostoreApp.NewBoolFlagToVar(&cfg.Store.ReadOnly, "pretend", "Simulate operation on the database (actually retrieveing metadata without inserting them into the store).")
 	gostoreApp.NewBoolFlagToVar(&cfg.UI.Auto, "auto", "Automatically fecth metadata before importing them in the collection.")
-	gostoreApp.NewEnumFlagToVar(&cfg.UI.FormatStyle, "style", "Style for printing records' details.", cfg.UI.ListStyles())
+	gostoreApp.NewEnumFlagToVar(&cfg.UI.OutputFormat, "style", "Style for printing records' details.", cfg.UI.ListStyles())
 
 	importCmd := gostoreApp.NewCommand("import", "Import a new media into the collection.")
 	importMedia := importCmd.NewStringArg("media", "Media to import into the collection.")
