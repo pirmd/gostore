@@ -24,9 +24,9 @@ var (
 	_ modules.Module = (*dehtmlizer)(nil)
 )
 
-//config defines the different configurations that can be used to customized
+//Config defines the different configurations that can be used to customized
 //the behavior of a dehtmlizer module.
-type config struct {
+type Config struct {
 	//Fields2Clean lists the record's fields that should be dehtlmized.
 	//Non-existing fields are ignored.
 	Fields2Clean []string
@@ -34,6 +34,10 @@ type config struct {
 	//OutputStyle is the name of the target style to use when converting html
 	//to text. Known styles are text and markdown.
 	OutputStyle string
+}
+
+func newConfig() *Config {
+	return &Config{}
 }
 
 type dehtmlizer struct {
@@ -46,20 +50,7 @@ type dehtmlizer struct {
 	outputStyle style.Styler
 }
 
-//New creates a new dehtmlizer module whose configuration information is
-//supplied in a text-based format, whose encoding/idiom should be the
-//understood by modules.ConfUnmarshal
-func New(conf []byte, log *log.Logger) (modules.Module, error) {
-	cfg := &config{}
-	if err := modules.ConfUnmarshal(conf, cfg); err != nil {
-		return nil, fmt.Errorf("module '%s': bad configuration", moduleName)
-	}
-
-	return newDehtmlizer(cfg, log)
-}
-
-//newDehtmlizer creates a new dehtmlizer module
-func newDehtmlizer(cfg *config, logger *log.Logger) (modules.Module, error) {
+func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	d := &dehtmlizer{
 		log:         logger,
 		outputStyle: style.NewPlaintext(),
@@ -108,6 +99,17 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 
 	r.SetValue(field, txt)
 	return nil
+}
+
+//New creates a new dehtmlizer module whose configuration information
+func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+	cfg := newConfig()
+
+	if err := rawcfg.Unmarshal(cfg); err != nil {
+		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
+	}
+
+	return newDehtmlizer(cfg, log)
 }
 
 func init() {

@@ -1,4 +1,4 @@
-.TH GOSTORE 1 2019-08-07
+.TH GOSTORE 1 2019-10-13
 
 .SH Name
 .PP
@@ -6,19 +6,19 @@ gostore - A command-line minimalist media collection manager.
 
 .SH Synopsis
 .PP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBhelp\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBversion\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBimport\fP [--\fBauto\fP] [--\fBdry-run\fP] \fImedia\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBinfo\fP [--\fBfrom-file\fP] \fIname\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBlist\fP \fIquery\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBedit\fP \fIname\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBdelete\fP \fIname\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBexport\fP \fIname\fP \fIdst\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBstyle\fP=\fIname|list|full|json\fP] \fBcheck\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBhelp\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBversion\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBimport\fP \fImedia\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBinfo\fP [--\fBfrom-file\fP] \fIname\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBlist\fP [\fIpattern\fP]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBedit\fP \fIname\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBdelete\fP \fIname\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP [\fIdst\fP]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP
 
 .SH Description
 .PP
-A command-line minimalist media collection manager.
+gostore is a command line tool aiming at providing facilities to manage one or more collections of media files, keeping track of their metadata and/or additional information the user wants to record.
 
 .SH Options
 .TP
@@ -28,8 +28,14 @@ Show debug information.
 \fB--\fBroot\fP=\fIROOT\fP\fP
 Path to the root of the collection.
 .TP
-\fB--\fBstyle\fP=\fIname|list|full|json\fP\fP
-Style for printing records' details.
+\fB--\fBpretend\fP\fP
+Operations that modify the collection are simulated.
+.TP
+\fB--\fBauto\fP\fP
+Perform operations without manual interaction from the user.
+.TP
+\fB--\fBstyle\fP=\fISTYLE\fP\fP
+Style for printing records' details. Available styles are defined in the configuration file.
 
 .SH Commands
 .TP
@@ -39,23 +45,31 @@ Show usage information.
 \fB\fBversion\fP\fP
 Show version information.
 .TP
-\fB\fBimport\fP [<flags>] \fImedia\fP\fP
+\fB\fBimport\fP \fImedia\fP\fP
 Import a new media into the collection.
 .TP
 \fB\fBinfo\fP [<flags>] \fIname\fP\fP
-retrieve information about any collection's record.
+Retrieve information about any collection's record.
 .TP
-\fB\fBlist\fP [\fIquery\fP]\fP
-List the the records that match the given query. If no query is provied, list all records
+\fB\fBlist\fP [\fIpattern\fP]\fP
+Lists the collection's records matching the given pattern. If no pattern is provied, list all records of the collection.
 .TP
 \fB\fBedit\fP \fIname\fP\fP
-edit an existing record from the collection.
+Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.
 .TP
 \fB\fBdelete\fP \fIname\fP\fP
-delete a record from the collection.
+Delete an existing record from the collection.
 .TP
-\fB\fBexport\fP \fIname\fP \fIdst\fP\fP
-export a media from the collection to the given destination.
+\fB\fBexport\fP \fIname\fP [\fIdst\fP]\fP
+Copy a record's media file from the collection to the given destination.
 .TP
 \fB\fBcheck\fP\fP
-Verify collection's consistency.
+Verify collection's consistency and repairs or reports found inconsistencies.
+
+.SH Files
+.TP
+\fB\fI/etc/manpage_generate/config.yaml\fP\fP
+System-wide configuration location
+.TP
+\fB\fI/home/pir/.config/manpage_generate/config.yaml\fP\fP
+Per-user configuration location

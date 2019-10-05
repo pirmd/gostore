@@ -50,6 +50,7 @@ type CLIConfig struct {
 	Auto bool
 
 	// Command line to open a text editor
+	//XXX: default to Getenv("EDITOR")?
 	EditorCmd []string
 
 	// Command line to open a text merger
@@ -61,10 +62,6 @@ type CLIConfig struct {
 	// Templates to display information from the store.
 	// Templates are organized by output style
 	Formatters map[string]map[string]string
-	//XXX: simplify fomrat for style output (see go list -f FORMAT)
-
-	// Templates to display differences between two records or two records versions
-	Differs map[string]string
 }
 
 // ListStyles lists all available styles for printing records' details.
@@ -128,7 +125,6 @@ func (ui *CLI) Printf(format string, a ...interface{}) {
 }
 
 //PrettyPrint shows in a pleasant manner a metadata set
-//XXX func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
 func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
 	typ := mediasTypeOf(medias...)
 	fmt.Println(ui.printers.MustFormatUsingType(typ, medias))
@@ -145,7 +141,6 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 //Edit fires-up a new editor to modif m
 func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.editor) > 0 {
-		//XXX Edita and merge with YAML/TOML...
 		edited, err := input.EditAsJSON(m, ui.editor)
 		return edited.(map[string]interface{}), err
 	}

@@ -1,13 +1,16 @@
-//XXX go:generate go run manpage_generate.go cmd.go config.go ui.go
+//go:generate go run manpage_generate.go cmd.go gostore.go config.go ui.go
 package main
 
 import (
-	_ "github.com/pirmd/gostore/media/books"
+	"os"
 
+	_ "github.com/pirmd/gostore/media/books"
 	_ "github.com/pirmd/gostore/modules/dehtmlizer"
 	_ "github.com/pirmd/gostore/modules/organizer"
 )
 
 func main() {
-	gostoreApp.MustRun()
+	cfg := newConfig()
+	app := newApp(cfg)
+	app.MustRun(os.Args[1:])
 }

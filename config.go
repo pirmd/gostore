@@ -1,75 +1,45 @@
 package main
 
-// This module implements a more than basic configuration system
-
-// XXX: restructure like module NewFromYAML + newGostore, same for UI, LOG and Cie. Try to generalize module format
-// XXX: create a ConfigLoader parameter that can be JSON, TOML of YAML or whatever
-
-import (
-	"os"
-)
-
-// Configuration for gostore
-type config struct {
-	ShowLog       bool
-	Store         *storeConfig
-	UI            *CLIConfig
-	ImportModules []string // List of processings to be applied when importing a record
-	UpdateModules []string // List of processings to be applied when updating a record
-	Modules       map[string][]byte
+// Config represents the configuration for gostore
+type Config struct {
+	//ShowLog is a flag that governs if log information are to be shown
+	ShowLog bool
+	//Store contains configuration for anything related to storage
+	Store *storeConfig
+	//UI contains configuration for anything related to user interface
+	UI *CLIConfig
+	//ImportModules lists of processings to be applied when importing a record
+	ImportModules map[string]*rawYAMLConfig
+	//UpdateModules lists of processings to be applied when updating a record
+	UpdateModules map[string]*rawYAMLConfig
 }
 
-// Configuration for storage
+// storeConfig contains configuration for storage
 type storeConfig struct {
 	//Root contains the path to the datastore
 	Root string
 	//ReadOnly is the flag to switch the store into read only operation mode
-	//XXX it is not implemented
 	ReadOnly bool
 }
 
-var (
-	//XXX -> config.yaml.example
-	cfg = &config{
-		UI: &CLIConfig{
-			Formatters: map[string]map[string]string{
-				"list": {
-					"_default": `{{ table . "Name" "Title" "Authors" }}`,
-					"epub":     `{{ table . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}`,
-				},
-
-				"full": {
-					"_default": `{{ metadata . "Name" "Title" "*" "CreatedAt" "UpdatedAt"}}`,
-					"epub":     `{{ metadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}`,
-				},
-			},
-
-			EditorCmd: []string{os.Getenv("EDITOR")},
-			MergerCmd: []string{"vimdiff"},
-		},
-
-		ImportModules: []string{
-			"organizer",
-			"dehtmlizer",
-		},
-
-		UpdateModules: []string{
-			"organizer",
-			"dehtmlizer",
-		},
-
-		Modules: map[string][]byte{
-			"organizer": []byte(`
-NamingSchemes:
-    _default: {{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}
-Sanitizer    : detox
-            `),
-
-			"dehtmlizer": []byte(`
-Fields2Clean:
-    - Description
-OutputStyle : markdown
-            `),
-		},
+func newConfig() *Config {
+	return &Config{
+		Store:         &storeConfig{Root: "."},
+		UI:            &CLIConfig{},
+		ImportModules: make(map[string]*rawYAMLConfig),
+		UpdateModules: make(map[string]*rawYAMLConfig),
 	}
-)
+}
+
+type rawYAMLConfig struct {
+	unmarshal func(interface{}) error
+}
+
+func (cfg *rawYAMLConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	cfg.unmarshal = unmarshal
+	return nil
+}
+
+func (cfg *rawYAMLConfig) Unmarshal(v interface{}) error {
+	return cfg.unmarshal(v)
+}

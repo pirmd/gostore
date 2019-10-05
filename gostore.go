@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	yaml "gopkg.in/yaml.v2"
-
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
@@ -24,8 +22,7 @@ type Gostore struct {
 	updateModules []modules.Module
 }
 
-//XXX: default IMportModule
-func newGostore(cfg *config) (*Gostore, error) {
+func newGostore(cfg *Config) (*Gostore, error) {
 	gs := &Gostore{
 		log: log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
 		ui:  NewCLI(cfg.UI),
@@ -36,18 +33,16 @@ func newGostore(cfg *config) (*Gostore, error) {
 	}
 
 	var err error
-	gs.store, err = store.New(
-		//XXX: check what is happening if Root is empty (expected behaviour: use current dir)
+	if gs.store, err = store.New(
 		cfg.Store.Root,
 		store.UsingLogger(gs.log),
 		store.UsingTypeField(media.TypeField),
-	)
-	if err != nil {
+	); err != nil {
 		return nil, err
 	}
 
-	for _, modName := range cfg.ImportModules {
-		m, err := modules.New(modName, cfg.Modules[modName], gs.log)
+	for modName, modRawCfg := range cfg.ImportModules {
+		m, err := modules.New(modName, modRawCfg, gs.log)
 		if err != nil {
 			return nil, err
 		}
@@ -55,8 +50,8 @@ func newGostore(cfg *config) (*Gostore, error) {
 		gs.importModules = append(gs.importModules, m)
 	}
 
-	for _, modName := range cfg.UpdateModules {
-		m, err := modules.New(modName, cfg.Modules[modName], gs.log)
+	for modName, modRawCfg := range cfg.UpdateModules {
+		m, err := modules.New(modName, modRawCfg, gs.log)
 		if err != nil {
 			return nil, err
 		}
@@ -275,9 +270,4 @@ func (gs *Gostore) CheckAndRepair() error {
 		gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
 	}
 	return nil
-}
-
-func init() {
-	//XXX: or in config.ModuleConifg(name string) -> Module ??
-	modules.ConfUnmarshal = yaml.Unmarshal
 }

@@ -1,0 +1,102 @@
+# showlog is a boolean flag that governs whether detailed log information are
+# to be displayed
+# It can be set at runtime using the '--debug' flag
+#showlog: false
+
+# store contains any customization to manage the way the collection is stored
+store:
+    # root is the path to the collection's root path. The database, index and
+    # media files are stored inside this root path
+    # It can be set at runtime using the '--root=xxx' flag
+    # If root is not set, it defaults to the current working directory.
+    root: /tmp/gostore-test/
+
+    # readonly is a boolean flag that governs whether gostore is allowed to
+    # alter the content of the collection. It is typically useful to dry-run
+    # some actions.
+    # It can be set at runtime using the '--pretend' flag
+    #readonly:   false
+
+# ui contains any customization to manage the way gostore interacts with the
+# user
+ui:
+    # auto is a boolean flag that governs whether user manual interaction (like
+    # metadata editing) is expected.
+    # It can be set at runtime using the '--auto' flag
+    #auto: false
+    
+    # editorcmd contains the invocation stanza to fire-up a text editor
+    # allowing the user to modify metadata.
+    # If editocmd is not set, metadata modification is skipped.
+    editorcmd:
+        - $EDITOR
+          
+    # mergercmd contains the invocation stanza to fire-up a text editor
+    # allowing the user to mergel two set of metadata.
+    # If mergercmd is not set, metadata modification is skipped.
+    mergercmd:
+        - vimdiff
+
+    # outputformat points to the style to print-out metadata. It should be one
+    # of the defined formatters.
+    # If not set or set to a non-specified formatter, it defaults to listing
+    # media file name.
+    # It can be set at runtime using '--style=xxx' flag.
+    outputformat: full
+
+    # formatters is the set of available styles for listing media metadata. For
+    # each style, customized styles can be proposed for a given media'type.
+    # Fall-back templates or generic template can be defined using the
+    # "_default" keyword. Template's follow golang text/template specification. 
+    formatters:
+        list:
+            _default: '{{ table . "Name" "Title" "Authors" }}'
+            epub: '{{ table . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}'
+
+        full:
+            _default: '{{ metadata . "Name" "Title" "*" "CreatedAt" "UpdatedAt"}}'
+            epub:     '{{ metadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}'
+
+# importmodules lists the different processings that will modified the media's
+# metadata during the import stage.
+# Available modules can be listed using the "modules" command of gostore.
+importmodules:
+    # organizer is a modules that rationalizes the name of a media based on its metadata values
+    organizer:
+        
+        # namingschemes is a collection of templates to define a media name
+        # based on its metadata values. DIffernet naming schemes can be adopted
+        # based on the media's type.
+        # Fall-back templates or generic template can be defined using the
+        # "_default" keyword. Template's follow golang text/template specification. 
+        namingschemes:
+            _default: "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}"
+            
+        # sanitizer allows to clean the filename of media to get rid of
+        # unwanted chars. Available sanitizers are none (default), standard or
+        # nospace
+        sanitizer: standard
+
+    # dehtmlizer is a modules that removes any html tags from a media metadata.
+    # it can optionally convert th ehtml taging into another idioms (like
+    # markdown)
+    dehtmlizer:
+        # fields2clean is th elist of metadata fields to clean from html tags
+        fields2clean:
+            - Description
+        # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
+        outputstyle: markdown
+
+# updatemodules lists the different processings that will modified the media's
+# metadata during the update stage.
+# Available modules can be listed using the "modules" command of gostore.
+updatemodules:
+    organizer:
+        namingschemes:
+            _default: "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}"
+        sanitizer: standard
+
+    dehtmlizer:
+        fields2clean:
+            - Description
+        outputstyle : markdown

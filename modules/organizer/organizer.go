@@ -26,9 +26,9 @@ var (
 	ErrEmptyName = fmt.Errorf("generated name is empty")
 )
 
-//config defines the different configurations that can be used to customized
+//Config defines the different configurations that can be used to customize
 //the behavior of an organizer module.
-type config struct {
+type Config struct {
 	//NamingSchemes defines, for each record's type, the templates to rename a
 	//record according to its attribute.  You can define a default naming
 	//scheme for all record's type not defined in NamingScheme using the
@@ -40,6 +40,10 @@ type config struct {
 	Sanitizer string
 }
 
+func newConfig() *Config {
+	return &Config{}
+}
+
 type organizer struct {
 	log *log.Logger
 
@@ -47,27 +51,14 @@ type organizer struct {
 	sanitizer func(string) string
 }
 
-//New creates a new organizer module whose configuration information is
-//supplied in a text-based format, whose encoding/idiom should be the
-//understood by modules.ConfUnmarshal
-func New(conf []byte, log *log.Logger) (modules.Module, error) {
-	cfg := &config{}
-	if err := modules.ConfUnmarshal(conf, cfg); err != nil {
-		return nil, fmt.Errorf("module '%s': bad configuration", moduleName)
-	}
-
-	return newOrganizer(cfg, log)
-}
-
-//newOrganizer creates a new organizer module
-func newOrganizer(cfg *config, logger *log.Logger) (*organizer, error) {
+func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 	o := &organizer{
 		namers: formatter.Formatters{},
 		log:    logger,
 	}
 
 	tmpl := template.New("organizer").Funcs(map[string]interface{}{
-		//XXX: Provides helpers for naming scheme definition (?)
+		//TODO(pirmd): Provides helpers for naming scheme definition (?)
 	})
 	for typ, txt := range cfg.NamingSchemes {
 		fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
@@ -112,6 +103,17 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 
 	r.SetKey(name)
 	return nil
+}
+
+//New creates a new organizer module
+func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+	cfg := newConfig()
+
+	if err := rawcfg.Unmarshal(cfg); err != nil {
+		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
+	}
+
+	return newOrganizer(cfg, log)
 }
 
 func init() {

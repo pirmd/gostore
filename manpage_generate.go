@@ -1,8 +1,5 @@
 // +build ignore
 
-//Generate the manpage for 'godex' application
-//You have to run it in together with cmd.go and its dependencies, for
-//example 'go run manpage_generate.go cmd.go config.go'
 package main
 
 import (
@@ -10,6 +7,9 @@ import (
 )
 
 func main() {
-	app.GenerateManpage(gostore)
-	app.GenerateHelpFile(gostore)
+	cfg := newConfig()
+	cmd := newApp(cfg, nil)
+
+	app.GenerateManpage(cmd)
+	app.GenerateHelpFile(cmd)
 }
