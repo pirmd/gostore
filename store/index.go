@@ -24,7 +24,6 @@ func newIdx(path string) *storeidx {
 }
 
 //Open opens or creates a new storeidx
-//If storeidx path is empty, open a memory-only index
 func (s *storeidx) Open() (err error) {
 	if s.idx, err = bleve.Open(s.path); err == nil {
 		return
@@ -39,6 +38,7 @@ func (s *storeidx) Open() (err error) {
 
 //Close cleanly closes the storeidx
 func (s *storeidx) Close() error {
+	s.idx.Close()
 	return nil
 }
 
