@@ -4,6 +4,8 @@ go 1.12
 
 replace github.com/pirmd/cli => ../cli
 
+replace github.com/pirmd/verify => ../verify
+
 require (
 	github.com/RoaringBitmap/roaring v0.4.20 // indirect
 	github.com/blevesearch/bleve v0.8.1-0.20190826155422-1626176d5505
