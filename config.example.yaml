@@ -28,14 +28,12 @@ ui:
     # editorcmd contains the invocation stanza to fire-up a text editor
     # allowing the user to modify metadata.
     # If editocmd is not set, metadata modification is skipped.
-    editorcmd:
-        - $EDITOR
+    editorcmd: $EDITOR
           
     # mergercmd contains the invocation stanza to fire-up a text editor
     # allowing the user to mergel two set of metadata.
     # If mergercmd is not set, metadata modification is skipped.
-    mergercmd:
-        - vimdiff
+    mergercmd: vimdiff
 
     # outputformat points to the style to print-out metadata. It should be one
     # of the defined formatters.

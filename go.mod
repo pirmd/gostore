@@ -22,6 +22,7 @@ require (
 	github.com/gabriel-vasile/mimetype v0.3.17
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/pirmd/cli v0.2.1-0.20191006125207-74bb920e6743
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/verify v0.2.0

@@ -25,7 +25,6 @@ type Gostore struct {
 func newGostore(cfg *Config) (*Gostore, error) {
 	gs := &Gostore{
 		log: log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
-		ui:  NewCLI(cfg.UI),
 	}
 
 	if cfg.ShowLog {
@@ -38,6 +37,10 @@ func newGostore(cfg *Config) (*Gostore, error) {
 		store.UsingLogger(gs.log),
 		store.UsingTypeField(media.TypeField),
 	); err != nil {
+		return nil, err
+	}
+
+	if gs.ui, err = NewCLI(cfg.UI); err != nil {
 		return nil, err
 	}
 

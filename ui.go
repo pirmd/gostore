@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/kballard/go-shellquote"
 
 	"github.com/pirmd/cli/formatter"
 	"github.com/pirmd/cli/input"
@@ -25,21 +28,21 @@ const (
 	variousMediaType = "media"
 )
 
-//UserInterfacer represents any User Interface.
+// UserInterfacer represents any User Interface.
 type UserInterfacer interface {
-	//Printf displays a message to the user (has same behaviour than fmt.Printf)
+	// Printf displays a message to the user (has same behaviour than fmt.Printf)
 	Printf(string, ...interface{})
 
-	//PrettyPrint displays values from the provided map
+	// PrettyPrint displays values from the provided map
 	PrettyPrint(...map[string]interface{})
 
-	//PrettyDiff displays povided maps, higlighting their differences
+	// PrettyDiff displays povided maps, higlighting their differences
 	PrettyDiff(map[string]interface{}, map[string]interface{})
 
-	//Edit spawns an editor dialog to modified provided map
+	// Edit spawns an editor dialog to modified provided map
 	Edit(map[string]interface{}) (map[string]interface{}, error)
 
-	//Merge spawns a dialog to merge two maps into one
+	// Merge spawns a dialog to merge two maps into one
 	Merge(map[string]interface{}, map[string]interface{}) (map[string]interface{}, error)
 }
 
@@ -50,11 +53,10 @@ type CLIConfig struct {
 	Auto bool
 
 	// Command line to open a text editor
-	//XXX: default to Getenv("EDITOR")?
-	EditorCmd []string
+	EditorCmd string
 
 	// Command line to open a text merger
-	MergerCmd []string
+	MergerCmd string
 
 	// Select the style of output to format answers (UIFormatters[UIFormatStyle])
 	OutputFormat string
@@ -72,9 +74,9 @@ func (cfg *CLIConfig) ListStyles() (styles []string) {
 	return
 }
 
-//CLI is a user interface built for the command line.
-//If cfg.Auto flag is on, the returned User Interface will avoid any interaction
-//with the user (like automatically merging metadata or skipping editing steps)
+// CLI is a user interface built for the command line.
+// If cfg.Auto flag is on, the returned User Interface will avoid any interaction
+// with the user (like automatically merging metadata or skipping editing steps)
 type CLI struct {
 	editor []string
 	merger []string
@@ -83,8 +85,8 @@ type CLI struct {
 	printers formatter.Formatters
 }
 
-//NewCLI creates a CLI User Interface
-func NewCLI(cfg *CLIConfig) *CLI {
+// NewCLI creates a CLI User Interface
+func NewCLI(cfg *CLIConfig) (*CLI, error) {
 	ui := &CLI{
 		style: style.NewColorterm(),
 
@@ -113,24 +115,31 @@ func NewCLI(cfg *CLIConfig) *CLI {
 	}
 
 	if !cfg.Auto {
-		ui.editor, ui.merger = cfg.EditorCmd, cfg.MergerCmd
+		var err error
+
+		if ui.editor, err = shellquote.Split(cfg.EditorCmd); err != nil {
+			return nil, fmt.Errorf("CLI config: parsing EditorCmd failed: %v", err)
+		}
+
+		if ui.merger, err = shellquote.Split(cfg.MergerCmd); err != nil {
+			return nil, fmt.Errorf("CLI config: parsing MergerCmd failed: %v", err)
+		}
 	}
 
-	return ui
+	return ui, nil
 }
 
-//Printf displays a message to the user (has same behaviour than fmt.Printf)
+// Printf displays a message to the user (has same behaviour than fmt.Printf)
 func (ui *CLI) Printf(format string, a ...interface{}) {
 	fmt.Printf(format, a...)
 }
 
-//PrettyPrint shows in a pleasant manner a metadata set
+// PrettyPrint shows in a pleasant manner a metadata set
 func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
-	typ := mediasTypeOf(medias...)
-	fmt.Println(ui.printers.MustFormatUsingType(typ, medias))
+	fmt.Println(ui.format(medias...))
 }
 
-//PrettyDiff shows in a pleasant manner differences between two metadata sets
+// PrettyDiff shows in a pleasant manner differences between two metadata sets
 func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	valL, valR := ui.format(mediaL), ui.format(mediaR)
 	dT, dL, dR := text.ColorDiff.Anything(valL, valR)
@@ -138,7 +147,7 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	fmt.Println(diffAsTable)
 }
 
-//Edit fires-up a new editor to modif m
+// Edit fires-up a new editor to modif m
 func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.editor) > 0 {
 		edited, err := input.EditAsJSON(m, ui.editor)
@@ -148,7 +157,7 @@ func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	return m, nil
 }
 
-//Merge fires-up a new editor to merge m and n
+// Merge fires-up a new editor to merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.merger) > 0 {
 		merged, _, err := input.MergeAsJSON(m, n, ui.merger)
@@ -224,15 +233,23 @@ func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 	}
 
 	for _, f := range fields {
-		switch f {
-		case "*":
+		switch {
+		case f == "*":
+			var allkeys []string
 			for _, m := range maps {
 				for k := range m {
-					if !isInSlice(k, fields) && !isInSlice(k, keys) {
-						keys = append(keys, k)
+					if !isInSlice("!"+k, fields) &&
+						!isInSlice(k, fields) &&
+						!isInSlice(k, allkeys) {
+						allkeys = append(allkeys, k)
 					}
 				}
 			}
+			sort.Strings(allkeys)
+			keys = append(keys, allkeys...)
+
+		case f[0] == '!':
+			//ignore this field
 
 		default:
 			keys = append(keys, f)
@@ -243,27 +260,15 @@ func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 }
 
 func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
-	if len(fields) == 0 {
-		fields = []string{"*"}
+	if len(maps) == 0 {
+		return
 	}
 
-	for _, f := range fields {
-		switch f {
-		case "*":
-			//We only keep keys that are present in all maps, then we pass the "*"
-			//So that possibly additional fields of a given maps can be extracted too
-			if len(maps) > 0 {
-				for k := range maps[0] {
-					if !isInSlice(k, fields) && !isInSlice(k, keys) &&
-						hasKey(k, maps[1:]...) {
-						keys = append(keys, k)
-					}
-				}
-			}
-			keys = append(keys, f)
+	allKeys := getKeys([]map[string]interface{}{maps[0]}, fields...)
 
-		default:
-			keys = append(keys, f)
+	for _, k := range allKeys {
+		if hasKey(k, maps[1:]...) {
+			keys = append(keys, k)
 		}
 	}
 
@@ -317,7 +322,7 @@ func hasKey(k string, maps ...map[string]interface{}) bool {
 
 func isInSlice(s string, slice []string) bool {
 	for _, item := range slice {
-		if item == s {
+		if s == item {
 			return true
 		}
 	}
@@ -331,8 +336,8 @@ func styleSlice(fn func(string) string, s []string) (ss []string) {
 	return
 }
 
-//merge completes m with n content with the following logic: values of m are
-//copied, values of n that are not in m are added.
+// merge completes m with n content with the following logic: values of m are
+// copied, values of n that are not in m are added.
 func merge(m, n map[string]interface{}) (map[string]interface{}, error) {
 	merged := make(map[string]interface{})
 
