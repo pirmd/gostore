@@ -41,7 +41,11 @@ type Config struct {
 }
 
 func newConfig() *Config {
-	return &Config{}
+	return &Config{
+		NamingSchemes: map[string]string{
+			"_default": "{{ .Name }}",
+		},
+	}
 }
 
 type organizer struct {
