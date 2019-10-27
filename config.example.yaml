@@ -57,7 +57,6 @@ ui:
 
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
-# Available modules can be listed using the "modules" command of gostore.
 importmodules:
     # organizer is a modules that rationalizes the name of a media based on its metadata values
     organizer:
@@ -87,7 +86,6 @@ importmodules:
 
 # updatemodules lists the different processings that will modified the media's
 # metadata during the update stage.
-# Available modules can be listed using the "modules" command of gostore.
 updatemodules:
     organizer:
         namingschemes:
