@@ -15,7 +15,7 @@ const (
 )
 
 func TestGetMetadata(t *testing.T) {
-	testCases, err := filepath.Glob(filepath.Join(testdataPath, "*.*"))
+	testCases, err := filepath.Glob(filepath.Join(testdataPath, "*.epub"))
 	if err != nil {
 		t.Fatalf("cannot read test data in %s:%v", testdataPath, err)
 	}
