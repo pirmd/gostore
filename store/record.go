@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const (
@@ -123,8 +122,8 @@ func (r *Record) ReplaceValues(fields map[string]interface{}) {
 
 //stamp creates or updates "CreatedAtField" and "UpdatedAtField"
 func (r *Record) stamp() {
-	r.value.SetIfNotExists(CreatedAtField, time.Now())
-	r.value.Set(UpdatedAtField, time.Now())
+	r.value.SetIfNotExists(CreatedAtField, timestamper())
+	r.value.Set(UpdatedAtField, timestamper())
 }
 
 //Records represents a collection of Record
