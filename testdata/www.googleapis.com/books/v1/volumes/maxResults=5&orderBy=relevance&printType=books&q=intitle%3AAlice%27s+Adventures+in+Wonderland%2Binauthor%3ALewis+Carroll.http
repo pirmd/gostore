@@ -1,0 +1,460 @@
+HTTP/2.0 200 OK
+Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Type: application/json; charset=UTF-8
+Date: Sat, 02 Nov 2019 14:07:27 GMT
+Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/6EfAHNblWdsNgkd8UMIypFLq3q8"
+Expires: Sat, 02 Nov 2019 14:07:27 GMT
+Server: GSE
+Vary: Origin
+Vary: X-Origin
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Xss-Protection: 1; mode=block
+
+{
+ "kind": "books#volumes",
+ "totalItems": 94,
+ "items": [
+  {
+   "kind": "books#volume",
+   "id": "_-DjX7W_xJoC",
+   "etag": "QGT0cu3HrqM",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/_-DjX7W_xJoC",
+   "volumeInfo": {
+    "title": "Alice's Adventures in Wonderland & Through the Looking-glass",
+    "authors": [
+     "Lewis Carroll"
+    ],
+    "publisher": "Wordsworth Editions",
+    "publishedDate": "1993",
+    "description": "This edition contains Alice's Adventures in Wonderland and its sequel Through the Looking Glass. It is illustrated throughout by Sir John Tenniel, whose drawings for the books add so much to the enjoyment of them. Tweedledum and Tweedledee, the Mad Hatter, the Cheshire Cat, the Red Queen and the White Rabbit all make their appearances, and are now familiar figures in writing, conversation and idiom. So too, are Carroll's delightful verses such as 'The Walrus and the Carpenter' and the inspired jargon of that masterly Wordsworthian parody, 'The Jabberwocky'.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "1853261181"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9781853261183"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": true
+    },
+    "pageCount": 272,
+    "printType": "BOOK",
+    "categories": [
+     "Fiction"
+    ],
+    "averageRating": 4.0,
+    "ratingsCount": 1,
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "0.1.1.0.preview.1",
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=_-DjX7W_xJoC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=_-DjX7W_xJoC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=_-DjX7W_xJoC&printsec=frontcover&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=_-DjX7W_xJoC&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Alice_s_Adventures_in_Wonderland_Through.html?hl=&id=_-DjX7W_xJoC"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=_-DjX7W_xJoC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "This edition contains &#39;Alice&#39;s Adventures in Wonderland&#39; and its sequel &#39;Through the Looking Glass&#39;. It is illustrated throughout by Sir John Tenniel, whose drawings for the books add so much to the enjoyment of them."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "cxKu6MBnh-UC",
+   "etag": "yXW8dfkrH64",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/cxKu6MBnh-UC",
+   "volumeInfo": {
+    "title": "Alice's Adventures in Wonderland and Through the Looking-Glass",
+    "authors": [
+     "Lewis Carroll"
+    ],
+    "publisher": "OUP Oxford",
+    "publishedDate": "2009-09-10",
+    "description": "'But I don't want to go among mad people,' Alice remarked. 'Oh, you can't help that,' said the Cat. 'We're all mad here.' The 'Alice' books are two of the most translated, most quoted, and best-known books in the world, but what exactly are they? Apparently delightful, innocent fantasies for children, they are also complex textures of mathematical, linguistic, and philosophical jokes. Alice's encounters with the White Rabbit, the Cheshire-Cat, the King and Queen of Hearts, the Mad Hatter, Tweedledum and Tweedledee and many other extraordinary characters have made them masterpieces of carefree nonsense, yet they also appeal to adults on a quite different level. Layers of satire, allusion, and symbolism about Victorian culture and politics, as well as revelations about the intricate subconscious problems of their author, add to their fascination and make them impossible to classify. This new edition explores the phenomenal range of reference, and the paradoxical appeal of two of the most inventive books in world literature. It also includes an episode removed by Carroll from the proofs of Through the Looking-Glass, called 'The Wasp in a Wig'. ABOUT THE SERIES: For over 100 years Oxford World's Classics has made available the widest range of literature from around the globe. Each affordable volume reflects Oxford's commitment to scholarship, providing the most accurate text plus a wealth of other valuable features, including expert introductions by leading authorities, helpful notes to clarify the text, up-to-date bibliographies for further study, and much more.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_13",
+      "identifier": "9780191509230"
+     },
+     {
+      "type": "ISBN_10",
+      "identifier": "019150923X"
+     }
+    ],
+    "readingModes": {
+     "text": true,
+     "image": true
+    },
+    "pageCount": 352,
+    "printType": "BOOK",
+    "categories": [
+     "Fiction"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": true,
+    "contentVersion": "2.3.4.0.preview.3",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=cxKu6MBnh-UC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=cxKu6MBnh-UC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=cxKu6MBnh-UC&printsec=frontcover&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=cxKu6MBnh-UC&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=cxKu6MBnh-UC"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+     "amount": 6.84,
+     "currencyCode": "EUR"
+    },
+    "retailPrice": {
+     "amount": 6.5,
+     "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=cxKu6MBnh-UC&rdid=book-cxKu6MBnh-UC&rdot=1&source=gbs_api",
+    "offers": [
+     {
+      "finskyOfferType": 1,
+      "listPrice": {
+       "amountInMicros": 6840000.0,
+       "currencyCode": "EUR"
+      },
+      "retailPrice": {
+       "amountInMicros": 6500000.0,
+       "currencyCode": "EUR"
+      },
+      "giftable": true
+     }
+    ]
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Alice_s_Adventures_in_Wonderland_and_Thr-sample-epub.acsm?id=cxKu6MBnh-UC&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "pdf": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Alice_s_Adventures_in_Wonderland_and_Thr-sample-pdf.acsm?id=cxKu6MBnh-UC&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=cxKu6MBnh-UC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "This new edition explores the phenomenal range of reference, and the paradoxical appeal of two of the most inventive books in world literature."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "zIxGXrR8bgEC",
+   "etag": "RwZzVlH07i8",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/zIxGXrR8bgEC",
+   "volumeInfo": {
+    "title": "Alice's Adventures in Wonderland",
+    "authors": [
+     "Lewis Carroll"
+    ],
+    "publisher": "Digital Scanning Inc",
+    "publishedDate": "2007-06",
+    "description": "A little girl falls down a rabbit hole and discovers a world of nonsensical and amusing characters.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_13",
+      "identifier": "9781582187914"
+     },
+     {
+      "type": "ISBN_10",
+      "identifier": "1582187916"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": true
+    },
+    "pageCount": 204,
+    "printType": "BOOK",
+    "categories": [
+     "Juvenile Fiction"
+    ],
+    "averageRating": 4.5,
+    "ratingsCount": 12,
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": true,
+    "contentVersion": "1.1.1.0.preview.1",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=zIxGXrR8bgEC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=zIxGXrR8bgEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=zIxGXrR8bgEC&printsec=frontcover&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=zIxGXrR8bgEC&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=zIxGXrR8bgEC"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+     "amount": 1.4,
+     "currencyCode": "EUR"
+    },
+    "retailPrice": {
+     "amount": 1.4,
+     "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=zIxGXrR8bgEC&rdid=book-zIxGXrR8bgEC&rdot=1&source=gbs_api",
+    "offers": [
+     {
+      "finskyOfferType": 1,
+      "listPrice": {
+       "amountInMicros": 1400000.0,
+       "currencyCode": "EUR"
+      },
+      "retailPrice": {
+       "amountInMicros": 1400000.0,
+       "currencyCode": "EUR"
+      },
+      "giftable": true
+     }
+    ]
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "ALL_PAGES",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": true
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=zIxGXrR8bgEC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "A little girl falls down a rabbit hole and discovers a world of nonsensical and amusing characters."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "HJ8Wg0u7CUgC",
+   "etag": "Uhm94UNyUWY",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/HJ8Wg0u7CUgC",
+   "volumeInfo": {
+    "title": "Alice's Adventures in Wonderland",
+    "authors": [
+     "Lewis Carroll"
+    ],
+    "publisher": "Broadview Press",
+    "publishedDate": "2000-09-13",
+    "description": "First published in 1865, Alice's Adventures in Wonderland began as a story told to Alice Liddell and her two sisters on a boating trip in July of 1862. The novel follows Alice down a rabbit-hole and into a surreal world of strange and wonderful characters who constantly turn everything upside-down with their mind-boggling logic and word play, and their fantastic parodies. Carroll's fable illustrates his masterful ability to weave logic with nonsense in a tale that continues to delight all ages. While this great classic is widely available, the Broadview edition is unique. Richard Kelly combines Alice's Adventures in Wonderland not with the later (and largely distinct) work Through the Looking Glass but rather with Alice's Adventures Under Ground, Lewis Carroll's first version of the story. Readers are thus able to trace the literary revisions, and to compare Caroll's own illustrations in the original with the famous John Tenniel illustrations for Alice's Adventures in Wonderland. Among the many other materials included in the Broadview Literary Texts edition are a substantial selection of early reviews, selections from Carroll's diaries and correspondence, Carroll's early nonsense poems, and the originals of the poems parodied in his text.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "155111223X"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9781551112237"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": true
+    },
+    "pageCount": 356,
+    "printType": "BOOK",
+    "categories": [
+     "Juvenile Fiction"
+    ],
+    "averageRating": 3.0,
+    "ratingsCount": 3,
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "2.2.1.0.preview.1",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=HJ8Wg0u7CUgC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=HJ8Wg0u7CUgC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=HJ8Wg0u7CUgC&printsec=frontcover&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&cd=4&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=HJ8Wg0u7CUgC&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Alice_s_Adventures_in_Wonderland.html?hl=&id=HJ8Wg0u7CUgC"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=HJ8Wg0u7CUgC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Richard Kelly combines Alice&#39;s Adventures in Wonderland not with the later (and largely distinct) work Through the Looking Glass but rather with Alice&#39;s Adventures Under Ground, Lewis Carroll&#39;s first version of the story."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "T1x-CgAAQBAJ",
+   "etag": "ZCpYxj55mcE",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/T1x-CgAAQBAJ",
+   "volumeInfo": {
+    "title": "Alice's Adventures in Wonderland - Illustrated by George Soper",
+    "authors": [
+     "Lewis Carroll"
+    ],
+    "publisher": "Read Books Ltd",
+    "publishedDate": "2014-04-10",
+    "description": "Alice in Wonderland' is the best known work of Charles Lutwidge Dodgson (1832 - 1898), better known by his pen name, 'Lewis Carroll'. Telling the tale of a girl named Alice who falls down a rabbit hole into a fantasy world populated by surreal and anthropomorphic creatures, the book was a huge commercial success on its initial publication in 1865. It was followed by its sequel, 'Through the Looking-Glass, and What Alice Found There', in 1871. The books play at the heart of logical problems and literary nonsense – giving the narrative lasting popularity with adults and children alike. Originally published in 1929, this edition of the 'Alice in Wonderland' story is accompanied by the stunning artwork of George Soper. Soper (1870 - 1942), was an etcher and painter, widely known for his rustic scenes and lively animals. His delicate colour plates and beautifully detailed line drawing compliment the story perfectly – adding even more dream-like magic to Alice's fantastical realm. Soper's illustrations and Lewis Carroll's text are presented side-by-side, so that the two may be better appreciated. This book forms part of our 'Pook Press' imprint, celebrating the golden age of illustration in children's literature.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_13",
+      "identifier": "9781473393943"
+     },
+     {
+      "type": "ISBN_10",
+      "identifier": "1473393949"
+     }
+    ],
+    "readingModes": {
+     "text": true,
+     "image": true
+    },
+    "pageCount": 202,
+    "printType": "BOOK",
+    "categories": [
+     "Juvenile Fiction"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "0.1.1.0.preview.3",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=T1x-CgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=T1x-CgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=T1x-CgAAQBAJ&printsec=frontcover&dq=intitle:Alice%27s+Adventures+in+Wonderland%2Binauthor:Lewis+Carroll&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=T1x-CgAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=T1x-CgAAQBAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+     "amount": 3.49,
+     "currencyCode": "EUR"
+    },
+    "retailPrice": {
+     "amount": 3.49,
+     "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=T1x-CgAAQBAJ&rdid=book-T1x-CgAAQBAJ&rdot=1&source=gbs_api",
+    "offers": [
+     {
+      "finskyOfferType": 1,
+      "listPrice": {
+       "amountInMicros": 3490000.0,
+       "currencyCode": "EUR"
+      },
+      "retailPrice": {
+       "amountInMicros": 3490000.0,
+       "currencyCode": "EUR"
+      },
+      "giftable": true
+     }
+    ]
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Alice_s_Adventures_in_Wonderland_Illustr-sample-epub.acsm?id=T1x-CgAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "pdf": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Alice_s_Adventures_in_Wonderland_Illustr-sample-pdf.acsm?id=T1x-CgAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=T1x-CgAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Soper&#39;s illustrations and Lewis Carroll&#39;s text are presented side-by-side, so that the two may be better appreciated. This book forms part of our &#39;Pook Press&#39; imprint, celebrating the golden age of illustration in children&#39;s literature."
+   }
+  }
+ ]
+}

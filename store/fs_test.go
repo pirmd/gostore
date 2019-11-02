@@ -67,13 +67,21 @@ func TestFSDelete(t *testing.T) {
 
 	tstDir.Populate(tstCases)
 
-	for _, tc := range tstCases {
-		if err := fs.Delete(tc); err != nil {
-			t.Errorf("Cannot delete '%s'", tc)
+	t.Run("Delete record", func(t *testing.T) {
+		for _, tc := range tstCases {
+			if err := fs.Delete(tc); err != nil {
+				t.Errorf("Cannot delete '%s'", tc)
+			}
+			tstDir.ShouldNotHaveFile(tc, "Storefs cannot delete files")
 		}
-		tstDir.ShouldNotHaveFile(tc, "Storefs cannot delete files")
-	}
-	tstDir.ShouldHaveContent([]string{}, "Storefs cannot delete files")
+		tstDir.ShouldHaveContent([]string{}, "Storefs cannot delete files")
+	})
+
+	t.Run("Delete inexitant record", func(t *testing.T) {
+		if err := fs.Delete("non_existing_record"); !os.IsNotExist(err) {
+			t.Errorf("Should fail when deleting non existing record (err: %s)", err)
+		}
+	})
 
 }
 

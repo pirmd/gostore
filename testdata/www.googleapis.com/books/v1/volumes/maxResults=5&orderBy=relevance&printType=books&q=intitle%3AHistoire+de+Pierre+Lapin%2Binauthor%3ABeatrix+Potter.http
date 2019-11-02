@@ -1,0 +1,385 @@
+HTTP/2.0 200 OK
+Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Type: application/json; charset=UTF-8
+Date: Sat, 02 Nov 2019 14:07:28 GMT
+Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/tJMtKo1huqZHcXkL_3wWcOCoVxc"
+Expires: Sat, 02 Nov 2019 14:07:28 GMT
+Server: GSE
+Vary: Origin
+Vary: X-Origin
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Xss-Protection: 1; mode=block
+
+{
+ "kind": "books#volumes",
+ "totalItems": 6,
+ "items": [
+  {
+   "kind": "books#volume",
+   "id": "--VkyAEACAAJ",
+   "etag": "bp+bHDMDReA",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/--VkyAEACAAJ",
+   "volumeInfo": {
+    "title": "L'histoire de Pierre Lapin",
+    "authors": [
+     "Beatrix Potter"
+    ],
+    "publishedDate": "2019-07-29",
+    "description": "\"The Tale of Peter Rabbit\" de Beatrix Potter, traduit de l'anglais et adapté à un jeune public francophone par Éric Bernard, imprimé en gros caractères et avec de grandes reproductions des magnifiques aquarelles de l'auteur, en couleurs.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "1086086627"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9781086086621"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": false
+    },
+    "pageCount": 28,
+    "printType": "BOOK",
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=--VkyAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=--VkyAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=--VkyAEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=--VkyAEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/L_histoire_de_Pierre_Lapin.html?hl=&id=--VkyAEACAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "NO_PAGES",
+    "embeddable": false,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=--VkyAEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "NONE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "&quot;The Tale of Peter Rabbit&quot; de Beatrix Potter, traduit de l&#39;anglais et adapté à un jeune public francophone par Éric Bernard, imprimé en gros caractères et avec de grandes reproductions des magnifiques aquarelles de l&#39;auteur, en ..."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "cRlSDwAAQBAJ",
+   "etag": "DIWGJkBoxI8",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/cRlSDwAAQBAJ",
+   "volumeInfo": {
+    "title": "Histoire de Pierre Lapin",
+    "authors": [
+     "Beatrix Potter"
+    ],
+    "publisher": "BoD – Books on Demand",
+    "publishedDate": "2018-03-20",
+    "description": "Histoire de Pierre Lapin: \"IL y avait une fois quatre petits lapins qui s'appelaient - Flopsaut, Trotsaut, Oueue-de-Coton, et Pierre. ...\"",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_13",
+      "identifier": "9783746091761"
+     },
+     {
+      "type": "ISBN_10",
+      "identifier": "3746091764"
+     }
+    ],
+    "readingModes": {
+     "text": true,
+     "image": true
+    },
+    "pageCount": 11,
+    "printType": "BOOK",
+    "categories": [
+     "Juvenile Fiction"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": true,
+    "contentVersion": "1.2.3.0.preview.3",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=cRlSDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=cRlSDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=cRlSDwAAQBAJ&printsec=frontcover&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+     "amount": 0.99,
+     "currencyCode": "EUR"
+    },
+    "retailPrice": {
+     "amount": 0.99,
+     "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ&rdid=book-cRlSDwAAQBAJ&rdot=1&source=gbs_api",
+    "offers": [
+     {
+      "finskyOfferType": 1,
+      "listPrice": {
+       "amountInMicros": 990000.0,
+       "currencyCode": "EUR"
+      },
+      "retailPrice": {
+       "amountInMicros": 990000.0,
+       "currencyCode": "EUR"
+      },
+      "giftable": true
+     }
+    ]
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Histoire_de_Pierre_Lapin-sample-epub.acsm?id=cRlSDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "pdf": {
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Histoire_de_Pierre_Lapin-sample-pdf.acsm?id=cRlSDwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=cRlSDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Histoire de Pierre Lapin: &quot;IL y avait une fois quatre petits lapins qui s&#39;appelaient - Flopsaut, Trotsaut, Oueue-de-Coton, et Pierre. ...&quot;"
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "Gz6HDAEACAAJ",
+   "etag": "3FkW1AWMcVM",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/Gz6HDAEACAAJ",
+   "volumeInfo": {
+    "title": "Histoire de Pierre Lapin",
+    "authors": [
+     "Beatrix Potter"
+    ],
+    "publisher": "Hardpress Publishing",
+    "publishedDate": "2016-06-23",
+    "description": "Unlike some other reproductions of classic texts (1) We have not used OCR(Optical Character Recognition), as this leads to bad quality books with introduced typos. (2) In books where there are images such as portraits, maps, sketches etc We have endeavoured to keep the quality of these images, so they represent accurately the original artefact. Although occasionally there may be certain imperfections with these old texts, we feel they deserve to be made available for future generations to enjoy.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "1318919460"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9781318919468"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": false
+    },
+    "pageCount": 52,
+    "printType": "BOOK",
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=Gz6HDAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=Gz6HDAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+    },
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=Gz6HDAEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=Gz6HDAEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Histoire_de_Pierre_Lapin.html?hl=&id=Gz6HDAEACAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "NO_PAGES",
+    "embeddable": false,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=Gz6HDAEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "NONE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Although occasionally there may be certain imperfections with these old texts, we feel they deserve to be made available for future generations to enjoy."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "Bc3TNQAACAAJ",
+   "etag": "bhKR0a5SPNY",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/Bc3TNQAACAAJ",
+   "volumeInfo": {
+    "title": "L'histoire de Tonton-le-Voltigeur",
+    "authors": [
+     "Beatrix Potter"
+    ],
+    "publisher": "Frederick Warne Publishers",
+    "publishedDate": "1978-01-01",
+    "description": "Les écrits de Beatrix Potter ont fait le bonheur de nombreux enfants. Des histoires gentilles à l'illustration traditionaliste. Le format de ces volumes bien reliés les rend facilement manipulables par les enfants qui commencent à lire. Le temps, mieux que quiconque, a critiqué cet auteur animalier dont les volumes ont paru au début du siècle. A lire ou à conter.",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "0723220484"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9780723220480"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": false
+    },
+    "pageCount": 59,
+    "printType": "BOOK",
+    "categories": [
+     "Children's literature, French"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=Bc3TNQAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=4&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=Bc3TNQAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/L_histoire_de_Tonton_le_Voltigeur.html?hl=&id=Bc3TNQAACAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "NO_PAGES",
+    "embeddable": false,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=Bc3TNQAACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "NONE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Les écrits de Beatrix Potter ont fait le bonheur de nombreux enfants."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "xSbjAAAACAAJ",
+   "etag": "S9+AdQ63jgU",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/xSbjAAAACAAJ",
+   "volumeInfo": {
+    "title": "Histoire de Madame Trotte, L'",
+    "subtitle": "2french Edition",
+    "authors": [
+     "Beatrix Potter",
+     "Annie Thiriot"
+    ],
+    "publisher": "Frederick Warne Publishers",
+    "publishedDate": "1975-01-01",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "072321865X"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9780723218654"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": false
+    },
+    "pageCount": 59,
+    "printType": "BOOK",
+    "categories": [
+     "Children's literature, French"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=xSbjAAAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=xSbjAAAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Histoire_de_Madame_Trotte_L.html?hl=&id=xSbjAAAACAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "NO_PAGES",
+    "embeddable": false,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=xSbjAAAACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "NONE",
+    "quoteSharingAllowed": false
+   }
+  }
+ ]
+}
