@@ -355,8 +355,19 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 			return err
 		}
 		if !exists {
-			logger.Printf("Record '%s' is in database and not in filesystem. Deleting it", key)
-			return s.Delete(key)
+			errDel := new(NonBlockingErrors)
+
+			logger.Printf("Record '%s' is in database and not in filesystem. Deleting it from database", key)
+			if err := s.db.Delete(key); err != nil {
+				errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
+			}
+
+			logger.Printf("Record '%s' is in index and not in filesystem. Deleting it from index", key)
+			if err := s.idx.Delete(key); err != nil {
+				errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
+			}
+
+			return errDel.Err()
 		}
 
 		exists, err = s.idx.Exists(key)

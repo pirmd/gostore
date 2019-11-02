@@ -67,13 +67,10 @@ func (s *storefs) Move(oldpath string, r *Record) error {
 	return nil
 }
 
-//Delete remove a record from the storefs as well as its parent directories if empty
+//Delete removes a record from the storefs as well as its parent directories if empty
 //If path does not exist, Delete exits without error
 func (s *storefs) Delete(path string) error {
 	if err := s.fs.Remove(path); err != nil {
-		if os.IsNotExist(err) {
-			return nil
-		}
 		return err
 	}
 
