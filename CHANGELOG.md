@@ -10,6 +10,9 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
   cli application definition.
 - refactor gostore configuration as well as processing modules for hopefully
   better modularity.
+### Removed
+- disable ability to read metadata from files rather than from the collection's
+  database
 
 ## [0.2.0] - 2019.08.11
 ### Added

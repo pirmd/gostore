@@ -86,6 +86,7 @@ func newApp(cfg *Config) *app.Command {
 		Name:  "info",
 		Usage: "Retrieve information about any collection's record.",
 
+		/* TODO: implements correct dif screen outputs to restore this function
 		Flags: app.Flags{
 			{
 				Name:  "from-file",
@@ -93,6 +94,7 @@ func newApp(cfg *Config) *app.Command {
 				Var:   &readInfoFromMediaFile,
 			},
 		},
+		*/
 
 		Args: app.Args{
 			{
