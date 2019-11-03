@@ -43,7 +43,7 @@ ui:
     outputformat: full
 
     # formatters is the set of available styles for listing media metadata. For
-    # each style, customized styles can be proposed for a given media'type.
+    # each style, customized styles can be proposed for a given media type.
     # Fall-back templates or generic template can be defined using the
     # "_default" keyword. Template's follow golang text/template specification. 
     formatters:
@@ -53,11 +53,11 @@ ui:
 
         full:
             _default: '{{ metadata . "Name" "Title" "*" "CreatedAt" "UpdatedAt"}}'
-            epub:     '{{ metadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}'
+            epub: '{{ metadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}'
 
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
-importmodules:
+importmodules: &importmodules
     # organizer is a modules that rationalizes the name of a media based on its metadata values
     organizer:
         
@@ -77,7 +77,7 @@ importmodules:
     # dehtmlizer is a modules that removes any html tags from a media metadata.
     # it can optionally convert th ehtml taging into another idioms (like
     # markdown)
-    dehtmlizer:
+    dehtmlizer: &dehtmlizer
         # fields2clean is th elist of metadata fields to clean from html tags
         fields2clean:
             - Description
@@ -87,12 +87,4 @@ importmodules:
 # updatemodules lists the different processings that will modified the media's
 # metadata during the update stage.
 updatemodules:
-    organizer:
-        namingschemes:
-            _default: "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}"
-        sanitizer: standard
-
-    dehtmlizer:
-        fields2clean:
-            - Description
-        outputstyle : markdown
+    <<: *importmodules
