@@ -11,7 +11,7 @@ import (
 func setupStore(tb testing.TB) (*Store, func()) {
 	tstDir := verify.NewTestField(tb)
 
-	s, err := Open(tstDir.Root)
+	s, err := Open(tstDir.Root, UsingFrozenTimeStamps())
 	if err != nil {
 		tstDir.Clean()
 		tb.Fatalf("Fail to create testing Store: %s", err)
