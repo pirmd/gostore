@@ -91,24 +91,3 @@ func TestIndexWalk(t *testing.T) {
 
 	verify.EqualSliceWithoutOrder(t, out, keys, "Walk through index")
 }
-
-func BenchmarkIndexCreationWithDefaultAnalyzer(b *testing.B) {
-	idx, cleanFn := setupIdx(b)
-	defer cleanFn()
-
-	for n := 0; n < b.N; n++ {
-		_ = populateIdx(b, idx)
-	}
-
-}
-
-func BenchmarkIndexCreateWithfrAnalyzer(b *testing.B) {
-	idx, cleanFn := setupIdx(b)
-	defer cleanFn()
-
-	idx.Mapping.DefaultAnalyzer = fr.AnalyzerName
-
-	for n := 0; n < b.N; n++ {
-		_ = populateIdx(b, idx)
-	}
-}
