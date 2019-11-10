@@ -133,8 +133,7 @@ func (gs *Gostore) Import(path string) error {
 		return err
 	}
 
-	//XXX: change path to filepath.Base(path)?
-	r := store.NewRecord(path, mdata)
+	r := store.NewRecord(filepath.Base(path), mdata)
 
 	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return err
@@ -301,8 +300,6 @@ func (gs *Gostore) Export(key, dstFolder string) error {
 	defer w.Close() //XXX: check for failures on close
 
 	if _, err := io.Copy(w, r); err != nil {
-		//XXX: is it going to work? search correct pattern
-		_ = os.Remove(dstPath)
 		return err
 	}
 
