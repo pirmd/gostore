@@ -14,7 +14,6 @@ type storefs struct {
 	fs          *vfs.VFS
 }
 
-//newFS returns a new storefs
 func newFS(path string, validFn func(string) bool) *storefs {
 	return &storefs{
 		path:        path,
@@ -22,7 +21,7 @@ func newFS(path string, validFn func(string) bool) *storefs {
 	}
 }
 
-//Open opens a new fs for use
+// Open opens a new fs for use
 func (s *storefs) Open() error {
 	if err := os.MkdirAll(s.path, 0777); err != nil {
 		return err
@@ -32,20 +31,20 @@ func (s *storefs) Open() error {
 	return nil
 }
 
-//Close cleanly closes a storefs
+// Close cleanly closes a storefs
 func (s *storefs) Close() error {
 	return nil
 }
 
-//Exists checks whether a path is present in the storefs
+// Exists checks whether a path is present in the storefs
 func (s *storefs) Exists(path string) (bool, error) {
 	return s.fs.Exists(path)
 }
 
-//Put imports a Record into the storefs
+// Put imports a Record into the storefs
 //
-//Put will happily erase and replace any existing file previously
-//found at Record's path, if any.
+// Put will happily erase and replace any existing file previously
+// found at Record's path, if any.
 func (s *storefs) Put(r *Record, src io.Reader) error {
 	if err := s.fs.Import(src, r.key); err != nil {
 		return err
@@ -53,13 +52,13 @@ func (s *storefs) Put(r *Record, src io.Reader) error {
 	return nil
 }
 
-//Get returns an os.File fore reading/wroting to the Record's file
-//corresponding to the gicen key
+// Get returns an os.File for reading to the Record's file corresponding to the
+// given key
 func (s *storefs) Get(path string) (vfs.File, error) {
 	return s.fs.Open(path)
 }
 
-//Move moves a Record in the storefs
+// Move moves a Record in the storefs
 func (s *storefs) Move(oldpath string, r *Record) error {
 	if err := s.fs.Move(oldpath, r.key); err != nil {
 		return err
@@ -67,8 +66,8 @@ func (s *storefs) Move(oldpath string, r *Record) error {
 	return nil
 }
 
-//Delete removes a record from the storefs as well as its parent directories if empty
-//If path does not exist, Delete exits without error
+// Delete removes a record from the storefs as well as its parent directories if empty
+// If path does not exist, Delete exits without error
 func (s *storefs) Delete(path string) error {
 	if err := s.fs.Remove(path); err != nil {
 		return err
@@ -83,9 +82,9 @@ func (s *storefs) Delete(path string) error {
 	return nil
 }
 
-//Walk iterates over all storedb items and call f for each item
-//Errors that happen during f execution will not stop the execution of Walk but
-//are captured and will be returned once Walk is over
+// Walk iterates over all storedb items and call walkFn for each item. Errors
+// that happen during walkFn execution will not stop the execution of Walk but
+// are captured and will be returned once Walk is over
 func (s *storefs) Walk(walkFn func(string) error) error {
 	errWalk := new(NonBlockingErrors)
 

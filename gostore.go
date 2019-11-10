@@ -18,6 +18,7 @@ type Gostore struct {
 	log           *log.Logger
 	store         *store.Store
 	ui            UserInterfacer
+	pretend       bool
 	importModules []modules.Module
 	updateModules []modules.Module
 }
@@ -39,6 +40,8 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	); err != nil {
 		return nil, err
 	}
+
+	gs.pretend = cfg.Store.ReadOnly
 
 	if gs.ui, err = NewCLI(cfg.UI); err != nil {
 		return nil, err
@@ -100,17 +103,19 @@ func (gs *Gostore) Import(path string) error {
 	}
 	defer gs.store.Close()
 
-	if err := gs.store.Create(r, f); err != nil {
-		return err
+	if !gs.pretend {
+		if err := gs.store.Create(r, f); err != nil {
+			return err
+		}
 	}
 
 	gs.ui.PrettyPrint(r.Fields())
 	return nil
 }
 
-//Info retrieves information about any collection's record.
-//If fromFile flag is set, Info also displays actual metadata stored in the
-//media file
+// Info retrieves information about any collection's record.
+// If fromFile flag is set, Info also displays actual metadata stored in the
+// media file
 func (gs *Gostore) Info(key string, fromFile bool) error {
 	if err := gs.store.Open(); err != nil {
 		return err
@@ -142,7 +147,7 @@ func (gs *Gostore) Info(key string, fromFile bool) error {
 	return nil
 }
 
-//ListAll lists all collection's records
+// ListAll lists all collection's records
 func (gs *Gostore) ListAll() error {
 	if err := gs.store.Open(); err != nil {
 		return err
@@ -197,8 +202,10 @@ func (gs *Gostore) Edit(key string) error {
 		return err
 	}
 
-	if err := gs.store.Update(key, r); err != nil {
-		return err
+	if !gs.pretend {
+		if err := gs.store.Update(key, r); err != nil {
+			return err
+		}
 	}
 
 	gs.ui.PrettyPrint(r.Fields())
@@ -212,8 +219,12 @@ func (gs *Gostore) Delete(key string) error {
 	}
 	defer gs.store.Close()
 
-	if err := gs.store.Delete(key); err != nil {
-		return err
+	//XXX: this pattern should be in store API
+	//XXX: store has readonly and simulates (only report what is going to do but don't actually do it)
+	if !gs.pretend {
+		if err := gs.store.Delete(key); err != nil {
+			return err
+		}
 	}
 
 	return nil

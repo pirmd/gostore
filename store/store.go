@@ -1,6 +1,7 @@
 package store
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -15,24 +16,24 @@ const (
 )
 
 var (
-	//ErrKeyIsNotValid raises an error if provided key is invalid
-	ErrKeyIsNotValid = fmt.Errorf("key is invalid")
-	//ErrRecordAlreadyExists raises an error if a record already exits
-	ErrRecordAlreadyExists = fmt.Errorf("record already exists")
-	//ErrRecordDoesNotExist raises an error is a record does not exist
-	ErrRecordDoesNotExist = fmt.Errorf("record does not exist")
+	// ErrKeyIsNotValid raises an error if provided key is invalid
+	ErrKeyIsNotValid = errors.New("key is invalid")
+	// ErrRecordAlreadyExists raises an error if a record already exits
+	ErrRecordAlreadyExists = errors.New("record already exists")
+	// ErrRecordDoesNotExist raises an error is a record does not exist
+	ErrRecordDoesNotExist = errors.New("record does not exist")
 )
 
-//Store represents the actual storing engine It is made of a filesystem, a
-//keystore (leveldb) and an indexer (bleve)
+// Store represents the actual storing engine It is made of a filesystem, a
+// keystore (leveldb) and an indexer (bleve)
 type Store struct {
 	fs  *storefs
 	db  *storedb
 	idx *storeidx
 }
 
-//New creates a new Store New accepts options to costumize default Store
-//behaviour
+// New creates a new Store New accepts options to costumize default Store
+// behaviour
 func New(path string, opts ...Option) (*Store, error) {
 	s := &Store{}
 
@@ -49,8 +50,8 @@ func New(path string, opts ...Option) (*Store, error) {
 	return s, nil
 }
 
-//Open creates and opens a Store for use It is a simple shortcut for s := New()
-//then s.Open(). It accepts the same Options than New()
+// Open creates and opens a Store for use It is a simple shortcut for s := New()
+// then s.Open(). It accepts the same Options than New()
 func Open(path string, opts ...Option) (s *Store, err error) {
 	logger.Printf("Opening store at %s", path)
 	if s, err = New(path, opts...); err != nil {
@@ -61,7 +62,7 @@ func Open(path string, opts ...Option) (s *Store, err error) {
 	return
 }
 
-//Open opens a Store for use
+// Open opens a Store for use
 func (s *Store) Open() error {
 	logger.Printf("Opening store's filesystem")
 	if err := s.fs.Open(); err != nil {
@@ -91,7 +92,7 @@ func (s *Store) Open() error {
 	return nil
 }
 
-//Close cleanly closes a Store
+// Close cleanly closes a Store
 func (s *Store) Close() error {
 	err := new(NonBlockingErrors)
 
@@ -113,10 +114,10 @@ func (s *Store) Close() error {
 	return err.Err()
 }
 
-//Create creates a new record in the Store Create does not replace existing
-//Record (you have to use Update for that) but will replace partially existing
-//records resulting from an inconsistent state of the Store (e.g. file exists
-//but entry in db does not)
+// Create creates a new record in the Store Create does not replace existing
+// Record (you have to use Update for that) but will replace partially existing
+// records resulting from an inconsistent state of the Store (e.g. file exists
+// but entry in db does not)
 func (s *Store) Create(r *Record, file io.Reader) error {
 	logger.Printf("Adding new record to store '%s'", r)
 
@@ -158,9 +159,9 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 	return nil
 }
 
-//Exists returns whether a Record exists for the given key If the Store's state
-//is inconsistent for the given key (e.g. file is not present but and entry
-//exists in the database), Exists returns false
+// Exists returns whether a Record exists for the given key If the Store's state
+// is inconsistent for the given key (e.g. file is not present but and entry
+// exists in the database), Exists returns false
 func (s *Store) Exists(key string) (exists bool, err error) {
 	logger.Printf("Test if '%s' exists in fs", key)
 	if exists, err = s.fs.Exists(key); err != nil || !exists {
@@ -176,13 +177,13 @@ func (s *Store) Exists(key string) (exists bool, err error) {
 	return s.idx.Exists(key)
 }
 
-//Read returns the stored Record corresponding to the given key
+// Read returns the stored Record corresponding to the given key
 func (s *Store) Read(key string) (*Record, error) {
 	logger.Printf("Get record '%s' from storage", key)
 	return s.db.Get(key)
 }
 
-//ReadAll returns all store's records
+// ReadAll returns all store's records
 func (s *Store) ReadAll() (list Records, err error) {
 	logger.Printf("Get all records from store")
 
@@ -198,16 +199,16 @@ func (s *Store) ReadAll() (list Records, err error) {
 	return
 }
 
-//OpenRecord opens an os.File for the record corresponding to the given key
+// OpenRecord opens the record corresponding to the given key for reading.
 func (s *Store) OpenRecord(key string) (vfs.File, error) {
 	logger.Printf("Open record '%s' from storage", key)
 	return s.fs.Get(key)
 }
 
-//Update replaces an existing Store's record.  Update only works if the record
-//is actually existing in the Store. If it corresponds to a partially existing
-//Record (e.g. no file but data in the database), Update will fail (you have to
-//use Create for that situation)
+// Update replaces an existing Store's record. Update only works if the record
+// is actually existing in the Store. If it corresponds to a partially existing
+// Record (e.g. no file but data in the database), Update will fail (you have to
+// use Create for that situation)
 func (s *Store) Update(key string, r *Record) error {
 	logger.Printf("Updating record '%s' to '%s'", key, r)
 
@@ -274,7 +275,7 @@ func (s *Store) Update(key string, r *Record) error {
 	return nil
 }
 
-//Delete removes a record from the Store
+// Delete removes a record from the Store
 func (s *Store) Delete(key string) error {
 	logger.Printf("Deleting record '%s' from store", key)
 
@@ -298,8 +299,8 @@ func (s *Store) Delete(key string) error {
 	return errDel.Err()
 }
 
-//Search returns the list of keys corresponding to the given search query The
-//query should follow the bleve search engine synthax.
+// Search returns the list of keys corresponding to the given search query. The
+// query should follow the bleve search engine synthax.
 func (s *Store) Search(query string) (Records, error) {
 	logger.Printf("Search records for '%s'", query)
 
@@ -320,9 +321,9 @@ func (s *Store) Search(query string) (Records, error) {
 	return result, nil
 }
 
-//RebuildIndex deletes then rebuild the index from scratch based on the
-//database content It can be used for example to implement a new mapping
-//stratégy or if things are really going bad
+// RebuildIndex deletes then rebuild the index from scratch based on the
+// database content It can be used for example to implement a new mapping
+// startégy or if things are really going bad
 func (s *Store) RebuildIndex() error {
 	logger.Printf("Create a new index from scratch")
 	if err := s.idx.Empty(); err != nil {
@@ -339,8 +340,8 @@ func (s *Store) RebuildIndex() error {
 	})
 }
 
-//CheckAndRepair verifies the consistency between the Store's components (file
-//system, database and index) and try to solve any issues:
+// CheckAndRepair verifies the consistency between the Store's components (file
+// system, database and index) and try to solve any issues:
 // - delete database and index entries whose file cannot be found
 // - re-create index entry with a database and file record
 // - report files found in the store without any index or database record
