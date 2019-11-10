@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/pirmd/verify"
 	"testing"
+
+	"github.com/pirmd/verify"
 )
 
 func TestGetKeys(t *testing.T) {
