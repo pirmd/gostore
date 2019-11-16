@@ -38,8 +38,7 @@ func (s *storeidx) Open() (err error) {
 
 //Close cleanly closes the storeidx
 func (s *storeidx) Close() error {
-	s.idx.Close()
-	return nil
+	return s.idx.Close()
 }
 
 //Empty removes all content from the index and restart from scratch

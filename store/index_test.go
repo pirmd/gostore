@@ -18,8 +18,10 @@ func setupIdx(tb testing.TB) (*storeidx, func()) {
 	}
 
 	return idx, func() {
-		idx.Close()
 		tstDir.Clean()
+		if err := idx.Close(); err != nil {
+			tb.Fatalf("Fail to properly close testing index: %s", err)
+		}
 	}
 }
 

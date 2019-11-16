@@ -85,7 +85,6 @@ func (s *Store) Open() error {
 		if e := s.db.Close(); e != nil {
 			err = fmt.Errorf("%s\nClose store's database failed: %s", err, e)
 		}
-		s.db.Close()
 		return err
 	}
 

@@ -42,7 +42,9 @@ func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 		tb.Fatalf("cannot generate gostore from config: %s", err)
 	}
 
-	store.UsingFrozenTimeStamps()(gs.store)
+	if err := store.UsingFrozenTimeStamps()(gs.store); err != nil {
+		tb.Fatalf("cannot force store to use frozen time-stamps for test duration: %s", err)
+	}
 
 	return &testGostore{gs, tstDir}
 }

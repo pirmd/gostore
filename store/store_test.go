@@ -19,7 +19,9 @@ func setupStore(tb testing.TB) (*Store, func()) {
 
 	return s, func() {
 		tstDir.Clean()
-		s.Close()
+		if err := s.Close(); err != nil {
+			tb.Fatalf("Fail to properly close testing Store: %s", err)
+		}
 	}
 }
 

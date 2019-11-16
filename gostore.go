@@ -275,7 +275,7 @@ func (gs *Gostore) Delete(key string) error {
 // Destination is considered as a folder where the record's media file will be
 // copied to (final file's will be dst/key, keeping any sub-folder(s) coming
 // with the record's key name).
-func (gs *Gostore) Export(key, dstFolder string) error {
+func (gs *Gostore) Export(key, dstFolder string) (err error) {
 	dstPath := filepath.Join(key, dstFolder)
 
 	if err := gs.store.Open(); err != nil {
@@ -283,27 +283,31 @@ func (gs *Gostore) Export(key, dstFolder string) error {
 	}
 	defer gs.store.Close()
 
-	r, err := gs.store.OpenRecord(key)
+	f, err := gs.store.OpenRecord(key)
 	if err != nil {
 		return err
 	}
-	defer r.Close()
+	defer f.Close()
 
 	if err := os.MkdirAll(filepath.Dir(dstPath), 0777); err != nil {
 		return err
 	}
 
-	w, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE, 0666)
+	var w *os.File
+	w, err = os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		return err
 	}
-	defer w.Close() //XXX: check for failures on close
 
-	if _, err := io.Copy(w, r); err != nil {
-		return err
-	}
+	defer func() {
+		cerr := w.Close()
+		if err == nil {
+			err = cerr
+		}
+	}()
 
-	return nil
+	_, err = io.Copy(w, f)
+	return
 }
 
 // CheckAndRepair verifies collection's consistency and repairs or reports found inconsistencies.

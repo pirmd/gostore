@@ -17,8 +17,10 @@ func setupDb(tb testing.TB) (*storedb, func()) {
 	}
 
 	return db, func() {
-		db.Close()
 		tstDir.Clean()
+		if err := db.Close(); err != nil {
+			tb.Fatalf("Fail to properly close testing database: %s", err)
+		}
 	}
 }
 
