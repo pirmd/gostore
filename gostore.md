@@ -11,7 +11,7 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __import__ *media*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __info__ [--__from-file__] *name*
+[--__style__=*STYLE*] __info__ *name*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __list__ [*pattern*]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
@@ -58,7 +58,7 @@ __version__
 __import__ *media*
 :Import a new media into the collection.
 
-__info__ [<flags>] *name*
+__info__ *name*
 :Retrieve information about any collection's record.
 
 __list__ [*pattern*]

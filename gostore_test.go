@@ -198,7 +198,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		verify.MatchStdoutGolden(t, stdout, "Search output is not as expected")
 	})
 
-	//XXX: add additional search pattern using date and serie number
+	//TODO(pirmd): add additional search pattern using date and serie number
 }
 
 func testDelete(t *testing.T, gs *testGostore) {

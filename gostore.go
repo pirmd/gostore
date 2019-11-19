@@ -260,8 +260,6 @@ func (gs *Gostore) Delete(key string) error {
 	}
 	defer gs.store.Close()
 
-	//XXX: this pattern should be in store API
-	//XXX: store has readonly and simulates (only report what is going to do but don't actually do it)
 	if !gs.pretend {
 		if err := gs.store.Delete(key); err != nil {
 			return err

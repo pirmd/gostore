@@ -8,7 +8,7 @@ import (
 
 func main() {
 	cfg := newConfig()
-	cmd := newApp(cfg, nil)
+	cmd := newApp(cfg)
 
 	app.GenerateManpage(cmd)
 	app.GenerateHelpFile(cmd)
