@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"fmt"
@@ -9,11 +9,11 @@ import (
 
 	"github.com/kballard/go-shellquote"
 
-	"github.com/pirmd/cli/formatter"
-	"github.com/pirmd/cli/input"
 	"github.com/pirmd/style"
 	"github.com/pirmd/text"
 	"github.com/pirmd/text/diff"
+
+	"github.com/pirmd/gostore/ui/formatter"
 )
 
 var (
@@ -151,7 +151,7 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 // Edit fires-up a new editor to modif m
 func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.editor) > 0 {
-		edited, err := input.EditAsJSON(m, ui.editor)
+		edited, err := EditAsJSON(m, ui.editor)
 		return edited.(map[string]interface{}), err
 	}
 
@@ -161,7 +161,7 @@ func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 // Merge fires-up a new editor to merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.merger) > 0 {
-		merged, _, err := input.MergeAsJSON(m, n, ui.merger)
+		merged, _, err := MergeAsJSON(m, n, ui.merger)
 		return merged.(map[string]interface{}), err
 	}
 

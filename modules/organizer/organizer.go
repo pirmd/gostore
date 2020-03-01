@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/pirmd/cli/formatter"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/ui/formatter"
 )
 
 const (

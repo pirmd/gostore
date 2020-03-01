@@ -22,7 +22,6 @@ require (
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/pirmd/clapp v0.3.2
-	github.com/pirmd/cli v0.3.0
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.3.2
 	github.com/pirmd/text v0.5.1

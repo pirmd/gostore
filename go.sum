@@ -83,8 +83,6 @@ github.com/philhofer/fwd v1.0.0/go.mod h1:gk3iGcWd9+svBvR0sR+KPcfE+RNWozjowpeBVG
 github.com/pirmd/clapp v0.3.2 h1:Ll+l8rRSZtIP1snOY/5PUNIVftOwbs2HJ7+R+ShyzAQ=
 github.com/pirmd/clapp v0.3.2/go.mod h1:uzGQhqAzkG3jTwqcppW+/RvRV3R0BjkMtNH7QKO/Hmo=
 github.com/pirmd/cli v0.2.0/go.mod h1:O0KX5M95fQFSeWLPP4kq4LrZHWgS1+G9FwitmBF9T64=
-github.com/pirmd/cli v0.2.1-0.20191006125207-74bb920e6743 h1:TnHdWhbO5zsRQZV2DaXNjboL0Dq5HyOp9KGWjcEDRag=
-github.com/pirmd/cli v0.2.1-0.20191006125207-74bb920e6743/go.mod h1:MCAlgqKKTt8c0KK9tggXepX6mqo0ztZm6t2R5nNbZKY=
 github.com/pirmd/cli v0.3.0 h1:OW0248GRk/79lePS3g+Wqpua3BziEKPagBZ/ta0uGmQ=
 github.com/pirmd/cli v0.3.0/go.mod h1:MCAlgqKKTt8c0KK9tggXepX6mqo0ztZm6t2R5nNbZKY=
 github.com/pirmd/epub v0.1.0 h1:zhgu/Tuw5+/XXpnV6CdYok7YswD/o7VfiQ2Ae0MJL94=
