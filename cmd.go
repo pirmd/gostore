@@ -5,26 +5,26 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/pirmd/cli/app"
+	"github.com/pirmd/clapp"
 )
 
-func newApp(cfg *Config) *app.Command {
-	cmd := &app.Command{
+func newApp(cfg *Config) *clapp.Command {
+	cmd := &clapp.Command{
 		Name:        "gostore",
 		Usage:       "A command-line minimalist media collection manager.",
 		Description: "gostore is a command line tool aiming at providing facilities to manage one or more collections of media files, keeping track of their metadata and/or additional information the user wants to record.",
 
-		Config: &app.Config{
+		Config: &clapp.Config{
 			Unmarshaller: yaml.Unmarshal,
-			Files:        app.DefaultConfigFiles("config.yaml"),
+			Files:        clapp.DefaultConfigFiles("config.yaml"),
 			Var:          cfg,
 		},
 
-		ShowHelp:    app.ShowUsage,
-		ShowVersion: app.ShowVersion,
+		ShowHelp:    clapp.ShowUsage,
+		ShowVersion: clapp.ShowVersion,
 	}
 
-	cmd.Flags = app.Flags{
+	cmd.Flags = clapp.Flags{
 		{
 			Name:  "debug",
 			Usage: "Show debug information.",
@@ -57,10 +57,10 @@ func newApp(cfg *Config) *app.Command {
 	}
 
 	var mediaPath string
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "import",
 		Usage: "Import a new media into the collection.",
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:  "media",
 				Usage: "Media to import into the collection.",
@@ -82,12 +82,12 @@ func newApp(cfg *Config) *app.Command {
 
 	var recordID string
 	var readInfoFromMediaFile bool
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "info",
 		Usage: "Retrieve information about any collection's record.",
 
 		/* TODO: implements correct dif screen outputs to restore this function
-		Flags: app.Flags{
+		Flags: clapp.Flags{
 			{
 				Name:  "from-file",
 				Usage: "Read information from media file rather than from the collection",
@@ -96,7 +96,7 @@ func newApp(cfg *Config) *app.Command {
 		},
 		*/
 
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:  "name",
 				Usage: "Name of the record to get information about.",
@@ -118,12 +118,12 @@ func newApp(cfg *Config) *app.Command {
 	})
 
 	searchPattern := "*"
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name: "list",
 
 		Usage: "Lists the collection's records matching the given pattern. If no pattern is provied, list all records of the collection.",
 
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:     "pattern",
 				Usage:    "Pattern to match records against. Pattern follows blevesearch query language (https://blevesearch.com/docs/Query-String-Query/).",
@@ -152,11 +152,11 @@ func newApp(cfg *Config) *app.Command {
 		},
 	})
 
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "edit",
 		Usage: "Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.",
 
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:  "name",
 				Usage: "Name of the record to edit.",
@@ -177,11 +177,11 @@ func newApp(cfg *Config) *app.Command {
 		},
 	})
 
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "delete",
 		Usage: "Delete an existing record from the collection.",
 
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:  "name",
 				Usage: "Name of the record to delete.",
@@ -203,11 +203,11 @@ func newApp(cfg *Config) *app.Command {
 	})
 
 	var dstFolder string
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "export",
 		Usage: "Copy a record's media file from the collection to the given destination.",
 
-		Args: app.Args{
+		Args: clapp.Args{
 			{
 				Name:  "name",
 				Usage: "Name of the record to export.",
@@ -234,7 +234,7 @@ func newApp(cfg *Config) *app.Command {
 		},
 	})
 
-	cmd.SubCommands.Add(&app.Command{
+	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "check",
 		Usage: "Verify collection's consistency and repairs or reports found inconsistencies.",
 		Execute: func() error {

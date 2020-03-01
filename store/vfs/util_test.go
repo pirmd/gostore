@@ -7,14 +7,21 @@ import (
 )
 
 func TestExists(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
 
 	fs := NewOsfs()
 
-	for _, f := range tstDir.List() {
+	tstList, err := tstDir.List()
+	if err != nil {
+		t.Fatalf("Fail to list test folder content: %v", err)
+	}
+	for _, f := range tstList {
 		exists, err := fs.Exists(tstDir.Fullpath(f))
 		if err != nil {
 			t.Errorf("Failed to test existence of '%s': %s", f, err)
@@ -25,14 +32,20 @@ func TestExists(t *testing.T) {
 		}
 	}
 
-	for _, f := range tstDir.List() {
+	tstList, err = tstDir.List()
+	if err != nil {
+		t.Fatalf("Fail to list test folder content: %v", err)
+	}
+	for _, f := range tstList {
 		exists, err := fs.Exists(tstDir.Fullpath(f) + "_nonexistent")
 		if err != nil {
 			t.Errorf("Failed to test existence of '%s': %s", f, err)
 		}
 
-		if exists && !tstDir.Exists(f) {
-			t.Errorf("'%s' is seen as existent", f)
+		if exists {
+			if failure := tstDir.ShouldNotHaveFile(f); failure != nil {
+				t.Errorf("'%s' is seen as existent", f)
+			}
 		}
 	}
 }

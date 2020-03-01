@@ -18,7 +18,7 @@ case ${CMD:-} in
         #another set-up for initiliazing version variables but can be annoying
         #in other cases. For these cases, you'd better edit this script
         #directly
-        exec go build -ldflags "-X github.com/pirmd/cli/app.version=${VERSION:-?.?.?} -X github.com/pirmd/cli/app.build=${BUILD:-?}" "$@"
+        exec go build -ldflags "-X github.com/pirmd/clapp.version=${VERSION:-?.?.?} -X github.com/pirmd/clapp.build=${BUILD:-?}" "$@"
     ;;
 
     (install)
@@ -31,7 +31,7 @@ case ${CMD:-} in
         #another set-up for initiliazing version variables but can be annoying
         #in other cases. For these cases, you'd better edit this script
         #directly
-        exec go install -ldflags "-s -w -X github.com/pirmd/cli/app.version=${VERSION:-?.?.?} -X github.com/pirmd/cli/app.build=${BUILD:-?}" "$@"
+        exec go install -ldflags "-s -w -X github.com/pirmd/clapp.version=${VERSION:-?.?.?} -X github.com/pirmd/clapp.build=${BUILD:-?}" "$@"
     ;;
 
     (*)

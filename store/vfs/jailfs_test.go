@@ -31,7 +31,10 @@ func TestJailfsPath(t *testing.T) {
 }
 
 func TestJailfsRead(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -48,7 +51,10 @@ func TestJailfsRead(t *testing.T) {
 }
 
 func TestJailfsPopulateAndWalk(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := NewJailfs(tstDir.Root, NewOsfs())
@@ -57,11 +63,16 @@ func TestJailfsPopulateAndWalk(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	tstDir.ShouldHaveContent(tstCases, "Fail to create tree")
+	if failure := tstDir.ShouldHaveContent(tstCases); failure != nil {
+		t.Errorf("Fail to create tree:\n%v", failure)
+	}
 }
 
 func TestJailfsRemove(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -73,7 +84,9 @@ func TestJailfsRemove(t *testing.T) {
 		if err := fs.Remove(tc); err != nil {
 			t.Errorf("Failed to remove file %s: %s", tc, err)
 		}
-		tstDir.ShouldNotHaveFile(tc, "Failed to remove file")
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Failed to remove file:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove empty folder", func(t *testing.T) {
@@ -81,7 +94,9 @@ func TestJailfsRemove(t *testing.T) {
 		if err := fs.Remove(tc); err != nil {
 			t.Errorf("Failed to remove empty folder %s: %s", tc, err)
 		}
-		tstDir.ShouldNotHaveFile(tc, "Failed to remove empty folder")
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Failed to remove empty folder:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove non empty folder", func(t *testing.T) {
@@ -89,7 +104,9 @@ func TestJailfsRemove(t *testing.T) {
 		if err := fs.Remove(tc); err == nil {
 			t.Errorf("Succeed to remove non empty folder %s", tc)
 		}
-		tstDir.ShouldHaveFile(tc, "Succeed to remove non empty folder")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Succeed to remove non empty folder:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove root folder", func(t *testing.T) {
@@ -97,11 +114,17 @@ func TestJailfsRemove(t *testing.T) {
 			t.Errorf("Succeed to remove root folder")
 		}
 	})
-	tstDir.ShouldHaveContent([]string{""}, "Failed to remove folders")
+	//TODO(pirmd): introduce verify Empty()
+	if failure := tstDir.ShouldHaveContent(nil); failure != nil {
+		t.Errorf("Failed to remove folders:\n%v", failure)
+	}
 }
 
 func TestJailfsRename(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -114,8 +137,12 @@ func TestJailfsRename(t *testing.T) {
 			t.Errorf("Failed to rename %s: %s", tc, err)
 		}
 
-		tstDir.ShouldHaveFile(tc+"_renamed", "Failed to rename file")
-		tstDir.ShouldNotHaveFile(tc, "Failed to rename file")
+		if failure := tstDir.ShouldHaveFile(tc + "_renamed"); failure != nil {
+			t.Errorf("Failed to rename file:\n%v", failure)
+		}
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Failed to rename file:\n%v", failure)
+		}
 	})
 
 	t.Run("Rename root", func(t *testing.T) {
@@ -123,7 +150,11 @@ func TestJailfsRename(t *testing.T) {
 			t.Errorf("Succeed to rename root folder")
 		}
 
-		tstDir.ShouldHaveFile("", "Succeed to rename root folder")
-		tstDir.ShouldNotHaveFile("root_renamed", "Succeed to rename root folder")
+		if failure := tstDir.ShouldHaveFile(""); failure != nil {
+			t.Errorf("Succeed to rename root folder:\n%v", failure)
+		}
+		if failure := tstDir.ShouldNotHaveFile("root_renamed"); failure != nil {
+			t.Errorf("Succeed to rename root folder:\n%v", failure)
+		}
 	})
 }

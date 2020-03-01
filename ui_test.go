@@ -34,7 +34,9 @@ func TestGetKeys(t *testing.T) {
 
 	for _, tc := range tstCases {
 		got := getKeys(maps, tc.in...)
-		verify.Equal(t, got, tc.want, "failed to select fields in map collection")
+		if failure := verify.Equal(got, tc.want); failure != nil {
+			t.Errorf("Failed to select fields in map collection:\n%v", failure)
+		}
 	}
 }
 
@@ -70,6 +72,8 @@ func TestGetCommonKeys(t *testing.T) {
 
 	for _, tc := range tstCases {
 		got := getCommonKeys(maps, tc.in...)
-		verify.Equal(t, got, tc.want, "failed to select common fields in map collection")
+		if failure := verify.Equal(got, tc.want); failure != nil {
+			t.Errorf("Failed to select common fields in map collection:\n%v", failure)
+		}
 	}
 }

@@ -9,7 +9,10 @@ import (
 )
 
 func setupIdx(tb testing.TB) (*storeidx, func()) {
-	tstDir := verify.NewTestField(tb)
+	tstDir, err := verify.NewTestFolder(tb.Name())
+	if err != nil {
+		tb.Fatalf("Fail to create test folder: %v", err)
+	}
 
 	idx := newIdx(filepath.Join(tstDir.Root, "idxtest"))
 	if err := idx.Open(); err != nil {
@@ -72,7 +75,9 @@ func TestIndexSearch(t *testing.T) {
 				t.Errorf("Search for %s failed: %s", tc.in, err)
 			}
 
-			verify.Equal(t, out, tc.out, "Search for   "+tc.in)
+			if failure := verify.Equal(out, tc.out); failure != nil {
+				t.Errorf("Search for %s failed:\n%v", tc.in, failure)
+			}
 		})
 	}
 }
@@ -91,5 +96,7 @@ func TestIndexWalk(t *testing.T) {
 		t.Fatalf("Walking through index failed: %v", err)
 	}
 
-	verify.EqualSliceWithoutOrder(t, out, keys, "Walk through index")
+	if failure := verify.EqualSliceWithoutOrder(out, keys); failure != nil {
+		t.Errorf("Walk through index failed:\n%v", failure)
+	}
 }

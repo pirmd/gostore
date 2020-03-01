@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"path/filepath"
 	"testing"
 
@@ -9,7 +10,10 @@ import (
 )
 
 func setupStore(tb testing.TB) (*Store, func()) {
-	tstDir := verify.NewTestField(tb)
+	tstDir, err := verify.NewTestFolder(tb.Name())
+	if err != nil {
+		tb.Fatalf("Fail to create test folder: %v", err)
+	}
 
 	s, err := Open(tstDir.Root, UsingFrozenTimeStamps())
 	if err != nil {
@@ -28,7 +32,7 @@ func setupStore(tb testing.TB) (*Store, func()) {
 func populateStore(tb testing.TB, s *Store) (keys []string) {
 	for _, td := range testData {
 		r := NewRecord(buildKey(td), td)
-		if err := s.Create(r, verify.IOReader("")); err != nil {
+		if err := s.Create(r, verify.MockROFile("")); err != nil {
 			tb.Fatalf("Fail to add %v: %s", td, err)
 		}
 		keys = append(keys, r.key)
@@ -61,7 +65,7 @@ func TestCreateAndRead(t *testing.T) {
 
 	t.Run("Cannot create an already existing record", func(t *testing.T) {
 		for _, tc := range testData {
-			if err := s.Create(NewRecord(buildKey(tc), tc), verify.IOReader("")); err == nil {
+			if err := s.Create(NewRecord(buildKey(tc), tc), verify.MockROFile("")); err == nil {
 				t.Errorf("Managed to add %v that already exists in the store", tc)
 			}
 		}
@@ -73,7 +77,7 @@ func TestCreateAndRead(t *testing.T) {
 				t.Fatalf("Fail to delete '%s' from database: %v", keys[i], err)
 			}
 
-			if err := s.Create(NewRecord(keys[i], testData[i]), verify.IOReader("")); err != nil {
+			if err := s.Create(NewRecord(keys[i], testData[i]), verify.MockROFile("")); err != nil {
 				t.Errorf("Fail to create %s:%v: %v", keys[i], testData[i], err)
 			}
 		}
@@ -197,7 +201,9 @@ func TestSearch(t *testing.T) {
 			t.Errorf("Search for %s failed: %s", tc.in, err)
 		}
 
-		verify.EqualSliceWithoutOrder(t, out.Key(), tc.out, "Search:   "+tc.in)
+		if failure := verify.EqualSliceWithoutOrder(out.Key(), tc.out); failure != nil {
+			t.Errorf("Search for %s failed:\n%v", tc.in, failure)
+		}
 	}
 }
 
@@ -222,7 +228,9 @@ func TestCheckAndRepair(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Check and repair failed: %v", err)
 		}
-		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
+		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
+			t.Errorf("Orphans files mismatched:\n%v", failure)
+		}
 
 		for i := range testData {
 			shouldExistInStore(t, s, keys[i])
@@ -240,7 +248,9 @@ func TestCheckAndRepair(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Check and repair failed: %v", err)
 		}
-		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
+		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
+			t.Errorf("Orphans files mismatched:\n%v", failure)
+		}
 
 		for i := range testData {
 			if isIntInList(i, testCases) {
@@ -263,7 +273,9 @@ func TestCheckAndRepair(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Check and repair failed: %v", err)
 		}
-		verify.EqualSliceWithoutOrder(t, orphans, orphansExpected, "Orphans files mismatched")
+		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
+			t.Errorf("Orphans files mismatched:\n%v", failure)
+		}
 
 		for i := range testData {
 			if isIntInList(i, testCasesAfterDelete) {
@@ -300,7 +312,19 @@ func TestRebuildIndex(t *testing.T) {
 }
 
 func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message string) {
-	verify.EqualAsJSON(tb, r.Value(), m, message)
+	rInJSON, err := json.Marshal(r.Value())
+	if err != nil {
+		tb.Fatalf("Failed to marshall to JSON: %v", err)
+	}
+
+	mInJSON, err := json.Marshal(m)
+	if err != nil {
+		tb.Fatalf("Failed to marshal to JSON: %v", err)
+	}
+
+	if failure := verify.Equal(rInJSON, mInJSON); failure != nil {
+		tb.Errorf("%s:\n%v", message, failure)
+	}
 }
 
 func shouldExistInStore(tb testing.TB, s *Store, key string) {

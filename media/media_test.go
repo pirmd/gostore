@@ -34,5 +34,7 @@ func TestGetMetadata(t *testing.T) {
 		t.Fatalf("Fail to marshal test output to json: %v", err)
 	}
 
-	verify.MatchGolden(t, string(got), "Metadata is not as expected.")
+	if failure := verify.MatchGolden(t.Name(), string(got)); failure != nil {
+		t.Errorf("Metadata is not as expected:\n%v", failure)
+	}
 }

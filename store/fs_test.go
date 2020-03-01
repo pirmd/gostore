@@ -22,24 +22,32 @@ var (
 )
 
 func TestFSPut(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
 	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale)
 
 	for _, k := range tstCases {
-		if err := fs.Put(NewRecord(k, nil), verify.IOReader("")); err != nil {
+		if err := fs.Put(NewRecord(k, nil), verify.MockROFile("")); err != nil {
 			t.Fatalf("Fail to add %v: %v", k, err)
 		}
 	}
 
 	//This works because populate does not create subfolders
-	tstDir.ShouldHaveContent(tstCases, "fs Put did not work as expected")
+	if failure := tstDir.ShouldHaveContent(tstCases); failure != nil {
+		t.Errorf("fs Put did not work as expected:\n%v", failure)
+	}
 }
 
 func TestFSWalk(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
@@ -55,11 +63,16 @@ func TestFSWalk(t *testing.T) {
 		t.Fatalf("Walking through fs failed: %v", err)
 	}
 
-	verify.EqualSliceWithoutOrder(t, out, tstCases, "Walk through fs does not work")
+	if failure := verify.EqualSliceWithoutOrder(out, tstCases); failure != nil {
+		t.Errorf("Walk through fs does not work:\n%v", failure)
+	}
 }
 
 func TestFSDelete(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
@@ -72,9 +85,14 @@ func TestFSDelete(t *testing.T) {
 			if err := fs.Delete(tc); err != nil {
 				t.Errorf("Cannot delete '%s'", tc)
 			}
-			tstDir.ShouldNotHaveFile(tc, "Storefs cannot delete files")
+			if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+				t.Errorf("Storefs cannot delete files:\n%v", failure)
+			}
 		}
-		tstDir.ShouldHaveContent([]string{}, "Storefs cannot delete files")
+		//TODO(pirmd): create in verify: ShouldBeEmpty
+		if failure := tstDir.ShouldHaveContent(nil); failure != nil {
+			t.Errorf("storefs cannot delete files:\n%v", failure)
+		}
 	})
 
 	t.Run("Delete inexitant record", func(t *testing.T) {
@@ -86,7 +104,10 @@ func TestFSDelete(t *testing.T) {
 }
 
 func TestFSForbiddenPath(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
@@ -96,7 +117,7 @@ func TestFSForbiddenPath(t *testing.T) {
 
 	t.Run("Test Put()", func(t *testing.T) {
 		for _, tc := range tstCasesUnauthorized {
-			if err := fs.Put(NewRecord(tc, nil), verify.IOReader("")); err != os.ErrPermission {
+			if err := fs.Put(NewRecord(tc, nil), verify.MockROFile("")); err != os.ErrPermission {
 				t.Errorf("Succeed to create '%v' that is forbidden", tc)
 			}
 		}
@@ -158,8 +179,12 @@ func TestFSForbiddenPath(t *testing.T) {
 			if err := fs.Move(tc, NewRecord("moved/"+tc, nil)); err != nil {
 				t.Errorf("Cannot move '%s' to '%s': %v", tc, "moved/"+tc, err)
 			}
-			tstDir.ShouldHaveFile("moved/"+tc, "storefs cannot move files")
-			tstDir.ShouldNotHaveFile(tc, "storefs cannot move files")
+			if failure := tstDir.ShouldHaveFile("moved/" + tc); failure != nil {
+				t.Errorf("storefs cannot move files:\n%v", failure)
+			}
+			if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+				t.Errorf("storefs cannot move files:\n%v", failure)
+			}
 		}
 	})
 
@@ -168,14 +193,18 @@ func TestFSForbiddenPath(t *testing.T) {
 			if err := fs.Delete("moved/" + tc); err != nil {
 				t.Errorf("Cannot delete '%s'", "moved/"+tc)
 			}
-			tstDir.ShouldNotHaveFile("moved/"+tc, "storefs cannot delete files")
+			if failure := tstDir.ShouldNotHaveFile("moved/" + tc); failure != nil {
+				t.Errorf("storefs cannot delete files:\n%v", failure)
+			}
 		}
 
 		for _, tc := range tstCasesUnauthorized {
 			if err := fs.Delete(tc); err == nil {
 				t.Errorf("Can delete '%s'", tc)
 			}
-			tstDir.ShouldHaveFile(tc, "storefs can delete unauthorized files")
+			if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+				t.Errorf("storefs can delete unauthorized files:\n%v", failure)
+			}
 		}
 	})
 }

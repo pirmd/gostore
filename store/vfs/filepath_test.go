@@ -7,7 +7,10 @@ import (
 )
 
 func TestWalk(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -19,5 +22,7 @@ func TestWalk(t *testing.T) {
 		t.Fatalf("fail to list files in %s: %s", tstDir.Root, err)
 	}
 
-	tstDir.ShouldHaveContent(ls, "Fail to walk in a folder")
+	if failure := tstDir.ShouldHaveContent(ls); failure != nil {
+		t.Errorf("Fail to walk in a folder:\n%v", failure)
+	}
 }

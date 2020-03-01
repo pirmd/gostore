@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/html"
 
-	"github.com/pirmd/cli/style"
+	"github.com/pirmd/style"
 	"github.com/pirmd/verify"
 )
 
@@ -170,7 +170,9 @@ Col1.2 Col2.2
 			t.Errorf("Fail to render %s to Markdown: %v", tc.in, err)
 		}
 
-		verify.EqualString(t, got, tc.want, "Fail to render %s to Markdown.", tc.in)
+		if got != tc.want {
+			t.Errorf("Fail to render %s to Markdown.\nWant: %s\nGot : %s.", tc.in, tc.want, got)
+		}
 	}
 }
 
@@ -193,7 +195,9 @@ func TestRenderFullHtml(t *testing.T) {
 			}
 
 			got := renderNode(root, style.NewMarkdown())
-			verify.MatchGolden(t, got, "Generated Markdown is not as expected.")
+			if failure := verify.MatchGolden(t.Name(), got); failure != nil {
+				t.Errorf("Generated Markdown is not as expected:\n%v", failure)
+			}
 		})
 	}
 }

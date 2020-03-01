@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 
-	"github.com/pirmd/cli/style"
+	"github.com/pirmd/style"
 )
 
 var (

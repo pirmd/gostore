@@ -7,7 +7,10 @@ import (
 )
 
 func TestCreate(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := NewOsfs()
@@ -17,7 +20,9 @@ func TestCreate(t *testing.T) {
 		t.Errorf("Fail to create file '%s': %s", tc, err)
 	}
 
-	tstDir.ShouldHaveFile(tc, "Fail to create file")
+	if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+		t.Errorf("Fail to create file:\n%v", failure)
+	}
 
 	if _, err := fs.Open(tstDir.Fullpath(tc)); err != nil {
 		t.Errorf("Fail to open file '%s': %s", tc, err)
@@ -25,7 +30,10 @@ func TestCreate(t *testing.T) {
 }
 
 func TestMkdirAll(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -40,11 +48,16 @@ func TestMkdirAll(t *testing.T) {
 		t.Errorf("Fail to create folder '%s': %s", "folder/subfolder/subfolder", err)
 	}
 
-	tstDir.ShouldHaveFile("folder/subfolder/subfolder", "cannot create a folder with its parents")
+	if failure := tstDir.ShouldHaveFile("folder/subfolder/subfolder"); failure != nil {
+		t.Errorf("Cannot create a folder with its parents:\n%v", failure)
+	}
 }
 
 func TestRemoveAll(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -55,5 +68,7 @@ func TestRemoveAll(t *testing.T) {
 		t.Errorf("Failed to remove folder '%s': %s", "folder", err)
 	}
 
-	tstDir.ShouldHaveContent([]string{"file.txt"}, "Fail to remove all folders")
+	if failure := tstDir.ShouldHaveContent([]string{"file.txt"}); failure != nil {
+		t.Errorf("Fail to remove all folders:\n%v", failure)
+	}
 }

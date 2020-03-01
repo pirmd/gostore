@@ -3,13 +3,13 @@
 package main
 
 import (
-	"github.com/pirmd/cli/app"
+	"github.com/pirmd/clapp"
 )
 
 func main() {
 	cfg := newConfig()
 	cmd := newApp(cfg)
 
-	app.GenerateManpage(cmd)
-	app.GenerateHelpFile(cmd)
+	clapp.GenerateManpage(cmd)
+	clapp.GenerateHelpFile(cmd)
 }

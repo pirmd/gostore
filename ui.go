@@ -11,8 +11,9 @@ import (
 
 	"github.com/pirmd/cli/formatter"
 	"github.com/pirmd/cli/input"
-	"github.com/pirmd/cli/style"
-	"github.com/pirmd/cli/style/text"
+	"github.com/pirmd/style"
+	"github.com/pirmd/text"
+	"github.com/pirmd/text/diff"
 )
 
 var (
@@ -142,7 +143,7 @@ func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
 // PrettyDiff shows in a pleasant manner differences between two metadata sets
 func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	valL, valR := ui.format(mediaL), ui.format(mediaR)
-	dT, dL, dR := text.ColorDiff.Anything(valL, valR)
+	dT, dL, dR, _ := diff.Patience(valL, valR, diff.ByLines, diff.ByWords).PrettyPrint(diff.WithColor, diff.WithoutMissingContent)
 	diffAsTable := text.NewTable().Col(dL, dT, dR).Draw()
 	fmt.Println(diffAsTable)
 }

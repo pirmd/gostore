@@ -22,7 +22,10 @@ var (
 )
 
 func TestFilterfsRead(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -48,7 +51,10 @@ func TestFilterfsRead(t *testing.T) {
 }
 
 func TestFilterfsPopulateAndWalk(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	fs := NewFilterfs(validFn, NewOsfs())
@@ -57,7 +63,9 @@ func TestFilterfsPopulateAndWalk(t *testing.T) {
 		if err := PopulateFs(fs, tstDir.Root, tstCases); err != nil {
 			t.Fatal(err)
 		}
-		tstDir.ShouldHaveContent(tstCases, "FilterFs cannot create tree of files and folders")
+		if failure := tstDir.ShouldHaveContent(tstCases); failure != nil {
+			t.Errorf("FilterFs cannot create tree of files and folders:\n%v", failure)
+		}
 	})
 
 	t.Run("Populate filtered files", func(t *testing.T) {
@@ -66,7 +74,9 @@ func TestFilterfsPopulateAndWalk(t *testing.T) {
 				t.Errorf("Succeed to create an unauthorized file '%s'", tc)
 			}
 		}
-		tstDir.ShouldHaveContent(tstCases, "FilterFs cannot create tree of files and folders")
+		if failure := tstDir.ShouldHaveContent(tstCases); failure != nil {
+			t.Errorf("FilterFs cannot create tree of files and folders:\n%v", failure)
+		}
 	})
 
 	t.Run("Walk with non filtered files", func(t *testing.T) {
@@ -77,12 +87,17 @@ func TestFilterfsPopulateAndWalk(t *testing.T) {
 			t.Fatalf("fail to list files in %s: %s", tstDir.Root, err)
 		}
 
-		verify.EqualSliceWithoutOrder(t, ls, tstCases, "Filterfs cannot walk into folder with unauthorized file names")
+		if failure := verify.EqualSliceWithoutOrder(ls, tstCases); failure != nil {
+			t.Errorf("Filterfs cannot walk into folder with unauthorized file names:\n%v", failure)
+		}
 	})
 }
 
 func TestFilterfsRemove(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -96,7 +111,9 @@ func TestFilterfsRemove(t *testing.T) {
 			t.Errorf("Failed to remove file %s: %s", tc, err)
 		}
 
-		tstDir.ShouldNotHaveFile(tc, "Filterfs cannot remove file")
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs cannot remove file:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove unauthorized file", func(t *testing.T) {
@@ -104,7 +121,9 @@ func TestFilterfsRemove(t *testing.T) {
 		if err := fs.Remove(tstDir.Fullpath(tc)); err != os.ErrPermission {
 			t.Errorf("Succeed to remove unauthorized file %s", tc)
 		}
-		tstDir.ShouldHaveFile(tc, "Filterfs does remove unauthorized file")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs does remove unauthorized file:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove empty folder", func(t *testing.T) {
@@ -112,7 +131,9 @@ func TestFilterfsRemove(t *testing.T) {
 		if err := fs.Remove(tstDir.Fullpath(tc)); err != nil {
 			t.Errorf("Failed to remove empty folder %s: %s", tc, err)
 		}
-		tstDir.ShouldNotHaveFile(tc, "Filterfs cannot remove empty folder")
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs cannot remove empty folder:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove unauthorized folder", func(t *testing.T) {
@@ -120,7 +141,9 @@ func TestFilterfsRemove(t *testing.T) {
 		if err := fs.Remove(tstDir.Fullpath(tc)); err != os.ErrPermission {
 			t.Errorf("Succeed to remove unauthorized file %s", tc)
 		}
-		tstDir.ShouldHaveFile(tc, "Succeed to remove unauthorized file")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Succeed to remove unauthorized file:\n%v", failure)
+		}
 	})
 
 	t.Run("Remove non empty folder", func(t *testing.T) {
@@ -128,12 +151,17 @@ func TestFilterfsRemove(t *testing.T) {
 		if err := fs.Remove(tstDir.Fullpath(tc)); err == nil {
 			t.Errorf("Succeed to remove non empty folder %s", tc)
 		}
-		tstDir.ShouldHaveFile(tc, "Filterfs does remove non empty folder")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs does remove non empty folder:\n%v", failure)
+		}
 	})
 }
 
 func TestFilterfsRemoveAll(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -146,17 +174,24 @@ func TestFilterfsRemoveAll(t *testing.T) {
 		t.Errorf("Succeed to remove folders %s with unauthorized files: %s", tc, err)
 	}
 
-	tstDir.ShouldHaveContent([]string{"file.txt",
-		"file_toFilter.txt",
-		"folder",
-		"folder/subfolder_toFilter",
-		"folder_toFilter",
-		"folder_toFilter/file.txt"},
-		"Filterfs cannot remove recursively through a folder")
+	if failure := tstDir.ShouldHaveContent(
+		[]string{
+			"file.txt",
+			"file_toFilter.txt",
+			"folder",
+			"folder/subfolder_toFilter",
+			"folder_toFilter",
+			"folder_toFilter/file.txt",
+		}); failure != nil {
+		t.Errorf("Filterfs cannot remove recursively through a folder:\n%v", failure)
+	}
 }
 
 func TestFilterfsRename(t *testing.T) {
-	tstDir := verify.NewTestField(t)
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
 	defer tstDir.Clean()
 
 	tstDir.Populate(tstCases)
@@ -170,8 +205,12 @@ func TestFilterfsRename(t *testing.T) {
 			t.Errorf("Failed to rename %s: %s", tc, err)
 		}
 
-		tstDir.ShouldHaveFile(tc+"_renamed", "Fileterfs failed to rename file")
-		tstDir.ShouldNotHaveFile(tc, "Filterfs failed to rename file")
+		if failure := tstDir.ShouldHaveFile(tc + "_renamed"); failure != nil {
+			t.Errorf("Fileterfs failed to rename file:\n%v", failure)
+		}
+		if failure := tstDir.ShouldNotHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs failed to rename file:\n%v", failure)
+		}
 	})
 
 	t.Run("Rename filtered file", func(t *testing.T) {
@@ -180,8 +219,12 @@ func TestFilterfsRename(t *testing.T) {
 			t.Errorf("Succeed to rename unauthorized file %s", tc)
 		}
 
-		tstDir.ShouldHaveFile(tc, "Fileterfs can rename unauthorized file")
-		tstDir.ShouldNotHaveFile(tc+"_renamed", "Fileterfs can rename unauthorized file")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Fileterfs can rename unauthorized file:\n%v", failure)
+		}
+		if failure := tstDir.ShouldNotHaveFile(tc + "_renamed"); failure != nil {
+			t.Errorf("Fileterfs can rename unauthorized file:\n%v", failure)
+		}
 	})
 
 	t.Run("Rename file to unauthorized file", func(t *testing.T) {
@@ -190,7 +233,11 @@ func TestFilterfsRename(t *testing.T) {
 			t.Errorf("Succeed to rename %s to %s", tc, tc+"_toFilter")
 		}
 
-		tstDir.ShouldHaveFile(tc, "Filterfs can rename to unauthorized file")
-		tstDir.ShouldNotHaveFile(tc+"_renamed_toFilter", "Filterfs can rename to unauthorized file")
+		if failure := tstDir.ShouldHaveFile(tc); failure != nil {
+			t.Errorf("Filterfs can rename to unauthorized file:\n%v", failure)
+		}
+		if failure := tstDir.ShouldNotHaveFile(tc + "_renamed_toFilter"); failure != nil {
+			t.Errorf("Filterfs can rename to unauthorized file:\n%v", failure)
+		}
 	})
 }

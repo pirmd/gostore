@@ -24,14 +24,18 @@ var (
 
 type testGostore struct {
 	*Gostore
-	*verify.TestField
+	*verify.TestFolder
 }
 
 func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 	cfg.ShowLog = *debug
 	cfg.UI.Auto = true
 
-	tstDir := verify.NewTestField(tb)
+	tstDir, err := verify.NewTestFolder(tb.Name())
+	if err != nil {
+		tb.Fatalf("Failed to create test folder: %v", err)
+	}
+
 	if cfg.Store == nil {
 		cfg.Store = &storeConfig{}
 	}
@@ -52,7 +56,7 @@ func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 func TestGostoreWithDefaultConfig(t *testing.T) {
 	cfg := newConfig()
 
-	httpmock := verify.StartMockHTTPResponse(t)
+	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
 	gs := newTestGostore(t, cfg)
@@ -78,7 +82,7 @@ func TestGostoreWithConfigExample(t *testing.T) {
 		t.Fatalf("Fail to read 'config.example.yaml': %v", err)
 	}
 
-	httpmock := verify.StartMockHTTPResponse(t)
+	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
 	gs := newTestGostore(t, cfg)
@@ -98,7 +102,10 @@ func testImport(t *testing.T, gs *testGostore) {
 	}
 
 	t.Run("ImportEpubs", func(t *testing.T) {
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		for _, tc := range testCases {
@@ -107,7 +114,9 @@ func testImport(t *testing.T, gs *testGostore) {
 			}
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "Import output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Import output is not as expected.\n%v", failure)
+		}
 
 		// TODO(pirmd): update store's api to get quicker information regarding store's consitenbcy state
 		if err := gs.store.Open(); err != nil {
@@ -140,10 +149,16 @@ func testImport(t *testing.T, gs *testGostore) {
 }
 
 func testInfo(t *testing.T, gs *testGostore) {
-	allepubs := gs.ListWithExt(".epub")
+	allepubs, err := gs.ListWithExt(".epub")
+	if err != nil {
+		t.Fatalf("Fail to list epub: %v", err)
+	}
 
 	t.Run("InfoEpubs", func(t *testing.T) {
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		for _, epub := range allepubs {
@@ -152,7 +167,9 @@ func testInfo(t *testing.T, gs *testGostore) {
 			}
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "Info output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Info output is not as expected:\n%v", failure)
+		}
 	})
 
 	t.Run("InfoNonExisting", func(t *testing.T) {
@@ -164,59 +181,82 @@ func testInfo(t *testing.T, gs *testGostore) {
 
 func testListAll(t *testing.T, gs *testGostore) {
 	t.Run("ListAll", func(t *testing.T) {
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		if err := gs.ListAll(); err != nil {
 			t.Fatalf("ListAll: fail to list epubs from collection: %v", err)
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "ListAll output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("ListAll output is not as expected:\n%v", failure)
+		}
 	})
 }
 
 func testSearch(t *testing.T, gs *testGostore) {
 	t.Run("SearchAll", func(t *testing.T) {
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		if err := gs.Search("*"); err != nil {
 			t.Fatalf("SearchAll: fail to list epubs from collection: %v", err)
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "ListAll output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("SearchAll output is not as expected:\n%s", failure)
+		}
 	})
 
 	t.Run("Search", func(t *testing.T) {
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		if err := gs.Search("Alice"); err != nil {
 			t.Fatalf("Fail to search the collection: %v", err)
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "Search output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Search output is not as expected:\n%v", failure)
+		}
 	})
 
 	//TODO(pirmd): add additional search pattern using date and serie number
 }
 
 func testDelete(t *testing.T, gs *testGostore) {
-	allepubs := gs.ListWithExt(".epub")
+	allepubs, err := gs.ListWithExt(".epub")
+	if err != nil {
+		t.Fatalf("Fail to list epub: %v", err)
+	}
 
 	t.Run("DeleteEpubs", func(t *testing.T) {
 		if err := gs.Delete(allepubs[0]); err != nil {
 			t.Fatalf("Delete failed: %v", err)
 		}
 
-		stdout := verify.StartMockStdout(t)
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
 		defer stdout.Stop()
 
 		if err := gs.ListAll(); err != nil {
 			t.Fatalf("ListAll after delete failed: cannot list epubs from collection: %v", err)
 		}
 
-		verify.MatchStdoutGolden(t, stdout, "Delete output is not as expected")
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Delete output is not as expected:\n%v", failure)
+		}
 	})
 
 	t.Run("DeleteNonExisting", func(t *testing.T) {

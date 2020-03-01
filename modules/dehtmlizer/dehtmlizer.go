@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/pirmd/cli/style"
+	"github.com/pirmd/style"
 
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"

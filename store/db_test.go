@@ -8,7 +8,10 @@ import (
 )
 
 func setupDb(tb testing.TB) (*storedb, func()) {
-	tstDir := verify.NewTestField(tb)
+	tstDir, err := verify.NewTestFolder(tb.Name())
+	if err != nil {
+		tb.Fatalf("Fail to create test folder: %v", err)
+	}
 
 	db := newDB(filepath.Join(tstDir.Root, "test.db"))
 	if err := db.Open(); err != nil {
@@ -51,5 +54,7 @@ func TestDBWalk(t *testing.T) {
 		t.Fatalf("Walking through db failed: %v", err)
 	}
 
-	verify.EqualSliceWithoutOrder(t, out, keys, "Walk through db")
+	if failure := verify.EqualSliceWithoutOrder(out, keys); failure != nil {
+		t.Errorf("Walk through db failed:\n%v", failure)
+	}
 }
