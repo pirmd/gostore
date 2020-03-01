@@ -8,21 +8,21 @@ import (
 )
 
 const (
-	//DefaultMimetype is the fallback content type to identify file.  The
-	//handler that supports DefaultMimetype, if any, is also the default
-	//handler should no handler be registered for a given Type or Mimetype.
+	// DefaultMimetype is the fallback content type to identify file.  The
+	// handler that supports DefaultMimetype, if any, is also the default
+	// handler should no handler be registered for a given Type or Mimetype.
 	DefaultMimetype = "application/octet-stream"
 )
 
 var (
-	//ErrUnknownMediaType error is raise if submitted file is of unknown media
-	//type, that is to say that no corresponding media handler is found
+	// ErrUnknownMediaType error is raise if submitted file is of unknown media
+	// type, that is to say that no corresponding media handler is found
 	ErrUnknownMediaType = fmt.Errorf("media handler: unknown file type")
 
 	handlers = Handlers{} //register of all media known handlers
 )
 
-//Handler represents a media handler
+// Handler represents a media handler
 type Handler interface {
 	//Type provides the name of the handler. An handler's name is mainly used
 	//to identify a media type and adopt customized behavior based on a media
@@ -41,14 +41,14 @@ type Handler interface {
 	FetchMetadata(Metadata) (Metadata, error)
 }
 
-//Handlers represent th elist of known media handlers
+// Handlers represent th elist of known media handlers
 type Handlers []Handler
 
-//ForReader retrieves the handler for corresponding to the given file based on
-//the file guessed content type Should no registered handler be found, the
-//handler for DefaultType is returned if it exists.
+// ForReader retrieves the handler for corresponding to the given file based on
+// the file guessed content type Should no registered handler be found, the
+// handler for DefaultType is returned if it exists.
 //
-//ErrUnknownMediaType is returned if no handler is found.
+// ErrUnknownMediaType is returned if no handler is found.
 func (h Handlers) ForReader(f io.Reader) (Handler, error) {
 	mtype, err := getMimetype(f)
 	if err != nil {
@@ -58,11 +58,11 @@ func (h Handlers) ForReader(f io.Reader) (Handler, error) {
 	return h.ForMimetype(mtype)
 }
 
-//ForMimetype retrieves the handler corresponding to the provided mimetype.
-//Should no registered handler be found, the handler for DefaultType is
-//returned if it exists.
+// ForMimetype retrieves the handler corresponding to the provided mimetype.
+// Should no registered handler be found, the handler for DefaultType is
+// returned if it exists.
 //
-//ErrUnknownMediaType is returned if no handler is found.
+// ErrUnknownMediaType is returned if no handler is found.
 func (h Handlers) ForMimetype(mtype string) (Handler, error) {
 	for _, mh := range h {
 		if mh.Mimetype() == mtype {
@@ -73,11 +73,11 @@ func (h Handlers) ForMimetype(mtype string) (Handler, error) {
 	return h.defaultHandler()
 }
 
-//ForType retrieves the handler corresponding to the provided type.  Should no
-//registered handler be found, the handler for DefaultType is returned if it
-//exists.
+// ForType retrieves the handler corresponding to the provided type.  Should no
+// registered handler be found, the handler for DefaultType is returned if it
+// exists.
 //
-//ErrUnknownMediaType is returned if no handler is found.
+// ErrUnknownMediaType is returned if no handler is found.
 func (h Handlers) ForType(typ string) (Handler, error) {
 	for _, mh := range h {
 		if mh.Type() == typ {
@@ -88,7 +88,7 @@ func (h Handlers) ForType(typ string) (Handler, error) {
 	return h.defaultHandler()
 }
 
-//defaultHandler is the handler that manages DefaultMimetype
+// defaultHandler is the handler that manages DefaultMimetype
 func (h Handlers) defaultHandler() (Handler, error) {
 	for _, mh := range h {
 		if mh.Mimetype() == DefaultMimetype {
@@ -99,8 +99,8 @@ func (h Handlers) defaultHandler() (Handler, error) {
 	return nil, ErrUnknownMediaType
 }
 
-//RegisterHandler registers a new media handler It will panic if a media
-//handler with the same Type() or Mimetype() already exists
+// RegisterHandler registers a new media handler It will panic if a media
+// handler with the same Type() or Mimetype() already exists
 func RegisterHandler(mh Handler) {
 	for _, h := range handlers {
 		if mh.Type() == h.Type() || mh.Mimetype() == h.Mimetype() {
@@ -112,8 +112,8 @@ func RegisterHandler(mh Handler) {
 }
 
 // Always returns a valid content-type by returning "application/octet-stream"
-// if no others seemed to match.
-func getMimetype(r io.Reader) (mime string, err error) {
-	mime, _, err = mimetype.DetectReader(r)
-	return
+// if no others seemed to match or if an error occured.
+func getMimetype(r io.Reader) (string, error) {
+	mime, err := mimetype.DetectReader(r)
+	return mime.String(), err
 }
