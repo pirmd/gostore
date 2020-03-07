@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 Format is based on [Keep a Changelog] (https://keepachangelog.com/en/1.0.0/).
 Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.html)
 
+## [0.3.1] - 2020.03.07
+### Added
+- re-introduce ability to read metadata from files with new
+  github.com/pirmd/text/diff hoping better user readability
+### Modified
+- get rid of old github.com/pirmd/cli dependency
+- migrate to new github.com/pirmd/verify version
+- migrate to new github.com/blevesearch/bleve and github.com/gabriel-vasile/mimetype
+- switch from bolt to go.etcd.io/bbolt
+- refactor ui module
+
 ## [0.3.0] - 2019.11.19
 ### Modified
 - refactor gostore cli commands definition, separate core functions from ui and
@@ -30,7 +41,7 @@ Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.htm
   automatically by using the `--auto`flag.
   I've changed the previous behaviour as the new metadata fetching feature needs
   probably some more love before being blindly trusted.
-- Replace the Makefile, which was over-enginneered (and probably badly done),
+- Replace the Makefile, which was over-engineered (and probably badly done),
   by a small shell script that wraps go binary to supply version information
   and manpage generation/installation
 
