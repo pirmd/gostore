@@ -12,6 +12,7 @@ import (
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui"
+	"github.com/pirmd/gostore/ui/cli"
 )
 
 // Config represents the configuration for gostore
@@ -21,7 +22,7 @@ type Config struct {
 	// Store contains configuration for anything related to storage
 	Store *storeConfig
 	// UI contains configuration for anything related to user interface
-	UI *ui.CLIConfig
+	UI *cli.Config
 	// ImportModules lists of processings to be applied when importing a record
 	ImportModules map[string]*rawYAMLConfig
 	// UpdateModules lists of processings to be applied when updating a record
@@ -39,7 +40,7 @@ type storeConfig struct {
 func newConfig() *Config {
 	return &Config{
 		Store: &storeConfig{Root: "."},
-		UI:    &ui.CLIConfig{},
+		UI:    &cli.Config{},
 	}
 }
 
@@ -86,7 +87,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 
 	gs.pretend = cfg.Store.ReadOnly
 
-	if gs.ui, err = ui.NewCLI(cfg.UI); err != nil {
+	if gs.ui, err = cli.New(cfg.UI); err != nil {
 		return nil, err
 	}
 

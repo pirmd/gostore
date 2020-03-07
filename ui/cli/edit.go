@@ -1,4 +1,4 @@
-package ui
+package cli
 
 import (
 	"encoding/json"
@@ -8,27 +8,15 @@ import (
 	"os/exec"
 )
 
-// Edit spans an editor to modify the input text and feedbacks the result.
-func Edit(data []byte, cmdEditor []string) ([]byte, error) {
-	tmpfile, err := ioutil.TempFile("", "")
+// edit spans an editor to modify the input text and feedbacks the result.
+func edit(data []byte, cmdEditor []string) ([]byte, error) {
+	tmpfile, err := data2file(data)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		tmpfile.Close()
-		os.Remove(tmpfile.Name())
-	}()
 
-	n, err := tmpfile.Write(data)
-	if err != nil {
-		return nil, err
-	}
-	if n < len(data) {
-		return nil, io.ErrShortWrite
-	}
-	tmpfile.Close()
-
-	cmdArgs := append(cmdEditor, tmpfile.Name())
+	//TODO(pirmd): handle case where cmdEditor is empty?
+	cmdArgs := append(cmdEditor, tmpfile)
 	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	ed.Stdout = os.Stdout
 	ed.Stdin = os.Stdin
@@ -38,7 +26,7 @@ func Edit(data []byte, cmdEditor []string) ([]byte, error) {
 		return nil, err
 	}
 
-	body, err := ioutil.ReadFile(tmpfile.Name())
+	body, err := file2data(tmpfile)
 	if err != nil {
 		return nil, err
 	}
@@ -46,15 +34,15 @@ func Edit(data []byte, cmdEditor []string) ([]byte, error) {
 	return body, nil
 }
 
-// EditAsJSON fires-up an editor to modify the provided interface using its JSON
+// editAsJSON fires-up an editor to modify the provided interface using its JSON
 // form.
-func EditAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
+func editAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
 	j, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		return nil, err
 	}
 
-	buf, err := Edit(j, cmdEditor)
+	buf, err := edit(j, cmdEditor)
 	if err != nil {
 		return nil, err
 	}
@@ -74,8 +62,8 @@ func EditAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
 	return v, nil
 }
 
-// Merge spans an editor to merge the input texts and feedbacks the result.
-func Merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
+// merge spans an editor to merge the input texts and feedbacks the result.
+func merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
 	tmpfileL, err := data2file(left)
 	if err != nil {
 		return nil, nil, err
@@ -109,9 +97,9 @@ func Merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
 	return bodyL, bodyR, nil
 }
 
-// MergeAsJSON fires-up an editor to merge the provided interfaces using its
+// mergeAsJSON fires-up an editor to merge the provided interfaces using its
 // JSON form.
-func MergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, interface{}, error) {
+func mergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, interface{}, error) {
 	l, err := json.MarshalIndent(left, "", "  ")
 	if err != nil {
 		return nil, nil, err
@@ -122,7 +110,7 @@ func MergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, inte
 		return nil, nil, err
 	}
 
-	bufL, bufR, err := Merge(l, r, cmdMerger)
+	bufL, bufR, err := merge(l, r, cmdMerger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -142,7 +130,7 @@ func MergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, inte
 	return left, right, nil
 }
 
-// data2data copy the content of data to a temporaray text file, perfect for
+// data2file copy the content of data to a temporary text file, perfect for
 // editing purpose
 func data2file(data []byte) (string, error) {
 	tmpfile, err := ioutil.TempFile("", "")
@@ -165,7 +153,7 @@ func data2file(data []byte) (string, error) {
 	return tmpfile.Name(), nil
 }
 
-// file2data read back the content of a temp file and delete it whatever happen
+// file2data reads back the content of a temp file and delete it whatever happen
 func file2data(name string) ([]byte, error) {
 	defer func() { os.Remove(name) }()
 
