@@ -86,7 +86,6 @@ func newApp(cfg *Config) *clapp.Command {
 		Name:  "info",
 		Usage: "Retrieve information about any collection's record.",
 
-		/* TODO: implements correct dif screen outputs to restore this function
 		Flags: clapp.Flags{
 			{
 				Name:  "from-file",
@@ -94,7 +93,6 @@ func newApp(cfg *Config) *clapp.Command {
 				Var:   &readInfoFromMediaFile,
 			},
 		},
-		*/
 
 		Args: clapp.Args{
 			{
