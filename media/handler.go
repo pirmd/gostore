@@ -112,7 +112,7 @@ func RegisterHandler(mh Handler) {
 }
 
 // Always returns a valid content-type by returning "application/octet-stream"
-// if no others seemed to match or if an error occured.
+// if no others seemed to match or if an error occurred.
 func getMimetype(r io.Reader) (string, error) {
 	mime, err := mimetype.DetectReader(r)
 	return mime.String(), err
