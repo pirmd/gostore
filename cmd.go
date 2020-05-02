@@ -136,7 +136,6 @@ func newApp(cfg *Config) *clapp.Command {
 				return err
 			}
 
-			//XXX: is ListAll of any use? can we not directly Search for "*"
 			if searchPattern == "*" {
 				if err := gs.ListAll(); err != nil {
 					return fmt.Errorf("listing collection's content failed: %s", err)

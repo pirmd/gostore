@@ -28,7 +28,7 @@ ui:
     # editorcmd contains the invocation stanza to fire-up a text editor
     # allowing the user to modify metadata.
     # If editocmd is not set, metadata modification is skipped.
-    editorcmd: $EDITOR
+    editorcmd: vim
           
     # mergercmd contains the invocation stanza to fire-up a text editor
     # allowing the user to mergel two set of metadata.
@@ -42,18 +42,27 @@ ui:
     # It can be set at runtime using '--style=xxx' flag.
     outputformat: full
 
-    # formatters is the set of available styles for listing media metadata. For
-    # each style, customized styles can be proposed for a given media type.
-    # Fall-back templates or generic template can be defined using the
-    # "_default" keyword. Template's follow golang text/template specification. 
+    # formatters is the set of available styles for printing media metadata. For
+    # each style, customized template can be proposed for a given media type.
+    # Default template can be defined using the "_default" keyword.
+    # Template's follow golang text/template specification. 
     formatters:
         list:
-            _default: '{{ table . "Name" "Title" "Authors" }}'
-            epub: '{{ table . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" }}'
+            _default: '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
+            epub:     '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
 
         full:
-            _default: '{{ metadata . "Name" "Title" "*" "CreatedAt" "UpdatedAt"}}'
-            epub: '{{ metadata . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" }}'
+            _default: |
+                {{ range $i, $r := . -}}
+                {{ if $i }}{{ println }}{{ end -}}
+                {{ get $r "Name" "Title" "*" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ end -}}
+
+            epub: |
+                {{ range $i, $r := . -}}
+                {{ if $i }}{{ println }}{{ end -}}
+                {{ get $r "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ end -}}
 
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
@@ -78,7 +87,7 @@ importmodules: &importmodules
     # it can optionally convert th ehtml taging into another idioms (like
     # markdown)
     dehtmlizer: &dehtmlizer
-        # fields2clean is th elist of metadata fields to clean from html tags
+        # fields2clean is the list of metadata fields to clean from html tags
         fields2clean:
             - Description
         # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown

@@ -25,7 +25,14 @@ func TestGetKeys(t *testing.T) {
 			in:   []string{"c", "a", "*"},
 			want: []string{"c", "a", "b", "d"},
 		},
-
+		{
+			in:   []string{"?a", "b", "c"},
+			want: []string{"?a", "b", "c"},
+		},
+		{
+			in:   []string{"c", "a", "?*"},
+			want: []string{"c", "a", "?b", "?d"},
+		},
 		{
 			in:   []string{"!a", "*", "c"},
 			want: []string{"b", "d", "c"},
