@@ -2,13 +2,12 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
-	"os"
 	"path/filepath"
 	"testing"
 
 	yaml "gopkg.in/yaml.v2"
 
+	"github.com/pirmd/clapp"
 	"github.com/pirmd/verify"
 
 	"github.com/pirmd/gostore/store"
@@ -70,15 +69,15 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 }
 
 func TestGostoreWithConfigExample(t *testing.T) {
-	b, err := ioutil.ReadFile("config.example.yaml")
-	if err != nil {
-		t.Fatalf("Fail to read 'config.example.yaml': %v", err)
-	}
-
-	bexpanded := []byte(os.ExpandEnv(string(b)))
-
+	//TODO: Directly reuse cmd.go code to load configfile (for instance if add
+	//ExpandEnv we need to do it twice and create mismatch)
 	cfg := newConfig()
-	if err := yaml.Unmarshal(bexpanded, cfg); err != nil {
+	appCfg := &clapp.Config{
+		Unmarshaller: yaml.Unmarshal,
+		Files:        []*clapp.ConfigFile{{Name: "config.example.yaml"}},
+		Var:          cfg,
+	}
+	if err := appCfg.Load(); err != nil {
 		t.Fatalf("Fail to read 'config.example.yaml': %v", err)
 	}
 
@@ -221,7 +220,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Search("Alice"); err != nil {
+		if err := gs.Search("Adventures"); err != nil {
 			t.Fatalf("Fail to search the collection: %v", err)
 		}
 
