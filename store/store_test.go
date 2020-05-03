@@ -15,10 +15,15 @@ func setupStore(tb testing.TB) (*Store, func()) {
 		tb.Fatalf("Fail to create test folder: %v", err)
 	}
 
-	s, err := Open(tstDir.Root, UsingFrozenTimeStamps())
+	s, err := New(tstDir.Root, UsingFrozenTimeStamps())
 	if err != nil {
 		tstDir.Clean()
 		tb.Fatalf("Fail to create testing Store: %s", err)
+	}
+
+	if err := s.Open(); err != nil {
+		tstDir.Clean()
+		tb.Fatalf("Fail to open testing Store: %s", err)
 	}
 
 	return s, func() {

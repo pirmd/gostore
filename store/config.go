@@ -42,21 +42,6 @@ func NewFromConfig(cfg *Config) (*Store, error) {
 	)
 }
 
-// OpenFromConfig opens a Store from a given Config
-func OpenFromConfig(cfg *Config) (*Store, error) {
-	s, err := NewFromConfig(cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	logger.Printf("Opening store at %s", cfg.Path)
-	if err := s.Open(); err != nil {
-		return nil, err
-	}
-
-	return s, nil
-}
-
 // Options are using a set of variadic functional options for more
 // user-friendly api. Idea is coming from
 // [[https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis]]

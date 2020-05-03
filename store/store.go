@@ -52,22 +52,6 @@ func New(path string, opts ...Option) (*Store, error) {
 	return s, nil
 }
 
-// Open creates and opens a Store for use.
-// It is a simple shortcut for s := New() then s.Open().
-func Open(path string, opts ...Option) (*Store, error) {
-	s, err := New(path, opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	logger.Printf("Opening store at %s", path)
-	if err := s.Open(); err != nil {
-		return nil, err
-	}
-
-	return s, nil
-}
-
 // Open opens a Store for use
 func (s *Store) Open() error {
 	logger.Printf("Opening store's filesystem")
