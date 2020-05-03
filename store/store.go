@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -26,18 +28,22 @@ var (
 	ErrRecordDoesNotExist = errors.New("record does not exist")
 )
 
-// Store represents the actual storing engine It is made of a filesystem, a
+// Store represents the actual storing engine. It is made of a filesystem, a
 // keystore (leveldb) and an indexer (bleve)
 type Store struct {
 	fs  *storefs
 	db  *storedb
 	idx *storeidx
+
+	log *log.Logger
 }
 
 // New creates a new Store. New accepts options to costumize default Store
 // behaviour
 func New(path string, opts ...Option) (*Store, error) {
-	s := &Store{}
+	s := &Store{
+		log: log.New(ioutil.Discard, "store ", log.LstdFlags),
+	}
 
 	s.fs = newFS(path, s.isValidKey)
 	s.db = newDB(filepath.Join(path, dbPath))
@@ -54,12 +60,12 @@ func New(path string, opts ...Option) (*Store, error) {
 
 // Open opens a Store for use
 func (s *Store) Open() error {
-	logger.Printf("Opening store's filesystem")
+	s.log.Printf("Opening store's filesystem")
 	if err := s.fs.Open(); err != nil {
 		return err
 	}
 
-	logger.Printf("Opening store's database")
+	s.log.Printf("Opening store's database")
 	if err := s.db.Open(); err != nil {
 		if e := s.fs.Close(); e != nil {
 			err = fmt.Errorf("%s\nClose store's filesystem failed: %s", err, e)
@@ -67,7 +73,7 @@ func (s *Store) Open() error {
 		return err
 	}
 
-	logger.Printf("Opening store's Index")
+	s.log.Printf("Opening store's Index")
 	if err := s.idx.Open(); err != nil {
 		if e := s.fs.Close(); e != nil {
 			err = fmt.Errorf("%s\nClose store's filesystem failed: %s", err, e)
@@ -85,17 +91,17 @@ func (s *Store) Open() error {
 func (s *Store) Close() error {
 	err := new(NonBlockingErrors)
 
-	logger.Printf("Closing store's filesystem")
+	s.log.Printf("Closing store's filesystem")
 	if e := s.fs.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's filesystem: %s", e))
 	}
 
-	logger.Printf("Closing store's database")
+	s.log.Printf("Closing store's database")
 	if e := s.db.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's database: %s", e))
 	}
 
-	logger.Printf("Closing store's index")
+	s.log.Printf("Closing store's index")
 	if e := s.idx.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's index: %s", e))
 	}
@@ -108,7 +114,7 @@ func (s *Store) Close() error {
 // records resulting from an inconsistent state of the Store (e.g. file exists
 // but entry in db does not)
 func (s *Store) Create(r *Record, file io.Reader) error {
-	logger.Printf("Adding new record to store '%s'", r)
+	s.log.Printf("Adding new record to store '%s'", r)
 
 	exists, err := s.Exists(r.key)
 	if err != nil {
@@ -118,12 +124,12 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 		return ErrRecordAlreadyExists
 	}
 
-	logger.Printf("Register new record in store's db")
+	s.log.Printf("Register new record in store's db")
 	if err := s.db.Put(r); err != nil {
 		return err
 	}
 
-	logger.Printf("Register new record in store's idx")
+	s.log.Printf("Register new record in store's idx")
 	if err := s.idx.Put(r); err != nil {
 		if e := s.db.Delete(r.key); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
@@ -132,7 +138,7 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 		return err
 	}
 
-	logger.Printf("Import new media file into store's fs")
+	s.log.Printf("Import new media file into store's fs")
 	if err := s.fs.Put(r, file); err != nil {
 		if e := s.db.Delete(r.key); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
@@ -152,29 +158,29 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 // is inconsistent for the given key (e.g. file is not present but and entry
 // exists in the database), Exists returns false
 func (s *Store) Exists(key string) (exists bool, err error) {
-	logger.Printf("Test if '%s' exists in fs", key)
+	s.log.Printf("Test if '%s' exists in fs", key)
 	if exists, err = s.fs.Exists(key); err != nil || !exists {
 		return
 	}
 
-	logger.Printf("Test if '%s' exists in db", key)
+	s.log.Printf("Test if '%s' exists in db", key)
 	if exists, err = s.db.Exists(key); err != nil || !exists {
 		return
 	}
 
-	logger.Printf("Test if '%s' exists in idx", key)
+	s.log.Printf("Test if '%s' exists in idx", key)
 	return s.idx.Exists(key)
 }
 
 // Read returns the stored Record corresponding to the given key
 func (s *Store) Read(key string) (*Record, error) {
-	logger.Printf("Get record '%s' from storage", key)
+	s.log.Printf("Get record '%s' from storage", key)
 	return s.db.Get(key)
 }
 
 // ReadAll returns all store's records
 func (s *Store) ReadAll() (list Records, err error) {
-	logger.Printf("Get all records from store")
+	s.log.Printf("Get all records from store")
 
 	err = s.db.Walk(func(key string) error {
 		r, err := s.db.Get(key)
@@ -190,7 +196,7 @@ func (s *Store) ReadAll() (list Records, err error) {
 
 // OpenRecord opens the record corresponding to the given key for reading.
 func (s *Store) OpenRecord(key string) (vfs.File, error) {
-	logger.Printf("Open record '%s' from storage", key)
+	s.log.Printf("Open record '%s' from storage", key)
 	return s.fs.Get(key)
 }
 
@@ -199,7 +205,7 @@ func (s *Store) OpenRecord(key string) (vfs.File, error) {
 // Record (e.g. no file but data in the database), Update will fail (you have to
 // use Create for that situation)
 func (s *Store) Update(key string, r *Record) error {
-	logger.Printf("Updating record '%s' to '%s'", key, r)
+	s.log.Printf("Updating record '%s' to '%s'", key, r)
 
 	exists, err := s.Exists(key)
 	if err != nil {
@@ -219,12 +225,12 @@ func (s *Store) Update(key string, r *Record) error {
 		}
 	}
 
-	logger.Printf("Updating record in store's db")
+	s.log.Printf("Updating record in store's db")
 	if err := s.db.Put(r); err != nil {
 		return err
 	}
 
-	logger.Printf("Updating record in store's idx")
+	s.log.Printf("Updating record in store's idx")
 	if err := s.idx.Put(r); err != nil {
 		if e := s.db.Delete(r.key); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
@@ -233,7 +239,7 @@ func (s *Store) Update(key string, r *Record) error {
 	}
 
 	if r.key != key {
-		logger.Printf("Import new media file into store's fs")
+		s.log.Printf("Import new media file into store's fs")
 		if err := s.fs.Move(key, r); err != nil {
 			if e := s.db.Delete(r.key); e != nil {
 				err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
@@ -248,12 +254,12 @@ func (s *Store) Update(key string, r *Record) error {
 
 		errDel := new(NonBlockingErrors)
 
-		logger.Printf("Clean old entry '%s' in the store's db", key)
+		s.log.Printf("Clean old entry '%s' in the store's db", key)
 		if err := s.db.Delete(key); err != nil {
 			errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
 		}
 
-		logger.Printf("Clean old entry '%s' in the store's idx", key)
+		s.log.Printf("Clean old entry '%s' in the store's idx", key)
 		if err := s.idx.Delete(key); err != nil {
 			errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
 		}
@@ -266,21 +272,21 @@ func (s *Store) Update(key string, r *Record) error {
 
 // Delete removes a record from the Store
 func (s *Store) Delete(key string) error {
-	logger.Printf("Deleting record '%s' from store", key)
+	s.log.Printf("Deleting record '%s' from store", key)
 
-	logger.Printf("Deleting record's file from store's fs")
+	s.log.Printf("Deleting record's file from store's fs")
 	if err := s.fs.Delete(key); err != nil {
 		return err
 	}
 
 	errDel := new(NonBlockingErrors)
 
-	logger.Printf("Deleting record from store's db")
+	s.log.Printf("Deleting record from store's db")
 	if err := s.db.Delete(key); err != nil {
 		errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
 	}
 
-	logger.Printf("Deleting record from store's idx")
+	s.log.Printf("Deleting record from store's idx")
 	if err := s.idx.Delete(key); err != nil {
 		errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
 	}
@@ -291,7 +297,7 @@ func (s *Store) Delete(key string) error {
 // Search returns the list of keys corresponding to the given search query. The
 // query should follow the bleve search engine synthax.
 func (s *Store) Search(query string) (Records, error) {
-	logger.Printf("Search records for '%s'", query)
+	s.log.Printf("Search records for '%s'", query)
 
 	keys, err := s.idx.Search(query)
 	if err != nil {
@@ -314,12 +320,12 @@ func (s *Store) Search(query string) (Records, error) {
 // database content It can be used for example to implement a new mapping
 // startégy or if things are really going bad
 func (s *Store) RebuildIndex() error {
-	logger.Printf("Create a new index from scratch")
+	s.log.Printf("Create a new index from scratch")
 	if err := s.idx.Empty(); err != nil {
 		return err
 	}
 
-	logger.Printf("Rebuilding index")
+	s.log.Printf("Rebuilding index")
 	return s.db.Walk(func(key string) error {
 		r, err := s.db.Get(key)
 		if err != nil {
@@ -337,9 +343,9 @@ func (s *Store) RebuildIndex() error {
 func (s *Store) CheckAndRepair() ([]string, error) {
 	errCheck := new(NonBlockingErrors)
 
-	logger.Printf("Verify that all store's database entries are in the store")
+	s.log.Printf("Verify that all store's database entries are in the store")
 	if err := s.db.Walk(func(key string) error {
-		logger.Printf("Verify record '%s' from database...", key)
+		s.log.Printf("Verify record '%s' from database...", key)
 		exists, err := s.fs.Exists(key)
 		if err != nil {
 			return err
@@ -347,12 +353,12 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 		if !exists {
 			errDel := new(NonBlockingErrors)
 
-			logger.Printf("Record '%s' is in database and not in filesystem. Deleting it from database", key)
+			s.log.Printf("Record '%s' is in database and not in filesystem. Deleting it from database", key)
 			if err := s.db.Delete(key); err != nil {
 				errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
 			}
 
-			logger.Printf("Record '%s' is in index and not in filesystem. Deleting it from index", key)
+			s.log.Printf("Record '%s' is in index and not in filesystem. Deleting it from index", key)
 			if err := s.idx.Delete(key); err != nil {
 				errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
 			}
@@ -365,7 +371,7 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 			return err
 		}
 		if !exists {
-			logger.Printf("Record '%s' is in database and not in index. Adding it to index", key)
+			s.log.Printf("Record '%s' is in database and not in index. Adding it to index", key)
 			r, err := s.db.Get(key)
 			if err != nil {
 				return err
@@ -377,16 +383,16 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 	}); err != nil {
 		errCheck.Add(err)
 	}
-	logger.Printf("Verify that all store's files are in the store database")
+	s.log.Printf("Verify that all store's files are in the store database")
 	orphans := []string{}
 	if err := s.fs.Walk(func(key string) error {
-		logger.Printf("Verify record '%s' from filesystem...", key)
+		s.log.Printf("Verify record '%s' from filesystem...", key)
 		exists, err := s.db.Exists(key)
 		if err != nil {
 			return err
 		}
 		if !exists {
-			logger.Printf("File '%s' is not in database. Either delete it or add it to store", key)
+			s.log.Printf("File '%s' is not in database. Either delete it or add it to store", key)
 			orphans = append(orphans, key)
 		}
 		return nil
@@ -394,15 +400,15 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 		errCheck.Add(err)
 	}
 
-	logger.Printf("Verify that all indexed records are in the store's database")
+	s.log.Printf("Verify that all indexed records are in the store's database")
 	if err := s.idx.Walk(func(key string) error {
-		logger.Printf("Verify record '%s' from index...", key)
+		s.log.Printf("Verify record '%s' from index...", key)
 		exists, err := s.db.Exists(key)
 		if err != nil {
 			return err
 		}
 		if !exists {
-			logger.Printf("Record '%s' is indexed and is not in the store's database. Deleting it from index", key)
+			s.log.Printf("Record '%s' is indexed and is not in the store's database. Deleting it from index", key)
 			return s.idx.Delete(key)
 		}
 		return nil

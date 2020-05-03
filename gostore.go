@@ -59,8 +59,7 @@ func (cfg *rawYAMLConfig) Unmarshal(v interface{}) error {
 
 // Gostore represents the main collection manager.
 type Gostore struct {
-	log *log.Logger
-	//XXX: rename pretend to readonly
+	log           *log.Logger
 	pretend       bool
 	store         *store.Store
 	ui            ui.UserInterfacer
@@ -68,8 +67,6 @@ type Gostore struct {
 	updateModules []modules.Module
 }
 
-//XXX: like ui / Store: have gostoreNew and gostoreNewFromConfig
-//XXX: like ui / Store: have Modules: New and NewFromConfig
 func newGostore(cfg *Config) (*Gostore, error) {
 	gs := &Gostore{
 		log:     log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
@@ -79,8 +76,6 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	if cfg.ShowLog {
 		gs.log.SetOutput(os.Stderr)
 	}
-
-	gs.pretend = cfg.ReadOnly
 
 	var err error
 	if gs.store, err = store.NewFromConfig(cfg.Store); err != nil {

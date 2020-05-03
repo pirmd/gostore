@@ -49,14 +49,14 @@ func NewFromConfig(cfg *Config) (*Store, error) {
 // Option is a function that can tweak the behavior of a Store
 type Option func(*Store) error
 
-var logger = log.New(ioutil.Discard, "store ", log.LstdFlags)
-
 // UsingLogger sets the logger used for logging events from store module.
 // By default, log messages are discarded (sent to ioutil.Discard)
 func UsingLogger(l *log.Logger) Option {
-	return func(*Store) error {
-		if l != nil {
-			logger = l
+	return func(s *Store) error {
+		if l == nil {
+			s.log = log.New(ioutil.Discard, "store ", log.LstdFlags)
+		} else {
+			s.log = l
 		}
 		return nil
 	}
