@@ -19,12 +19,16 @@ import (
 type Config struct {
 	// ShowLog is a flag that governs if log information are to be shown
 	ShowLog bool
+
 	// Store contains configuration for anything related to storage
 	Store *storeConfig
+
 	// UI contains configuration for anything related to user interface
 	UI *cli.Config
+
 	// ImportModules lists of processings to be applied when importing a record
 	ImportModules map[string]*rawYAMLConfig
+
 	// UpdateModules lists of processings to be applied when updating a record
 	UpdateModules map[string]*rawYAMLConfig
 }
@@ -33,6 +37,7 @@ type Config struct {
 type storeConfig struct {
 	// Root contains the path to the datastore
 	Root string
+
 	// ReadOnly is the flag to switch the store into read only operation mode
 	ReadOnly bool
 }
@@ -87,7 +92,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 
 	gs.pretend = cfg.Store.ReadOnly
 
-	if gs.ui, err = cli.New(cfg.UI); err != nil {
+	if gs.ui, err = cli.NewFromConfig(cfg.UI); err != nil {
 		return nil, err
 	}
 
