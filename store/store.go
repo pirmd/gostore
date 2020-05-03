@@ -18,8 +18,10 @@ const (
 var (
 	// ErrKeyIsNotValid raises an error if provided key is invalid
 	ErrKeyIsNotValid = errors.New("key is invalid")
+
 	// ErrRecordAlreadyExists raises an error if a record already exits
 	ErrRecordAlreadyExists = errors.New("record already exists")
+
 	// ErrRecordDoesNotExist raises an error is a record does not exist
 	ErrRecordDoesNotExist = errors.New("record does not exist")
 )
@@ -32,7 +34,7 @@ type Store struct {
 	idx *storeidx
 }
 
-// New creates a new Store New accepts options to costumize default Store
+// New creates a new Store. New accepts options to costumize default Store
 // behaviour
 func New(path string, opts ...Option) (*Store, error) {
 	s := &Store{}
@@ -50,16 +52,20 @@ func New(path string, opts ...Option) (*Store, error) {
 	return s, nil
 }
 
-// Open creates and opens a Store for use It is a simple shortcut for s := New()
-// then s.Open(). It accepts the same Options than New()
-func Open(path string, opts ...Option) (s *Store, err error) {
-	logger.Printf("Opening store at %s", path)
-	if s, err = New(path, opts...); err != nil {
-		return
+// Open creates and opens a Store for use.
+// It is a simple shortcut for s := New() then s.Open().
+func Open(path string, opts ...Option) (*Store, error) {
+	s, err := New(path, opts...)
+	if err != nil {
+		return nil, err
 	}
 
-	err = s.Open()
-	return
+	logger.Printf("Opening store at %s", path)
+	if err := s.Open(); err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
 
 // Open opens a Store for use

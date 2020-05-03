@@ -34,13 +34,13 @@ func newApp(cfg *Config) *clapp.Command {
 		{
 			Name:  "root",
 			Usage: "Path to the root of the collection.",
-			Var:   &cfg.Store.Root,
+			Var:   &cfg.Store.Path,
 		},
 
 		{
 			Name:  "pretend",
 			Usage: "Operations that modify the collection are simulated.",
-			Var:   &cfg.Store.ReadOnly,
+			Var:   &cfg.ReadOnly,
 		},
 
 		{

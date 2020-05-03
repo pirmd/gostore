@@ -36,9 +36,9 @@ func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 	}
 
 	if cfg.Store == nil {
-		cfg.Store = &storeConfig{}
+		cfg.Store = &store.Config{}
 	}
-	cfg.Store.Root = tstDir.Root
+	cfg.Store.Path = tstDir.Root
 
 	gs, err := newGostore(cfg)
 	if err != nil {

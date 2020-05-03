@@ -20,8 +20,11 @@ type Config struct {
 	// ShowLog is a flag that governs if log information are to be shown
 	ShowLog bool
 
+	// ReadOnly is the flag to switch the store into read only operation mode
+	ReadOnly bool
+
 	// Store contains configuration for anything related to storage
-	Store *storeConfig
+	Store *store.Config
 
 	// UI contains configuration for anything related to user interface
 	UI *cli.Config
@@ -33,18 +36,10 @@ type Config struct {
 	UpdateModules map[string]*rawYAMLConfig
 }
 
-// storeConfig contains configuration for storage
-type storeConfig struct {
-	// Root contains the path to the datastore
-	Root string
-
-	// ReadOnly is the flag to switch the store into read only operation mode
-	ReadOnly bool
-}
-
 func newConfig() *Config {
 	return &Config{
-		Store: &storeConfig{Root: "."},
+		//XXX: needed?
+		Store: &store.Config{Path: "."},
 		UI:    &cli.Config{},
 	}
 }
@@ -64,33 +59,33 @@ func (cfg *rawYAMLConfig) Unmarshal(v interface{}) error {
 
 // Gostore represents the main collection manager.
 type Gostore struct {
-	log           *log.Logger
+	log *log.Logger
+	//XXX: rename pretend to readonly
+	pretend       bool
 	store         *store.Store
 	ui            ui.UserInterfacer
-	pretend       bool
 	importModules []modules.Module
 	updateModules []modules.Module
 }
 
+//XXX: like ui / Store: have gostoreNew and gostoreNewFromConfig
+//XXX: like ui / Store: have Modules: New and NewFromConfig
 func newGostore(cfg *Config) (*Gostore, error) {
 	gs := &Gostore{
-		log: log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		log:     log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		pretend: cfg.ReadOnly,
 	}
 
 	if cfg.ShowLog {
 		gs.log.SetOutput(os.Stderr)
 	}
 
+	gs.pretend = cfg.ReadOnly
+
 	var err error
-	if gs.store, err = store.New(
-		cfg.Store.Root,
-		store.UsingLogger(gs.log),
-		store.UsingTypeField(media.TypeField),
-	); err != nil {
+	if gs.store, err = store.NewFromConfig(cfg.Store); err != nil {
 		return nil, err
 	}
-
-	gs.pretend = cfg.Store.ReadOnly
 
 	if gs.ui, err = cli.NewFromConfig(cfg.UI); err != nil {
 		return nil, err

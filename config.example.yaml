@@ -3,19 +3,20 @@
 # It can be set at runtime using the '--debug' flag
 #showlog: false
 
+# readonly is a boolean flag that governs whether gostore is allowed to
+# alter the content of the collection. It is typically useful to dry-run
+# some actions.
+# It can be set at runtime using the '--pretend' flag
+#readonly:   false
+
 # store contains any customization to manage the way the collection is stored
 store:
-    # root is the path to the collection's root path. The database, index and
-    # media files are stored inside this root path
-    # It can be set at runtime using the '--root=xxx' flag
+    # path is the path to the collection's root folder. The database, index and
+    # media files are stored inside this root folder.
+    # It can be set at runtime using the '--root=xxx' flag.
     # If root is not set, it defaults to the current working directory.
-    root: /tmp/gostore-test/
+    path: /tmp/gostore-test/
 
-    # readonly is a boolean flag that governs whether gostore is allowed to
-    # alter the content of the collection. It is typically useful to dry-run
-    # some actions.
-    # It can be set at runtime using the '--pretend' flag
-    #readonly:   false
 
 # ui contains any customization to manage the way gostore interacts with the
 # user
