@@ -36,6 +36,12 @@ type Config struct {
 	UpdateModules map[string]*rawYAMLConfig
 }
 
+func (cfg *Config) expandEnv() {
+	cfg.Store.Path = os.ExpandEnv(cfg.Store.Path)
+	cfg.UI.EditorCmd = os.ExpandEnv(cfg.UI.EditorCmd)
+	cfg.UI.MergerCmd = os.ExpandEnv(cfg.UI.MergerCmd)
+}
+
 func newConfig() *Config {
 	return &Config{
 		//XXX: needed?
@@ -68,6 +74,8 @@ type Gostore struct {
 }
 
 func newGostore(cfg *Config) (*Gostore, error) {
+	cfg.expandEnv()
+
 	gs := &Gostore{
 		log:     log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
 		pretend: cfg.ReadOnly,

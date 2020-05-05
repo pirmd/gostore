@@ -29,7 +29,7 @@ ui:
     # editorcmd contains the invocation stanza to fire-up a text editor
     # allowing the user to modify metadata.
     # If editocmd is not set, metadata modification is skipped.
-    editorcmd: vim
+    editorcmd: $EDITOR
           
     # mergercmd contains the invocation stanza to fire-up a text editor
     # allowing the user to mergel two set of metadata.
