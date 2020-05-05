@@ -41,6 +41,10 @@ type Store struct {
 // New creates a new Store. New accepts options to costumize default Store
 // behaviour
 func New(path string, opts ...Option) (*Store, error) {
+	if path == "" {
+		path = "."
+	}
+
 	s := &Store{
 		log: log.New(ioutil.Discard, "store ", log.LstdFlags),
 	}

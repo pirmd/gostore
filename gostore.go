@@ -44,8 +44,7 @@ func (cfg *Config) expandEnv() {
 
 func newConfig() *Config {
 	return &Config{
-		//XXX: needed?
-		Store: &store.Config{Path: "."},
+		Store: &store.Config{},
 		UI:    &cli.Config{},
 	}
 }
@@ -83,6 +82,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 
 	if cfg.ShowLog {
 		gs.log.SetOutput(os.Stderr)
+		cfg.Store.Logger = gs.log
 	}
 
 	var err error
