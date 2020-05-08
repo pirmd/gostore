@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/pirmd/style"
-	"github.com/pirmd/text"
 	"github.com/pirmd/text/diff"
 
 	"github.com/pirmd/gostore/ui"
@@ -56,10 +55,17 @@ func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
 
 // PrettyDiff shows in a pleasant manner differences between two metadata sets
 func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
-	valL, valR := ui.format(mediaL), ui.format(mediaR)
-	dT, dL, dR, _ := diff.Patience(valL, valR, diff.ByLines, diff.ByWords).PrettyPrint(diff.WithColor, diff.WithoutMissingContent)
-	diffAsTable := text.NewTable().Col(dL, dT, dR).Draw()
-	fmt.Println(diffAsTable)
+	//TODO: create printers for diff (using "diff_typeof(media)" name) to customize
+	//diff format (like old -> new)
+	deltaL := make(map[string]interface{})
+
+	allkeys := getKeys([]map[string]interface{}{mediaL, mediaR}, "?*")
+	for _, key := range allkeys {
+		dL, _, _, _ := diff.Patience(get(mediaL, key), get(mediaR, key), diff.ByLines, diff.ByWords).PrettyPrint(diff.WithColor)
+		deltaL[key[1:]] = strings.Join(dL, "")
+	}
+
+	ui.PrettyPrint(deltaL)
 }
 
 // Edit fires-up a new editor to modif m

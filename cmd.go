@@ -89,7 +89,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Flags: clapp.Flags{
 			{
 				Name:  "from-file",
-				Usage: "Read information from media file rather than from the collection",
+				Usage: "Highlight difference between information stored in the collection and information from media file",
 				Var:   &readInfoFromMediaFile,
 			},
 		},

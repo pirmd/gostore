@@ -171,10 +171,9 @@ func get(m map[string]interface{}, key string) string {
 			return t.Format(timeStampFmt)
 		}
 
-		// TODO(pirmd): implement a better formatting approach of slices, empty
-		// or nil values (use 'litter' prettyprinter?)
-		if value := fmt.Sprintf("%v", v); value != "" {
-			return value
+		if !isZero(v) {
+			// TODO(pirmd): implement a better formatting approach of slices: use 'litter' prettyprinter?
+			return fmt.Sprintf("%v", v)
 		}
 	}
 

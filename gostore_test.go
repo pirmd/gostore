@@ -171,6 +171,24 @@ func testInfo(t *testing.T, gs *testGostore) {
 		}
 	})
 
+	t.Run("InfoEpubsWithDiff", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
+		for _, epub := range allepubs {
+			if err := gs.Info(epub, true); err != nil {
+				t.Errorf("Getting Info failed: %v", err)
+			}
+		}
+
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Info output is not as expected:\n%v", failure)
+		}
+	})
+
 	t.Run("InfoNonExisting", func(t *testing.T) {
 		if err := gs.Info("non existing record", false); err == nil {
 			t.Errorf("Getting info for non existing record does no fail")

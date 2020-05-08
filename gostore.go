@@ -185,7 +185,7 @@ func (gs *Gostore) Info(key string, fromFile bool) error {
 			return err
 		}
 
-		gs.ui.PrettyDiff(r.OrigValue(), mdata)
+		gs.ui.PrettyDiff(r.Fields(), mdata)
 		return nil
 	}
 
