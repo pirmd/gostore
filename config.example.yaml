@@ -56,13 +56,13 @@ ui:
             _default: |
                 {{ range $i, $r := . -}}
                 {{ if $i }}{{ println }}{{ end -}}
-                {{ get $r "Name" "Title" "*" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol }}
                 {{ end -}}
 
             epub: |
                 {{ range $i, $r := . -}}
                 {{ if $i }}{{ println }}{{ end -}}
-                {{ get $r "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" "Description" "*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ get $r "Name" "Title" "?SubTitle" "?Serie" "?SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
                 {{ end -}}
 
 # importmodules lists the different processings that will modified the media's

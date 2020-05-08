@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -18,15 +19,22 @@ const (
 	variousType = "media"
 )
 
-// keyVal represents a collection of (key, value) couples.
+// keyVal represents a collection of (key, values) couples.
 type keyVal struct {
 	Keys   []string
 	Values [][]string
 }
 
 func map2kv(maps []map[string]interface{}, fields ...string) *keyVal {
-	kv := &keyVal{
-		Keys: getKeys(maps, fields...),
+	kv := &keyVal{}
+
+	keys := getKeys(maps, fields...)
+	for _, k := range keys {
+		if k[0] == '?' {
+			kv.Keys = append(kv.Keys, k[1:])
+		} else {
+			kv.Keys = append(kv.Keys, k)
+		}
 	}
 
 	for _, m := range maps {
@@ -102,7 +110,9 @@ func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 						!isInSlice("?"+k, allkeys) &&
 						!isInSlice(k, allkeys) {
 						if f[0] == '?' {
-							allkeys = append(allkeys, "?"+k)
+							if hasValue(k, maps...) {
+								allkeys = append(allkeys, "?"+k)
+							}
 						} else {
 							allkeys = append(allkeys, k)
 						}
@@ -115,24 +125,13 @@ func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 		case f[0] == '!':
 			//ignore this field
 
+		case f[0] == '?':
+			if hasValue(f[1:], maps...) {
+				keys = append(keys, f)
+			}
+
 		default:
 			keys = append(keys, f)
-		}
-	}
-
-	return
-}
-
-func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
-	if len(maps) == 0 {
-		return
-	}
-
-	allKeys := getKeys([]map[string]interface{}{maps[0]}, fields...)
-
-	for _, k := range allKeys {
-		if hasKey(strings.TrimPrefix(k, "?"), maps[1:]...) {
-			keys = append(keys, k)
 		}
 	}
 
@@ -186,6 +185,17 @@ func get(m map[string]interface{}, key string) string {
 	return ""
 }
 
+func hasValue(k string, maps ...map[string]interface{}) bool {
+	for _, m := range maps {
+		if isZero(m[k]) {
+			continue
+		}
+		return true
+	}
+
+	return false
+}
+
 func hasKey(k string, maps ...map[string]interface{}) bool {
 	for _, m := range maps {
 		if _, exists := m[k]; !exists {
@@ -202,4 +212,26 @@ func isInSlice(s string, slice []string) bool {
 		}
 	}
 	return false
+}
+
+func isZero(v interface{}) bool {
+	val := reflect.ValueOf(v)
+	return !val.IsValid() || reflect.DeepEqual(val.Interface(), reflect.Zero(val.Type()).Interface())
+}
+
+//TODO: depreciate this function?
+func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
+	if len(maps) == 0 {
+		return
+	}
+
+	allKeys := getKeys([]map[string]interface{}{maps[0]}, fields...)
+
+	for _, k := range allKeys {
+		if hasKey(strings.TrimPrefix(k, "?"), maps[1:]...) {
+			keys = append(keys, k)
+		}
+	}
+
+	return
 }

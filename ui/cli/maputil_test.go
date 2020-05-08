@@ -9,7 +9,7 @@ import (
 func TestGetKeys(t *testing.T) {
 	maps := []map[string]interface{}{
 		{"a": "", "b": "", "c": ""},
-		{"a": "", "b": "", "c": "", "d": ""},
+		{"a": "A", "b": "", "c": "", "d": "D"},
 		{"a": "", "c": ""},
 	}
 
@@ -31,7 +31,7 @@ func TestGetKeys(t *testing.T) {
 		},
 		{
 			in:   []string{"c", "a", "?*"},
-			want: []string{"c", "a", "?b", "?d"},
+			want: []string{"c", "a", "?d"},
 		},
 		{
 			in:   []string{"!a", "*", "c"},
