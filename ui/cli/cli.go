@@ -37,7 +37,7 @@ func New() *CLI {
 				for _, m := range v.([]map[string]interface{}) {
 					names = append(names, get(m, "Name"))
 				}
-				return strings.Join(names, "\n"), nil
+				return strings.Join(names, "\n") + "\n", nil
 			},
 		},
 	}
