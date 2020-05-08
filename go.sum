@@ -97,6 +97,8 @@ github.com/pirmd/text v0.0.0-20191111165610-e9760a07aba4/go.mod h1:FBNvItiLIoO/j
 github.com/pirmd/text v0.4.0/go.mod h1:4OlvjIEyYwpNYzjAgCyMX9I9kaWBU/HKdgITLQJW4uY=
 github.com/pirmd/text v0.4.1/go.mod h1:Okfp3RfUl/dyYmJpDU6ChXLawYI5H/hSfLSC3naYkBs=
 github.com/pirmd/text v0.5.1/go.mod h1:hnz1evTCIMeXQfoGk9M4JAM1i/P2xqrVC6pLE5SLwag=
+github.com/pirmd/text v0.5.2 h1:tW7xEcd1cTtTBDoyIs67q0CF2OkVolOGRuesIbXaGPg=
+github.com/pirmd/text v0.5.2/go.mod h1:JbZ5T8NTXpaeP4yHsW3FUyx/Ra1jucBhnf/g1Xlc3zk=
 github.com/pirmd/verify v0.2.0 h1:woyyRGbgZp4SnWGsMco3BCVwTfomkFZl/+xRKiGZ5FM=
 github.com/pirmd/verify v0.2.0/go.mod h1:/McQWCtPnQ52qjQCYc0JKdwFyTxd5oRfwtCUq9m+eG0=
 github.com/pirmd/verify v0.3.0 h1:P2HPGIPz/M9s2XMLjCtAcpJ9ndrTpbqN5aOxo9auDrI=

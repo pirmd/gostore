@@ -1,12 +1,16 @@
 # Changelog
-All notable changes to this project will be documented in this file.
 
-Format is based on [Keep a Changelog] (https://keepachangelog.com/en/1.0.0/).
-Versionning adheres to [Semantic Versioning] (https://semver.org/spec/v2.0.0.html)
-
-## [Unreleased]
+## [0.3.2] - 2020.05.05
+## Added
+- Add new template function to only display a metadata if non empty.
 ## Modified
 - FIX 'list' command does not search for the given pattern
+- Modify way to display difference between information stored in
+  collection and information stored in media file metadata.
+- rework template funcmap offered to tweak the way information from the store
+  is displayed on screen.
+- refactor slightly the way the configuration is handled inside gostrore, store
+  and UI structs and modules.
 
 ## [0.3.1] - 2020.03.07
 ### Added
