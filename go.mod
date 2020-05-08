@@ -21,13 +21,13 @@ require (
 	github.com/golang/protobuf v1.3.4 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/pirmd/clapp v0.3.2
+	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/pirmd/clapp v0.4.0
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.3.2
 	github.com/pirmd/text v0.5.1
 	github.com/pirmd/verify v0.4.1
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
-	github.com/smartystreets/goconvey v0.0.0-20190306220146-200a235640ff // indirect
 	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20190705090504-162552197222 // indirect
