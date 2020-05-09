@@ -47,7 +47,7 @@ An example and commented config file can be found in config.example.yaml.
 Run `go get github.com/pirmd/gostore` then `sh ./go install` from inside the
 gostore repository.
 
-Note: `go` is a small shell script on top of go binary that incorporates
+Note: `make` is a small shell script on top of go binary that incorporates
 version information and takes care of manpage generation and installation.
 You can either go directly with go standard command line commands.
 
