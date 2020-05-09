@@ -25,15 +25,16 @@ type Module interface {
 // ConfigUnmarshaler represents a raw configuration that can be unmarshalled to
 // a given module's config.
 type ConfigUnmarshaler interface {
-	// Unmarshal decodes a ra confiuration into a module's config
+	// Unmarshal decodes a raw configuration into a module's config
 	Unmarshal(interface{}) error
 }
 
 // factory represents a module provider.
 type factory struct {
-	//Name of the module
+	// Name of the module
 	Name string
-	//NewModule creates a new instance of the module
+
+	// NewModule creates a new instance of the module
 	NewModule func(rawcfg ConfigUnmarshaler, logger *log.Logger) (Module, error)
 }
 
@@ -63,9 +64,9 @@ func New(name string, rawcfg ConfigUnmarshaler, logger *log.Logger) (Module, err
 	return factory.NewModule(rawcfg, logger)
 }
 
-//Register registers a new Module.
-//If a Module already exists for the supplied name, it will be replaced by the
-//new provided module's factory.
+// Register registers a new Module.
+// If a Module already exists for the supplied name, it will be replaced by the
+// new provided module's factory.
 func Register(name string, newFn func(ConfigUnmarshaler, *log.Logger) (Module, error)) {
 	availableModules.append(&factory{
 		Name:      name,
@@ -73,7 +74,7 @@ func Register(name string, newFn func(ConfigUnmarshaler, *log.Logger) (Module, e
 	})
 }
 
-//List returns all availbale modules names
+// List returns all availbale modules names
 func List() (m []string) {
 	for _, factory := range availableModules {
 		m = append(m, factory.Name)
@@ -81,8 +82,8 @@ func List() (m []string) {
 	return
 }
 
-//ProcessRecord applies the specified series of modules to a record. If an
-//error occures, ProcessRecord stops and feedback the error.
+// ProcessRecord applies the specified series of modules to a record. If an
+// error occures, ProcessRecord stops and feedback the error.
 func ProcessRecord(r *store.Record, mods []Module) error {
 	for _, mod := range mods {
 		if err := mod.ProcessRecord(r); err != nil {
