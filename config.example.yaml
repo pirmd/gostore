@@ -68,14 +68,17 @@ ui:
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
 importmodules: &importmodules
-    # organizer is a modules that rationalizes the name of a media based on its metadata values
+    # XXX
+    GoogleBooksQuerier:
+
+    # organizer is a modules that rationalizes the name of a media based on its
+    # metadata values
     organizer:
-        
         # namingschemes is a collection of templates to define a media name
         # based on its metadata values. DIffernet naming schemes can be adopted
-        # based on the media's type.
-        # Fall-back templates or generic template can be defined using the
-        # "_default" keyword. Template's follow golang text/template specification. 
+        # based on the media's type.  Fall-back templates or generic template
+        # can be defined using the "_default" keyword. Template's follow golang
+        # text/template specification. 
         namingschemes:
             _default: "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}"
             
@@ -91,6 +94,7 @@ importmodules: &importmodules
         # fields2clean is the list of metadata fields to clean from html tags
         fields2clean:
             - Description
+
         # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
         outputstyle: markdown
 

@@ -23,21 +23,6 @@ func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
 	return epub2mdata(epubData), nil
 }
 
-func (mh *epubHandler) FetchMetadata(mdata media.Metadata) (media.Metadata, error) {
-	fetcher := &googleBooks{}
-
-	found, err := fetcher.LookForBooks(mdata)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(found) == 0 {
-		return nil, media.ErrNoMetadataFound
-	}
-
-	return found[0], nil
-}
-
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
 	mdata := make(media.Metadata)
 

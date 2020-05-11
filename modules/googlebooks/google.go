@@ -1,4 +1,4 @@
-package books
+package googlebooks
 
 import (
 	"encoding/json"
@@ -145,8 +145,8 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	return mdata
 }
 
-//parseTitle use a simple heuristic to decipher google books information aout
-//series hidden in title/subtitle volume information
+// parseTitle use a simple heuristic to decipher google books information aout
+// series hidden in title/subtitle volume information
 func (g *googleBooks) parseTitle(vi *googleVolumeInfo) (title string, subtitle string, serieName string, seriePos string) {
 	for _, re := range reSerieGuesser {
 		if r := submatchMap(re, vi.Title); len(r) > 0 {

@@ -58,35 +58,3 @@ func GetMetadataFromFile(path string) (Metadata, error) {
 
 	return GetMetadata(f)
 }
-
-//FetchMetadata retrieves the metadata from an external source (usually an
-//internet data base) that best correspond to the provided known data. It
-//provides its best guess or nil if nothing reasonable is found.
-//
-//FetchMetadata uses as input any known metadata to based its search on and
-//verifying that what it guesses is similar enough to its input to match.
-//Provided input shall provide a valid media Type otherwise FetchMetadata will
-//panic.
-//
-//FetchMetadata set the proper media Type if not done by the corresponding
-//Handler.
-func FetchMetadata(metadata Metadata) (Metadata, error) {
-	typ, ok := metadata[TypeField].(string)
-	if !ok {
-		panic("metadata type is unknown or not of type 'string'")
-	}
-
-	mh, err := handlers.ForType(typ)
-	if err != nil {
-		return nil, err
-	}
-
-	mdata, err := mh.FetchMetadata(metadata)
-	if err != nil {
-		return nil, err
-	}
-
-	mdata.SetIfNotExists(TypeField, mh.Type())
-
-	return mdata, nil
-}

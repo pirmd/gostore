@@ -34,11 +34,6 @@ type Handler interface {
 
 	//GetMetadata retrieves the metadata from a given file.
 	GetMetadata(File) (Metadata, error)
-
-	//FetchMetadata retrieves the metadata from an external source (usually an
-	//internet data base) that best correspond to the provided known data.  It
-	//provides its best guess or raise ErrNoMetadataFound
-	FetchMetadata(Metadata) (Metadata, error)
 }
 
 // Handlers represent th elist of known media handlers
