@@ -1,10 +1,11 @@
 HTTP/2.0 200 OK
-Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Alt-Svc: h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Security-Policy: frame-ancestors 'self'
 Content-Type: application/json; charset=UTF-8
-Date: Sat, 02 Nov 2019 14:07:28 GMT
-Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/9QxWkw5DfDff0g7QnWphk3RZG_4"
-Expires: Sat, 02 Nov 2019 14:07:28 GMT
+Date: Mon, 11 May 2020 08:17:27 GMT
+Etag: "9UcOB1bEN68_AJTyyQbHlA2_Izc/2C_eFYfq2fv47mp0F3arNoLx_Fg"
+Expires: Mon, 11 May 2020 08:17:27 GMT
 Server: GSE
 Vary: Origin
 Vary: X-Origin
@@ -14,13 +15,162 @@ X-Xss-Protection: 1; mode=block
 
 {
  "kind": "books#volumes",
- "totalItems": 53,
+ "totalItems": 101,
  "items": [
   {
    "kind": "books#volume",
-   "id": "voBPDwAAQBAJ",
-   "etag": "3nr1DrZfozM",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/voBPDwAAQBAJ",
+   "id": "yXmaDwAAQBAJ",
+   "etag": "RlP/2gaN5Dw",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/yXmaDwAAQBAJ",
+   "volumeInfo": {
+    "title": "Fiche de lecture Voyage au centre de la Terre (résumé détaillé et analyse littéraire de référence)",
+    "authors": [
+     "Jules Verne"
+    ],
+    "publisher": "Les Éditions de l'Ebook malin",
+    "publishedDate": "2019-05-28",
+    "description": "La collection « Connaître une œuvre » vous offre la possibilité de tout savoir du Voyage au centre de la Terre de Jules Verne grâce à une fiche de lecture aussi complète que détaillée. La rédaction, claire et accessible, a été confiée à un spécialiste universitaire. Notre travail éditorial vous offre un grand confort de lecture, spécialement développé pour la lecture numérique. Cette fiche de lecture répond à une charte qualité mise en place par une équipe d’enseignants. Ce livre numérique contient : - Un sommaire dynamique - La biographie de Jules Verne - La présentation de l’œuvre - Le résumé détaillé (chapitre par chapitre) - Les raisons du succès - Les thèmes principaux - L'étude du mouvement littéraire de l’auteur",
+    "readingModes": {
+     "text": true,
+     "image": true
+    },
+    "printType": "BOOK",
+    "categories": [
+     "Study Aids"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "1.1.1.0.preview.3",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=yXmaDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=yXmaDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=yXmaDwAAQBAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=yXmaDwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=yXmaDwAAQBAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+     "amount": 3.49,
+     "currencyCode": "EUR"
+    },
+    "retailPrice": {
+     "amount": 3.49,
+     "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=yXmaDwAAQBAJ&rdid=book-yXmaDwAAQBAJ&rdot=1&source=gbs_api",
+    "offers": [
+     {
+      "finskyOfferType": 1,
+      "listPrice": {
+       "amountInMicros": 3490000.0,
+       "currencyCode": "EUR"
+      },
+      "retailPrice": {
+       "amountInMicros": 3490000.0,
+       "currencyCode": "EUR"
+      },
+      "giftable": true
+     }
+    ]
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": true
+    },
+    "pdf": {
+     "isAvailable": true
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=yXmaDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "La collection « Connaître une œuvre » vous offre la possibilité de tout savoir du Voyage au centre de la Terre de Jules Verne grâce à une fiche de lecture aussi complète que détaillée."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "3TtUAAAAcAAJ",
+   "etag": "nc4TdaUlXFc",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/3TtUAAAAcAAJ",
+   "volumeInfo": {
+    "title": "Voyage au centre de la terre",
+    "authors": [
+     "Jules Verne"
+    ],
+    "publishedDate": "1870",
+    "industryIdentifiers": [
+     {
+      "type": "OTHER",
+      "identifier": "BSB:BSB11013514"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": true
+    },
+    "pageCount": 335,
+    "printType": "BOOK",
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "0.2.2.0.full.1",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "imageLinks": {
+     "smallThumbnail": "http://books.google.com/books/content?id=3TtUAAAAcAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=3TtUAAAAcAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=3TtUAAAAcAAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=3TtUAAAAcAAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=3TtUAAAAcAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "FREE",
+    "isEbook": true,
+    "buyLink": "https://play.google.com/store/books/details?id=3TtUAAAAcAAJ&rdid=book-3TtUAAAAcAAJ&rdot=1&source=gbs_api"
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "ALL_PAGES",
+    "embeddable": true,
+    "publicDomain": true,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false,
+     "downloadLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_terre.epub?id=3TtUAAAAcAAJ&hl=&output=epub&source=gbs_api"
+    },
+    "pdf": {
+     "isAvailable": true,
+     "downloadLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_terre.pdf?id=3TtUAAAAcAAJ&hl=&output=pdf&sig=ACfU3U1vLLBFa18H_E9kJWR23_1LBJJfuA&source=gbs_api"
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=3TtUAAAAcAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+    "quoteSharingAllowed": false
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "568_DwAAQBAJ",
+   "etag": "uWT5N+l5epY",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/568_DwAAQBAJ",
    "volumeInfo": {
     "title": "Voyage au Centre de la Terre",
     "authors": [
@@ -28,16 +178,16 @@ X-Xss-Protection: 1; mode=block
      "Jules Verne"
     ],
     "publisher": "Pika",
-    "publishedDate": "2018-03-21",
-    "description": "Le professeur Lidenbrock, Axel et Hans continuent leur exploration des entrailles de la Terre et quelle n’est pas leur surprise lorsqu’ils découvrent l’existence d’une mer souterraine ! Ils construisent alors un radeau et embarquent aussitôt pour de nouvelles aventures. Cependant, il semblerait qu’une gigantesque créature à la mâchoire puissante rôde dans ces eaux mystérieuses...",
+    "publishedDate": "2017-12-13",
+    "description": "Après avoir failli mourir de soif, le professeur Lidenbrock, Axel et Hans continuent leur route en suivant le cours d’eau découvert par le guide. Mais le chemin n’est pas sans embûche, surtout lorsqu’Axel finit par s’égarer dans les obscures galeries souterraines... Comment va-t-il retrouver son chemin dans ce dédale sans lumière ?",
     "industryIdentifiers": [
      {
       "type": "ISBN_13",
-      "identifier": "9782811639310"
+      "identifier": "9782811639297"
      },
      {
       "type": "ISBN_10",
-      "identifier": "2811639314"
+      "identifier": "2811639292"
      }
     ],
     "readingModes": {
@@ -51,19 +201,21 @@ X-Xss-Protection: 1; mode=block
     ],
     "maturityRating": "NOT_MATURE",
     "allowAnonLogging": false,
-    "contentVersion": "1.2.1.0.preview.3",
+    "contentVersion": "1.2.2.0.preview.3",
     "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
+     "containsEpubBubbles": true,
+     "containsImageBubbles": true,
+     "epubBubbleVersion": "6b4d645fded8575d",
+     "imageBubbleVersion": "6b4d645fded8575d"
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=voBPDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=voBPDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=568_DwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=568_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=voBPDwAAQBAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=voBPDwAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=voBPDwAAQBAJ"
+    "previewLink": "http://books.google.fr/books?id=568_DwAAQBAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=568_DwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=568_DwAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
@@ -77,7 +229,7 @@ X-Xss-Protection: 1; mode=block
      "amount": 4.49,
      "currencyCode": "EUR"
     },
-    "buyLink": "https://play.google.com/store/books/details?id=voBPDwAAQBAJ&rdid=book-voBPDwAAQBAJ&rdot=1&source=gbs_api",
+    "buyLink": "https://play.google.com/store/books/details?id=568_DwAAQBAJ&rdid=book-568_DwAAQBAJ&rdot=1&source=gbs_api",
     "offers": [
      {
       "finskyOfferType": 1,
@@ -101,262 +253,90 @@ X-Xss-Protection: 1; mode=block
     "textToSpeechPermission": "ALLOWED",
     "epub": {
      "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_Centre_de_la_Terre-sample-epub.acsm?id=voBPDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_Centre_de_la_Terre-sample-epub.acsm?id=568_DwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
     "pdf": {
      "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_Centre_de_la_Terre-sample-pdf.acsm?id=voBPDwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_Centre_de_la_Terre-sample-pdf.acsm?id=568_DwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=voBPDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=568_DwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "Le professeur Lidenbrock, Axel et Hans continuent leur exploration des entrailles de la Terre et quelle n’est pas leur surprise lorsqu’ils découvrent l’existence d’une mer souterraine !"
+    "textSnippet": "Après avoir failli mourir de soif, le professeur Lidenbrock, Axel et Hans continuent leur route en suivant le cours d’eau découvert par le guide."
    }
   },
   {
    "kind": "books#volume",
-   "id": "J4rsT5dGu5gC",
-   "etag": "mXbON9bX3Rk",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/J4rsT5dGu5gC",
-   "volumeInfo": {
-    "title": "Voyage au centre de la Terre - Texte Abrégé",
-    "authors": [
-     "Jules Verne"
-    ],
-    "publisher": "Livre de Poche Jeunesse",
-    "publishedDate": "2012-09-05",
-    "description": "Le professeur Lidenbrock est persuadé d'avoir découvert le chemin qui mène au centre de la Terre. Accompagné de son neveu Axel, l'impétueux géologue part en Islande. Là, au fond d'un volcan, les deux explorateurs et leur guide s'enfoncent dans les entrailles mystérieuses du globe. Un voyage d'une folle audace, véritable défi lancé à la science.",
-    "industryIdentifiers": [
-     {
-      "type": "ISBN_13",
-      "identifier": "9782013235075"
-     },
-     {
-      "type": "ISBN_10",
-      "identifier": "2013235070"
-     }
-    ],
-    "readingModes": {
-     "text": true,
-     "image": true
-    },
-    "pageCount": 288,
-    "printType": "BOOK",
-    "categories": [
-     "Juvenile Fiction"
-    ],
-    "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.5.4.0.preview.3",
-    "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
-    },
-    "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=J4rsT5dGu5gC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=J4rsT5dGu5gC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-    },
-    "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=J4rsT5dGu5gC&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=J4rsT5dGu5gC&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=J4rsT5dGu5gC"
-   },
-   "saleInfo": {
-    "country": "FR",
-    "saleability": "FOR_SALE",
-    "isEbook": true,
-    "listPrice": {
-     "amount": 4.49,
-     "currencyCode": "EUR"
-    },
-    "retailPrice": {
-     "amount": 4.49,
-     "currencyCode": "EUR"
-    },
-    "buyLink": "https://play.google.com/store/books/details?id=J4rsT5dGu5gC&rdid=book-J4rsT5dGu5gC&rdot=1&source=gbs_api",
-    "offers": [
-     {
-      "finskyOfferType": 1,
-      "listPrice": {
-       "amountInMicros": 4490000.0,
-       "currencyCode": "EUR"
-      },
-      "retailPrice": {
-       "amountInMicros": 4490000.0,
-       "currencyCode": "EUR"
-      },
-      "giftable": true
-     }
-    ]
-   },
-   "accessInfo": {
-    "country": "FR",
-    "viewability": "PARTIAL",
-    "embeddable": true,
-    "publicDomain": false,
-    "textToSpeechPermission": "ALLOWED",
-    "epub": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_Terre_Texte_Abr%C3%A9-sample-epub.acsm?id=J4rsT5dGu5gC&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
-    },
-    "pdf": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_Terre_Texte_Abr%C3%A9-sample-pdf.acsm?id=J4rsT5dGu5gC&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
-    },
-    "webReaderLink": "http://play.google.com/books/reader?id=J4rsT5dGu5gC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "SAMPLE",
-    "quoteSharingAllowed": false
-   },
-   "searchInfo": {
-    "textSnippet": "Le professeur Lidenbrock est persuadé d&#39;avoir découvert le chemin qui mène au centre de la Terre."
-   }
-  },
-  {
-   "kind": "books#volume",
-   "id": "oe-e_-FQhlcC",
-   "etag": "HAIyZZ77Chk",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/oe-e_-FQhlcC",
-   "volumeInfo": {
-    "title": "Voyage au centre de la terre",
-    "authors": [
-     "Jules Verne"
-    ],
-    "publishedDate": "1867",
-    "description": "This book is the 1867 French publication of Jules Verne's iconic science fiction tale. The publisher, Hetzel, was Verne's close friend, editor, and mentor. The English translation of the novel is \"Journey to the Center of the Earth.\" It is illustrated by Riou.",
-    "industryIdentifiers": [
-     {
-      "type": "OTHER",
-      "identifier": "BML:37001101500291"
-     }
-    ],
-    "readingModes": {
-     "text": true,
-     "image": true
-    },
-    "pageCount": 220,
-    "printType": "BOOK",
-    "categories": [
-     "Earth (Planet)"
-    ],
-    "averageRating": 4.0,
-    "ratingsCount": 27,
-    "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": false,
-    "contentVersion": "1.2.3.0.full.3",
-    "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
-    },
-    "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=oe-e_-FQhlcC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=oe-e_-FQhlcC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-    },
-    "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=oe-e_-FQhlcC&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=oe-e_-FQhlcC&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=oe-e_-FQhlcC"
-   },
-   "saleInfo": {
-    "country": "FR",
-    "saleability": "FREE",
-    "isEbook": true,
-    "buyLink": "https://play.google.com/store/books/details?id=oe-e_-FQhlcC&rdid=book-oe-e_-FQhlcC&rdot=1&source=gbs_api"
-   },
-   "accessInfo": {
-    "country": "FR",
-    "viewability": "ALL_PAGES",
-    "embeddable": true,
-    "publicDomain": true,
-    "textToSpeechPermission": "ALLOWED",
-    "epub": {
-     "isAvailable": true,
-     "downloadLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_terre.epub?id=oe-e_-FQhlcC&hl=&output=epub&source=gbs_api"
-    },
-    "pdf": {
-     "isAvailable": true,
-     "downloadLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_terre.pdf?id=oe-e_-FQhlcC&hl=&output=pdf&sig=ACfU3U3hi4CKqT2ZDrQJz6k9qTo4RG2aeg&source=gbs_api"
-    },
-    "webReaderLink": "http://play.google.com/books/reader?id=oe-e_-FQhlcC&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "FULL_PUBLIC_DOMAIN",
-    "quoteSharingAllowed": false
-   },
-   "searchInfo": {
-    "textSnippet": "This book is the 1867 French publication of Jules Verne&#39;s iconic science fiction tale. The publisher, Hetzel, was Verne&#39;s close friend, editor, and mentor. The English translation of the novel is &quot;Journey to the Center of the Earth."
-   }
-  },
-  {
-   "kind": "books#volume",
-   "id": "5g-iBgAAQBAJ",
-   "etag": "/MVH4Jkkl2E",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/5g-iBgAAQBAJ",
+   "id": "eJ5IBAAAQBAJ",
+   "etag": "QXEu3NYFw6c",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/eJ5IBAAAQBAJ",
    "volumeInfo": {
     "title": "Voyage au centre de la Terre",
     "authors": [
-     "Jules Verne",
-     "Ligaran,"
+     "Jules Verne"
     ],
-    "publisher": "Primento",
-    "publishedDate": "2015-01-26",
-    "description": "Extrait : \"Le 24 mai 1863, un dimanche, mon oncle, le professeur Lidenbrock, revint précipitamment vers sa petite maison située au numéro 19 de Königstrasse, l'une des plus anciennes rues du vieux quartier de Hambourg. La bonne Marthe dut se croire fort en retard, car le dîner commençait à peine à chanter sur le fourneau de la cuisine.\"",
+    "publisher": "BookRix",
+    "publishedDate": "2017-06-02",
+    "description": "\"Voyage au centre de la Terre\" est un roman de science-fiction, écrit en 1864 par Jules Verne. Il fut publié en édition originale in-18 le 25 novembre 1864, puis en gd in-8° le 13 mai 1867. Le texte de 1867 est différent de celui de 1864. Il comporte en effet deux chapitres de plus (45 au lieu de 43). Ayant découvert un manuscrit runique ancien, un savant, son neveu et leur guide entreprennent un voyage vers le centre de la Terre en y entrant par un volcan islandais éteint, le Sneffels (c'est-à-dire le Snæfellsjökull). Comme à l'habitude de Jules Verne, le roman est un habile mélange de données scientifiques, d'extrapolations osées et d'aventure. L'introduction du roman reflète l'engouement d'alors pour une science jeune, la cryptologie. La suite enchaîne sur une description de l'Islande de la fin du XIXe siècle, puis sur une vaste introduction à deux autres sciences en plein essor, la paléontologie et la géologie (on notera d'ailleurs les divergences entre les interprétations de l'époque et celles couramment admises aujourd'hui).",
     "industryIdentifiers": [
      {
       "type": "ISBN_13",
-      "identifier": "9782335008531"
+      "identifier": "9783736831520"
      },
      {
       "type": "ISBN_10",
-      "identifier": "2335008536"
+      "identifier": "3736831528"
      }
     ],
     "readingModes": {
      "text": true,
      "image": true
     },
-    "pageCount": 290,
+    "pageCount": 277,
     "printType": "BOOK",
     "categories": [
      "Fiction"
     ],
     "maturityRating": "NOT_MATURE",
     "allowAnonLogging": false,
-    "contentVersion": "0.7.10.0.preview.3",
+    "contentVersion": "0.94.92.0.preview.3",
     "panelizationSummary": {
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=5g-iBgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=5g-iBgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=eJ5IBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=eJ5IBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=5g-iBgAAQBAJ&pg=PT157&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=4&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=5g-iBgAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=5g-iBgAAQBAJ"
+    "previewLink": "http://books.google.fr/books?id=eJ5IBAAAQBAJ&pg=PT170&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=4&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=eJ5IBAAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=eJ5IBAAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
     "saleability": "FOR_SALE",
     "isEbook": true,
     "listPrice": {
-     "amount": 5.99,
+     "amount": 0.99,
      "currencyCode": "EUR"
     },
     "retailPrice": {
-     "amount": 5.99,
+     "amount": 0.99,
      "currencyCode": "EUR"
     },
-    "buyLink": "https://play.google.com/store/books/details?id=5g-iBgAAQBAJ&rdid=book-5g-iBgAAQBAJ&rdot=1&source=gbs_api",
+    "buyLink": "https://play.google.com/store/books/details?id=eJ5IBAAAQBAJ&rdid=book-eJ5IBAAAQBAJ&rdot=1&source=gbs_api",
     "offers": [
      {
       "finskyOfferType": 1,
       "listPrice": {
-       "amountInMicros": 5990000.0,
+       "amountInMicros": 990000.0,
        "currencyCode": "EUR"
       },
       "retailPrice": {
-       "amountInMicros": 5990000.0,
+       "amountInMicros": 990000.0,
        "currencyCode": "EUR"
       },
       "giftable": true
@@ -370,76 +350,91 @@ X-Xss-Protection: 1; mode=block
     "publicDomain": false,
     "textToSpeechPermission": "ALLOWED",
     "epub": {
-     "isAvailable": true
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_Terre-sample-epub.acsm?id=eJ5IBAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
     "pdf": {
-     "isAvailable": true
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Voyage_au_centre_de_la_Terre-sample-pdf.acsm?id=eJ5IBAAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=5g-iBgAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=eJ5IBAAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "Jules \u003cb\u003eVerne\u003c/b\u003e, Ligaran,. géant fait tournoyer sa trompe et broie sous ses défenses \u003cbr\u003e\nles rochers du rivage, tandis que le Megatherium, arc-bouté sur ses énormes \u003cbr\u003e\npattes, fouille la \u003cb\u003eterre\u003c/b\u003e en éveillant par ses rugissements l&#39;écho des granits \u003cbr\u003e\nsonores."
+    "textSnippet": "Jules \u003cb\u003eVerne\u003c/b\u003e. — Je le sais ; mais dites-moi, cet air ne finira-t-il pas par acquérir la \u003cbr\u003e\ndensité de l&#39;eau ? — Sans doute, sous une pression de sept cent dix \u003cbr\u003e\natmosphères. — Et plus bas ? — Plus bas, cette densité s&#39;accroîtra encore. — \u003cbr\u003e\nComment&nbsp;..."
    }
   },
   {
    "kind": "books#volume",
-   "id": "GmKsCQAAQBAJ",
-   "etag": "FeOhHVi07gY",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/GmKsCQAAQBAJ",
+   "id": "XgmiDwAAQBAJ",
+   "etag": "IbAKi0FONXo",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/XgmiDwAAQBAJ",
    "volumeInfo": {
-    "title": "Voyage au centre de la terre (Entièrement illustré)",
+    "title": "Jules Verne: Voyage au centre de la Terre",
+    "subtitle": "Edition intégrale",
     "authors": [
      "Jules Verne"
     ],
-    "publisher": "LCI",
-    "publishedDate": "1977",
-    "description": "- Avec 56 illustrations originales spécialement recueillies et formatées pour cette édition numérique. -Table des matières liée à chaque chapitre du livre. -Complet et formaté pour améliorer votre expérience de lecture. Le narrateur est Axel Lidenbrock, neveu d’un éminent géologue et naturaliste allemand, le professeur de minéralogie Otto Lidenbrock. L’histoire commence le 24 mai 1863 à Hambourg et plus exactement dans la rue Königstrasse, où est située la maison du Pr Lidenbrock. Le professeur, amateur de vieux livres, a acheté le manuscrit original d'une saga islandaise, Heimskringla, écrite par Snorri Sturluson au XIIe siècle. Il y découvre un parchemin codé, rédigé en caractères runiques islandais. Lidenbrock se passionne aussitôt pour ce cryptogramme et tyrannise toute la maison tant qu'il lui résiste. Axel, d'abord peu enthousiaste, se prend peu à peu au jeu et finit par découvrir la clé du message par un coup de chance. Le parchemin se révèle être un message d'un certain Arne Saknussemm, un alchimiste islandais du XVIe siècle, rédigé en latin mais écrit en runes. Celui-ci affirme avoir découvert un passage qui l'aurait mené jusqu'au centre de la Terre, via l'un des cratères d'un volcan éteint d'Islande, le Sneffels (l'actuel Snæfellsjökull). Le professeur Otto Lidenbrock est un homme enthousiaste et impétueux. Il décide de partir dès le lendemain pour l’Islande, emmenant avec lui son neveu Axel, beaucoup plus réticent. L'oncle et le neveu sont en désaccord sur la possibilité pratique d'un tel voyage, qui va à l'encontre de la théorie la plus répandue sur la composition de l'intérieur de la planète, la théorie de la chaleur centrale, soutenue notamment par Siméon Denis Poisson : Axel s'en fait le défenseur, tandis que Lidenbrock, plus influencé par les théories de Humphry Davy selon qui les températures profondes sont moins élevées, est déterminé à mettre l'hypothèse de la chaleur centrale à l'épreuve des faits. Par ailleurs, Axel est retenu à Hambourg par les sentiments qui le lient à la pupille de Lidenbrock, Graüben, une Virlandaise avec qui il s'est fiancé à l'insu du professeur ; mais celle-ci l'encourage au contraire à accomplir ce voyage, espérant qu'ils se marieront à son retour. Deux jours à peine après le déchiffrement du message, Lidenbrock et Axel se mettent donc en route, non sans de fiévreux préparatifs de la part du professeur, qui se pourvoit d'un matériel abondant correspondant au dernier cri technologique de l'époque (notamment les appareils de Ruhmkorff fournissant un moyen d'éclairage sûr, et le fulmicoton, un puissant explosif). Lidenbrock se hâte, car les indications fournies par Saknussemm sur l'emplacement exact du cratère à emprunter se fondent sur l'ombre projetée par un pic rocheux à la fin du mois de juin, et le trajet jusqu'en Islande leur prendra du temps. Le voyage d'Axel et de Lidenbrock les mène d'Altona, banlieue de Hambourg, à Kiel en chemin de fer ; de là, ils embarquent sur un navire à vapeur en partance pour le Danemark, qui les mène à Korsør, d'où ils gagnent en train Copenhague. Lidenbrock entre en contact avec M. Thompson, directeur du Musée des Antiquités du Nord de Copenhague, qui lui procure de précieuses indications pour son voyage et son séjour en Islande. Pendant les cinq jours d'attente avant le départ du navire qui les emmènera dans l'île, Lidenbrock oblige son neveu à prendre des leçons d'abîme en haut d'un clocher afin de leur permettre de surmonter leur vertige en prévision des gouffres qu'ils devront descendre. Le 2 juin, Lidenbrock et Axel embarquent sur une goélette qui longe Elseneur, remonte jusqu'au Skagerrak, longe la Norvège puis traverse la mer du Nord et passe au large des îles Féroé avant de rejoindre enfin le port de Reykjavik, au sud-ouest de l'Islande. (Wikipedia)",
+    "publisher": "epubli",
+    "publishedDate": "2019-07-10",
+    "description": "« Le 24 mai 1863, un dimanche, mon oncle, le professeur Lidenbrock, revint précipitamment vers sa petite maison située au numéro 19 de König-strasse, l'une des plus anciennes rues du vieux quartier de Hambourg. » « Voyage au centre de la Terre » est un roman d'aventures, écrit en 1864 par Jules Verne. Le roman traite de la découverte d'un manuscrit runique ancien par un savant allemand qui, avec son neveu et leur guide, entreprennent un voyage vers le centre de la Terre en y entrant par un volcan islandais éteint, le Sneffels (c'est-à-dire le Snæfellsjökull).",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_13",
+      "identifier": "9783748572022"
+     },
+     {
+      "type": "ISBN_10",
+      "identifier": "3748572026"
+     }
+    ],
     "readingModes": {
      "text": true,
      "image": true
     },
-    "pageCount": 474,
     "printType": "BOOK",
+    "categories": [
+     "Fiction"
+    ],
     "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.5.8.0.preview.3",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
     "panelizationSummary": {
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=GmKsCQAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=GmKsCQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=XgmiDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=XgmiDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=GmKsCQAAQBAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=GmKsCQAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=GmKsCQAAQBAJ"
+    "previewLink": "http://books.google.fr/books?id=XgmiDwAAQBAJ&printsec=frontcover&dq=intitle:Voyage+au+Centre+de+la+Terre%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=XgmiDwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=XgmiDwAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
     "saleability": "FOR_SALE",
     "isEbook": true,
     "listPrice": {
-     "amount": 1.51,
+     "amount": 17.99,
      "currencyCode": "EUR"
     },
     "retailPrice": {
-     "amount": 1.51,
+     "amount": 12.59,
      "currencyCode": "EUR"
     },
-    "buyLink": "https://play.google.com/store/books/details?id=GmKsCQAAQBAJ&rdid=book-GmKsCQAAQBAJ&rdot=1&source=gbs_api",
+    "buyLink": "https://play.google.com/store/books/details?id=XgmiDwAAQBAJ&rdid=book-XgmiDwAAQBAJ&rdot=1&source=gbs_api",
     "offers": [
      {
       "finskyOfferType": 1,
       "listPrice": {
-       "amountInMicros": 1510000.0,
+       "amountInMicros": 1.799E7,
        "currencyCode": "EUR"
       },
       "retailPrice": {
-       "amountInMicros": 1510000.0,
+       "amountInMicros": 1.259E7,
        "currencyCode": "EUR"
       },
       "giftable": true
@@ -458,12 +453,12 @@ X-Xss-Protection: 1; mode=block
     "pdf": {
      "isAvailable": true
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=GmKsCQAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=XgmiDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "- Avec 56 illustrations originales spécialement recueillies et formatées pour cette édition numérique."
+    "textSnippet": "« Le 24 mai 1863, un dimanche, mon oncle, le professeur Lidenbrock, revint précipitamment vers sa petite maison située au numéro 19 de König-strasse, l&#39;une des plus anciennes rues du vieux quartier de Hambourg. » « Voyage au centre ..."
    }
   }
  ]

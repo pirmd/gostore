@@ -1,10 +1,11 @@
 HTTP/2.0 200 OK
-Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Alt-Svc: h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Security-Policy: frame-ancestors 'self'
 Content-Type: application/json; charset=UTF-8
-Date: Sat, 02 Nov 2019 14:07:29 GMT
-Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/XVpVXC8_GczH_vWfRpae95xclMQ"
-Expires: Sat, 02 Nov 2019 14:07:29 GMT
+Date: Mon, 11 May 2020 08:17:27 GMT
+Etag: "9UcOB1bEN68_AJTyyQbHlA2_Izc/XVpVXC8_GczH_vWfRpae95xclMQ"
+Expires: Mon, 11 May 2020 08:17:27 GMT
 Server: GSE
 Vary: Origin
 Vary: X-Origin

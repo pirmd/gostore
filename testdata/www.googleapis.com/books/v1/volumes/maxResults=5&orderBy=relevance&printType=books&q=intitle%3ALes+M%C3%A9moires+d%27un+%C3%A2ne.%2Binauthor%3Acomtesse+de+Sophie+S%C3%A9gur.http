@@ -1,10 +1,11 @@
 HTTP/2.0 200 OK
-Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Alt-Svc: h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Security-Policy: frame-ancestors 'self'
 Content-Type: application/json; charset=UTF-8
-Date: Sat, 02 Nov 2019 14:07:27 GMT
-Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/GQ8Zv-ZyoNIVffIpUgL5O15SUps"
-Expires: Sat, 02 Nov 2019 14:07:27 GMT
+Date: Mon, 11 May 2020 08:17:25 GMT
+Etag: "9UcOB1bEN68_AJTyyQbHlA2_Izc/-vUi2PaOf_wuxrcy2hTdTHxsH7A"
+Expires: Mon, 11 May 2020 08:17:25 GMT
 Server: GSE
 Vary: Origin
 Vary: X-Origin
@@ -14,52 +15,51 @@ X-Xss-Protection: 1; mode=block
 
 {
  "kind": "books#volumes",
- "totalItems": 15,
+ "totalItems": 11,
  "items": [
   {
    "kind": "books#volume",
-   "id": "JDK_NAEACAAJ",
-   "etag": "slu+ReGBz00",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/JDK_NAEACAAJ",
+   "id": "ZAWHBwAAQBAJ",
+   "etag": "mo7eJQzedV8",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/ZAWHBwAAQBAJ",
    "volumeInfo": {
-    "title": "Les Mémoires d'un âne",
+    "title": "Les mémoires d’un âne",
     "authors": [
-     "Comtesse de Sophie Ségur"
+     "Sophie Rostopchine, comtesse de Ségur, présenté par Didier Hallépée"
     ],
-    "publisher": "Tredition Classics",
-    "publishedDate": "2012",
-    "description": "Cette oeuvre ( dition reli ) fait partie de la s rie TREDITION CLASSICS. La maison d' dition tredition, bas e Hambourg, a publi dans la s rie TREDITION CLASSICS des ouvrages anciens de plus de deux mill naires. Ils taient pour la plupart puis s ou uniquement disponible chez les bouquinistes. La s rie est destin e pr server la litt rature et promouvoir la culture. Avec sa s rie TREDITION CLASSICS, tredition comme but de mettre disposition des milliers de classiques de la litt rature mondiale dans diff rentes langues et de les diffuser dans le monde entier.",
+    "publisher": "les écrivains de Fondcombe",
+    "publishedDate": "2015-03-20",
+    "description": "Sophie Rostopchine (Sofia Fiodorovna Rostoptchina) est, comme son nom l'indique, issue de l'aristocratie russe. Elle est née le 1er août 1799 à Saint-Pétersbourg et a passé son enfance dans le domaine familial Voronovo, près de Moscou (45 000 hectares, 4 000 serfs)En 1812, Napoléon vient apporter au peuple russe les bienfaits de la révolution française à la tête de sa Grande Armée. Le général Fiodor Vassilievitch Rostopchine, père de Sophie, est alors gouverneur de Moscou. Il fait incendier Moscou, ce qui provoquera la retraite de Napoléon et la disgrâce de Fiodor. Réduit à l'exil, Fiodor finit par s'installer à Paris où il fait venir sa famille. C'est là que Sophie épouse le 14 juillet 1819 le comte Eugène de Ségur, petit-fils du maréchal de Ségur.Ce mariage commença comme un mariage d'amour mais finit par s'avérer désastreux. Sophie se consolera en s'occupant de ses huit enfants puis de ses nombreux petits enfants. Plus tard, elle coucha par écrit les nombreuses histoires qu'elle avait inventées pour ses petits enfants.L'oeuvre de la comtesse de Ségur à bercé notre enfance. Qui de nous n'a pas plaint la pauvre Sophie et eu envie de lui dire qu'elle serait moins malheureuse si elle était plus sage. Ces romans font écho à l'enfance dorée de l'aristocratie dans un monde où déjà le temps de l'aristocratie prend fin. Mais cette enfance dorée se combine aussi à l'enfance malheureuse, mal aimée et maltraitée. Heureusement, le temps, la chance et l'amour sont là pour panser les plaies et apporter le bonheur à ceux qui ont su le mériter. Ces romans, c'est aussi la peinture d'une époque encore proche de la nôtre et déjà disparue, une époque où la révolution industrielle vient de commencer et où la technologie moderne n'a pas encore bouleversé la société en profondeur.Didier HALLÉPÉE, grand lecteur aux mille passions a sélectionné cette oeuvre pour vous.",
     "industryIdentifiers": [
      {
-      "type": "ISBN_10",
-      "identifier": "3849139999"
+      "type": "ISBN_13",
+      "identifier": "9781508969150"
      },
      {
-      "type": "ISBN_13",
-      "identifier": "9783849139995"
+      "type": "ISBN_10",
+      "identifier": "1508969159"
      }
     ],
     "readingModes": {
      "text": false,
-     "image": false
+     "image": true
     },
-    "pageCount": 168,
+    "pageCount": 216,
     "printType": "BOOK",
+    "categories": [
+     "Fiction"
+    ],
     "maturityRating": "NOT_MATURE",
     "allowAnonLogging": false,
     "contentVersion": "preview-1.0.0",
-    "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
-    },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=JDK_NAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=JDK_NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=ZAWHBwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=ZAWHBwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=JDK_NAEACAAJ&dq=intitle:Les+M%C3%A9moires+d%27un+%C3%A2ne.%2Binauthor:comtesse+de+Sophie+S%C3%A9gur&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
-    "infoLink": "http://books.google.fr/books?id=JDK_NAEACAAJ&dq=intitle:Les+M%C3%A9moires+d%27un+%C3%A2ne.%2Binauthor:comtesse+de+Sophie+S%C3%A9gur&hl=&as_pt=BOOKS&source=gbs_api",
-    "canonicalVolumeLink": "https://books.google.com/books/about/Les_M%C3%A9moires_d_un_%C3%A2ne.html?hl=&id=JDK_NAEACAAJ"
+    "previewLink": "http://books.google.fr/books?id=ZAWHBwAAQBAJ&pg=PA202&dq=intitle:Les+M%C3%A9moires+d%27un+%C3%A2ne.%2Binauthor:comtesse+de+Sophie+S%C3%A9gur&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=ZAWHBwAAQBAJ&dq=intitle:Les+M%C3%A9moires+d%27un+%C3%A2ne.%2Binauthor:comtesse+de+Sophie+S%C3%A9gur&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Les_m%C3%A9moires_d_un_%C3%A2ne.html?hl=&id=ZAWHBwAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
@@ -68,28 +68,29 @@ X-Xss-Protection: 1; mode=block
    },
    "accessInfo": {
     "country": "FR",
-    "viewability": "NO_PAGES",
-    "embeddable": false,
+    "viewability": "PARTIAL",
+    "embeddable": true,
     "publicDomain": false,
     "textToSpeechPermission": "ALLOWED",
     "epub": {
      "isAvailable": false
     },
     "pdf": {
-     "isAvailable": false
+     "isAvailable": true,
+     "acsTokenLink": "http://books.google.fr/books/download/Les_m%C3%A9moires_d_un_%C3%A2ne-sample-pdf.acsm?id=ZAWHBwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=JDK_NAEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "NONE",
+    "webReaderLink": "http://play.google.com/books/reader?id=ZAWHBwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "Cette oeuvre ( dition reli ) fait partie de la s rie TREDITION CLASSICS. La maison d&#39; dition tredition, bas e Hambourg, a publi dans la s rie TREDITION CLASSICS des ouvrages anciens de plus de deux mill naires."
+    "textSnippet": "\u003cb\u003eSophie\u003c/b\u003e Rostopchine, comtesse de \u003cb\u003eSégur\u003c/b\u003e, présenté par Didier Hallépée ... \u003cbr\u003e\nComtesse de \u003cb\u003eSégur\u003c/b\u003e – Les malheurs de \u003cb\u003eSophie\u003c/b\u003e Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cbr\u003e\nvacances Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cb\u003emémoires d&#39;un âne Comtesse\u003c/b\u003e de \u003cb\u003eSégur\u003c/b\u003e – \u003cbr\u003e\nPauvre Blaise&nbsp;..."
    }
   },
   {
    "kind": "books#volume",
    "id": "IwiHBwAAQBAJ",
-   "etag": "xBch9H4/etI",
+   "etag": "4NtjFN7/SCo",
    "selfLink": "https://www.googleapis.com/books/v1/volumes/IwiHBwAAQBAJ",
    "volumeInfo": {
     "title": "Les malheurs de Sophie",
@@ -153,7 +154,7 @@ X-Xss-Protection: 1; mode=block
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "\u003cb\u003eSophie\u003c/b\u003e Rostopchine, comtesse de \u003cb\u003eSégur\u003c/b\u003e, présenté par Didier Hallépée ... \u003cbr\u003e\nComtesse de \u003cb\u003eSégur\u003c/b\u003e – Les malheurs de \u003cb\u003eSophie\u003c/b\u003e Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cbr\u003e\nvacances Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cb\u003emémoires d&#39;un âne Comtesse\u003c/b\u003e de \u003cb\u003eSégur\u003c/b\u003e – \u003cbr\u003e\nPauvre Blaise&nbsp;..."
+    "textSnippet": "... Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Nouveaux contes de fées Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cbr\u003e\npetites filles modèles Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les malheurs de \u003cb\u003eSophie\u003c/b\u003e Comtesse \u003cbr\u003e\nde \u003cb\u003eSégur\u003c/b\u003e – Les vacances Comtesse de \u003cb\u003eSégur\u003c/b\u003e – Les \u003cb\u003emémoires d&#39;un âne\u003c/b\u003e \u003cbr\u003e\n\u003cb\u003eComtesse\u003c/b\u003e&nbsp;..."
    }
   },
   {

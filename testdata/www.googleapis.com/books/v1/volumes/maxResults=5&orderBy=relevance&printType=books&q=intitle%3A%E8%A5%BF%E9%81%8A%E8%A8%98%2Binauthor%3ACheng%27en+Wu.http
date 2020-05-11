@@ -1,10 +1,11 @@
 HTTP/2.0 200 OK
-Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Alt-Svc: h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Security-Policy: frame-ancestors 'self'
 Content-Type: application/json; charset=UTF-8
-Date: Sat, 02 Nov 2019 14:07:28 GMT
-Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/w41DfPqcwlp272_pmQUkRQwP7U4"
-Expires: Sat, 02 Nov 2019 14:07:28 GMT
+Date: Mon, 11 May 2020 08:17:26 GMT
+Etag: "9UcOB1bEN68_AJTyyQbHlA2_Izc/_q4KMrebUj2BMyJHX5U4W-j01mw"
+Expires: Mon, 11 May 2020 08:17:26 GMT
 Server: GSE
 Vary: Origin
 Vary: X-Origin
@@ -14,30 +15,34 @@ X-Xss-Protection: 1; mode=block
 
 {
  "kind": "books#volumes",
- "totalItems": 2,
+ "totalItems": 1,
  "items": [
   {
    "kind": "books#volume",
-   "id": "xjuiuwEACAAJ",
-   "etag": "fOdaH7OP/Fc",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/xjuiuwEACAAJ",
+   "id": "c03mzAEACAAJ",
+   "etag": "eWDrkBGFqrQ",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/c03mzAEACAAJ",
    "volumeInfo": {
     "title": "西遊記",
     "authors": [
      "Cheng'en Wu"
     ],
-    "publishedDate": "1962",
+    "publishedDate": "1974",
     "industryIdentifiers": [
      {
       "type": "OTHER",
-      "identifier": "OCLC:502721198"
+      "identifier": "OCLC:222461180"
      }
     ],
     "readingModes": {
      "text": false,
      "image": false
     },
+    "pageCount": 1132,
     "printType": "BOOK",
+    "categories": [
+     "Chinese fiction"
+    ],
     "maturityRating": "NOT_MATURE",
     "allowAnonLogging": false,
     "contentVersion": "preview-1.0.0",
@@ -45,10 +50,10 @@ X-Xss-Protection: 1; mode=block
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
-    "language": "zh-TW",
-    "previewLink": "http://books.google.fr/books?id=xjuiuwEACAAJ&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
-    "infoLink": "http://books.google.fr/books?id=xjuiuwEACAAJ&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&source=gbs_api",
-    "canonicalVolumeLink": "https://books.google.com/books/about/%E8%A5%BF%E9%81%8A%E8%A8%98.html?hl=&id=xjuiuwEACAAJ"
+    "language": "en",
+    "previewLink": "http://books.google.fr/books?id=c03mzAEACAAJ&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=c03mzAEACAAJ&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/%E8%A5%BF%E9%81%8A%E8%A8%98.html?hl=&id=c03mzAEACAAJ"
    },
    "saleInfo": {
     "country": "FR",
@@ -67,73 +72,9 @@ X-Xss-Protection: 1; mode=block
     "pdf": {
      "isAvailable": false
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=xjuiuwEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=c03mzAEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "NONE",
     "quoteSharingAllowed": false
-   }
-  },
-  {
-   "kind": "books#volume",
-   "id": "DbEWAAAAIAAJ",
-   "etag": "pQLJGRZgg1s",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/DbEWAAAAIAAJ",
-   "volumeInfo": {
-    "title": "完譯西遊記",
-    "authors": [
-     "吳承恩"
-    ],
-    "publishedDate": "1960",
-    "industryIdentifiers": [
-     {
-      "type": "OTHER",
-      "identifier": "UCAL:B3956459"
-     }
-    ],
-    "readingModes": {
-     "text": false,
-     "image": false
-    },
-    "pageCount": 578,
-    "printType": "BOOK",
-    "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": false,
-    "contentVersion": "1.2.2.0.preview.0",
-    "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
-    },
-    "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=DbEWAAAAIAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=DbEWAAAAIAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    "language": "ko",
-    "previewLink": "http://books.google.fr/books?id=DbEWAAAAIAAJ&q=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
-    "infoLink": "http://books.google.fr/books?id=DbEWAAAAIAAJ&dq=intitle:%E8%A5%BF%E9%81%8A%E8%A8%98%2Binauthor:Cheng%27en+Wu&hl=&as_pt=BOOKS&source=gbs_api",
-    "canonicalVolumeLink": "https://books.google.com/books/about/%E5%AE%8C%E8%AD%AF%E8%A5%BF%E9%81%8A%E8%A8%98.html?hl=&id=DbEWAAAAIAAJ"
-   },
-   "saleInfo": {
-    "country": "FR",
-    "saleability": "NOT_FOR_SALE",
-    "isEbook": false
-   },
-   "accessInfo": {
-    "country": "FR",
-    "viewability": "NO_PAGES",
-    "embeddable": false,
-    "publicDomain": false,
-    "textToSpeechPermission": "ALLOWED",
-    "epub": {
-     "isAvailable": false
-    },
-    "pdf": {
-     "isAvailable": false
-    },
-    "webReaderLink": "http://play.google.com/books/reader?id=DbEWAAAAIAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "NONE",
-    "quoteSharingAllowed": false
-   },
-   "searchInfo": {
-    "textSnippet": "Cheng&#39;en \u003cb\u003eWu\u003c/b\u003e, 金光洲, 金湖星 준시안 4 시나갖나는사싣은수번이번시도이산스관깨 \u003cbr\u003e\n手 니앴는엑이아놘수없斗. 이기 군찬 킥 하고 았 는 인내 쾨 국소 산 이 갇은 기괘찌 \u003cbr\u003e\n二근기 包戶 네는나갇이듯갇은고리 斗 곈악걱악 퀘 土| 괘ᄂᄂ p 너군나나 기 케 干&nbsp;..."
    }
   }
  ]

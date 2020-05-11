@@ -1,10 +1,11 @@
 HTTP/2.0 200 OK
-Alt-Svc: quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+Alt-Svc: h3-27=":443"; ma=2592000,h3-25=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q049=":443"; ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 Cache-Control: private, max-age=0, must-revalidate, no-transform
+Content-Security-Policy: frame-ancestors 'self'
 Content-Type: application/json; charset=UTF-8
-Date: Sat, 02 Nov 2019 14:07:29 GMT
-Etag: "pWi_HUx3P71-CWcpJKMdM6Cftig/fRK3Cm5B1TMMWn2l1r86Oqv3ipo"
-Expires: Sat, 02 Nov 2019 14:07:29 GMT
+Date: Mon, 11 May 2020 08:17:27 GMT
+Etag: "9UcOB1bEN68_AJTyyQbHlA2_Izc/VvHvSsXIhP3SCsdDyqBk8PhEG_E"
+Expires: Mon, 11 May 2020 08:17:27 GMT
 Server: GSE
 Vary: Origin
 Vary: X-Origin
@@ -14,272 +15,142 @@ X-Xss-Protection: 1; mode=block
 
 {
  "kind": "books#volumes",
- "totalItems": 38,
+ "totalItems": 60,
  "items": [
   {
    "kind": "books#volume",
-   "id": "QjGABAAAQBAJ",
-   "etag": "wBdAmrUc9nI",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/QjGABAAAQBAJ",
+   "id": "Mj9UAAAAcAAJ",
+   "etag": "vSWfu5vkJSs",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/Mj9UAAAAcAAJ",
    "volumeInfo": {
     "title": "Vingt mille lieues sous les mers",
     "authors": [
      "Jules Verne"
     ],
-    "publisher": "BookRix",
-    "publishedDate": "2017-06-12",
-    "description": "\"Vingt mille lieues sous les mers\" est un roman d'aventures de Jules Verne, paru en 1869-1870. Cette œuvre a fait l'objet de nombreuses adaptations au cinéma, à la télévision ainsi qu'en bande dessinée.",
+    "publishedDate": "1870",
     "industryIdentifiers": [
      {
-      "type": "ISBN_13",
-      "identifier": "9783736837874"
-     },
-     {
-      "type": "ISBN_10",
-      "identifier": "3736837879"
+      "type": "OTHER",
+      "identifier": "BSB:BSB11013574"
      }
     ],
     "readingModes": {
-     "text": true,
+     "text": false,
      "image": true
     },
-    "pageCount": 563,
+    "pageCount": 434,
     "printType": "BOOK",
-    "categories": [
-     "Fiction"
-    ],
     "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.97.92.0.preview.3",
+    "allowAnonLogging": false,
+    "contentVersion": "1.1.2.0.full.1",
     "panelizationSummary": {
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=QjGABAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=QjGABAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=Mj9UAAAAcAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=Mj9UAAAAcAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=QjGABAAAQBAJ&pg=PT134&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=QjGABAAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=QjGABAAAQBAJ"
+    "previewLink": "http://books.google.fr/books?id=Mj9UAAAAcAAJ&printsec=frontcover&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=Mj9UAAAAcAAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=Mj9UAAAAcAAJ"
    },
    "saleInfo": {
     "country": "FR",
-    "saleability": "FOR_SALE",
+    "saleability": "FREE",
     "isEbook": true,
-    "listPrice": {
-     "amount": 0.99,
-     "currencyCode": "EUR"
-    },
-    "retailPrice": {
-     "amount": 0.99,
-     "currencyCode": "EUR"
-    },
-    "buyLink": "https://play.google.com/store/books/details?id=QjGABAAAQBAJ&rdid=book-QjGABAAAQBAJ&rdot=1&source=gbs_api",
-    "offers": [
-     {
-      "finskyOfferType": 1,
-      "listPrice": {
-       "amountInMicros": 990000.0,
-       "currencyCode": "EUR"
-      },
-      "retailPrice": {
-       "amountInMicros": 990000.0,
-       "currencyCode": "EUR"
-      },
-      "giftable": true
-     }
-    ]
+    "buyLink": "https://play.google.com/store/books/details?id=Mj9UAAAAcAAJ&rdid=book-Mj9UAAAAcAAJ&rdot=1&source=gbs_api"
    },
    "accessInfo": {
     "country": "FR",
-    "viewability": "PARTIAL",
+    "viewability": "ALL_PAGES",
     "embeddable": true,
-    "publicDomain": false,
+    "publicDomain": true,
     "textToSpeechPermission": "ALLOWED",
     "epub": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers-sample-epub.acsm?id=QjGABAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "isAvailable": false,
+     "downloadLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers.epub?id=Mj9UAAAAcAAJ&hl=&output=epub&source=gbs_api"
     },
     "pdf": {
      "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers-sample-pdf.acsm?id=QjGABAAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "downloadLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers.pdf?id=Mj9UAAAAcAAJ&hl=&output=pdf&sig=ACfU3U1yzaV0xPlFsKoVhfGCMUjY54ZjYA&source=gbs_api"
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=QjGABAAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "SAMPLE",
+    "webReaderLink": "http://play.google.com/books/reader?id=Mj9UAAAAcAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "FULL_PUBLIC_DOMAIN",
     "quoteSharingAllowed": false
-   },
-   "searchInfo": {
-    "textSnippet": "Jules \u003cb\u003eVerne\u003c/b\u003e. Chapitre XIV Le Fleuve-Noir. La portion du globe terrestre occupée \u003cbr\u003e\npar les eaux est évaluée à trois millions ... deux milliards deux cent cinquante \u003cbr\u003e\nmillions de \u003cb\u003emilles\u003c/b\u003e cubes, et formerait une sphère d&#39;un diamètre de soixante \u003cbr\u003e\n\u003cb\u003elieues\u003c/b\u003e&nbsp;..."
    }
   },
   {
    "kind": "books#volume",
-   "id": "BTCyAAAAQBAJ",
-   "etag": "jamM1WwkBXw",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/BTCyAAAAQBAJ",
+   "id": "r62zDwAAQBAJ",
+   "etag": "gK583i//egQ",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/r62zDwAAQBAJ",
    "volumeInfo": {
-    "title": "Vingt mille lieues sous les mers (édition adaptée)",
+    "title": "Vingt mille lieues sous les mers",
     "authors": [
      "Jules Verne"
     ],
-    "publisher": "Flammarion Jeunesse",
-    "publishedDate": "2013-08-28T00:00:00+02:00",
-    "description": "Édition adaptée par Michel Honaker. Une immense créature aquatique s'attaquant à des bateaux sème la panique dans le monde entier ! En 1866, Pierre Aronnax, spécialiste du monde sous-marin, se joint à l'expédition qui part à sa chasse. Mais au moment où la confrontation a enfin lieu, le professeur comprend qu'il ne s'agit pas d'un simple mammifère marin : il a sous les yeux un fabuleux sous-marin d'acier... \"La créature s'échappa à une vitesse sidérante et disparut dans la nuit. Nous en étions encore à nous interroger sur sa véritable nature quand, tout d'un coup, des obscures limites de l'horizon où elle avait pris son élan, elle reparut brusquement en fonçant droit sur nous.\"",
+    "publisher": "Lindhardt og Ringhof",
+    "publishedDate": "2019-10-17",
+    "description": "En 1886, un monstre est aperçu à plusieurs reprises par des marins dans différentes mers. Croyant qu’il s’agit d’une licorne des mers géantes, un groupe d’homme se forme aux États-Unis, préparant une expédition pour aller tuer le monstre, avant qu’il ne cause plus de dégâts aux navires. Le professeur français et éminent biologiste Pierre Aronnax joint l’expédition à la dernière minute. Quand l’équipage trouve la bête et se lance à l’attaque, le professeur, son assistant flamand Conseil et l’harponneur Québécois Ned Land se retrouvent à l’eau et se sauvent de justesse de la noyade en grimpant sur le dos de l’animal, mais il se trouve que ce n’est ni un monstre, ni un narval, mais plutôt un sous-marin, dirigé par le capitaine Nemo. Ils les invitent à l’intérieur où une aventure sans pareil les attend. Ce fascinant roman d’aventure suit ces héros à travers le monde, à la découverte de merveilles immergées, avec des inventions qui n’ont alors même pas encore été imaginées. C’est une histoire pleine de suspense et de rebondissement, en faisant un roman aussi exceptionnel qu’inoubliable. Jules Verne (1828-1905) naquit dans la ville portuaire de Nantes et aurait dû devenir avocat, comme son père, mais il quitta très jeune le nid pour écrire des nouvelles et des articles pour des gazettes. Sa collaboration avec l'éditeur Pierre-Jules Hetzel conduisit à la publication de la série de livres « Voyages extraordinaires », basé sur d'amples recherches, et qui inclut entre autres « Voyage au centre de la Terre » (1864), « Vingt mille lieues sous les mer » (1870) et « Le Tour du monde en quatre-vingts jours » (1873).rnJules Verne a traditionnellement été classifié, à tort, dans la catégorie des écrivains pour enfants, en raison des versions abrégées et déformées de ses romans, alors qu'il eut comme auteur une énorme influence sur l’avant-garde française. rnJules Verne est le deuxième auteur le plus traduit au monde, se plaçant ainsi entre Agatha Christie et William Shakespeare, et il est souvent considéré comme étant le père du genre littéraire de la science-fiction.",
     "industryIdentifiers": [
      {
       "type": "ISBN_13",
-      "identifier": "9782081316164"
+      "identifier": "9788726311099"
      },
      {
       "type": "ISBN_10",
-      "identifier": "2081316161"
-     }
-    ],
-    "readingModes": {
-     "text": true,
-     "image": true
-    },
-    "pageCount": 386,
-    "printType": "BOOK",
-    "categories": [
-     "Juvenile Fiction"
-    ],
-    "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.14.15.0.preview.3",
-    "panelizationSummary": {
-     "containsEpubBubbles": false,
-     "containsImageBubbles": false
-    },
-    "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=BTCyAAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=BTCyAAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-    },
-    "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=BTCyAAAAQBAJ&pg=PT7&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=BTCyAAAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=BTCyAAAAQBAJ"
-   },
-   "saleInfo": {
-    "country": "FR",
-    "saleability": "FOR_SALE",
-    "isEbook": true,
-    "listPrice": {
-     "amount": 4.49,
-     "currencyCode": "EUR"
-    },
-    "retailPrice": {
-     "amount": 4.49,
-     "currencyCode": "EUR"
-    },
-    "buyLink": "https://play.google.com/store/books/details?id=BTCyAAAAQBAJ&rdid=book-BTCyAAAAQBAJ&rdot=1&source=gbs_api",
-    "offers": [
-     {
-      "finskyOfferType": 1,
-      "listPrice": {
-       "amountInMicros": 4490000.0,
-       "currencyCode": "EUR"
-      },
-      "retailPrice": {
-       "amountInMicros": 4490000.0,
-       "currencyCode": "EUR"
-      },
-      "giftable": true
-     }
-    ]
-   },
-   "accessInfo": {
-    "country": "FR",
-    "viewability": "PARTIAL",
-    "embeddable": true,
-    "publicDomain": false,
-    "textToSpeechPermission": "ALLOWED",
-    "epub": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers_%C3%A9ditio-sample-epub.acsm?id=BTCyAAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
-    },
-    "pdf": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers_%C3%A9ditio-sample-pdf.acsm?id=BTCyAAAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
-    },
-    "webReaderLink": "http://play.google.com/books/reader?id=BTCyAAAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
-    "accessViewStatus": "SAMPLE",
-    "quoteSharingAllowed": false
-   },
-   "searchInfo": {
-    "textSnippet": "Jules \u003cb\u003eVerne\u003c/b\u003e ... 20 000 \u003cb\u003elieues\u003c/b\u003e correspondent, en chiffres ronds, à 111 000 \u003cbr\u003e\nkilomètres. ... Tout ce qui comptait d&#39;hommes de \u003cb\u003emer\u003c/b\u003e, des négociants aux \u003cbr\u003e\narmateurs, des simples matelots aux commandants de navire, s&#39;en émut au plus \u003cbr\u003e\nhaut point."
-   }
-  },
-  {
-   "kind": "books#volume",
-   "id": "Zk3HAcZr5R8C",
-   "etag": "7U3uqXimeB0",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/Zk3HAcZr5R8C",
-   "volumeInfo": {
-    "title": "Vingt Mille Lieues Sous Les Mers (Complete)",
-    "subtitle": "",
-    "authors": [
-     "Jules Verne"
-    ],
-    "publisher": "Library of Alexandria",
-    "publishedDate": "2004",
-    "description": "L'année 1866 fut marquée par un événement bizarre, un phénomène inexpliqué et inexplicable que personne n'a sans doute oublié. Sans parler des rumeurs qui agitaient les populations des ports et surexcitaient l'esprit public à l'intérieur des continents les gens de mer furent particulièrement émus. Les négociants, armateurs, capitaines de navires, skippers et masters de l'Europe et de l'Amérique, officiers des marines militaires de tous pays, et, après eux, les gouvernements des divers États des deux continents, se préoccupèrent de ce fait au plus haut point. En effet, depuis quelque temps, plusieurs navires s'étaient rencontrés sur mer avec « une chose énorme » un objet long, fusiforme, parfois phosphorescent, infiniment plus vaste et plus rapide qu'une baleine. Les faits relatifs à cette apparition, consignés aux divers livres de bord, s'accordaient assez exactement sur la structure de l'objet ou de l'être en question, la vitesse inouïe de ses mouvements, la puissance surprenante de sa locomotion, la vie particulière dont il semblait doué. Si c'était un cétacé, il surpassait en volume tous ceux que la science avait classés jusqu'alors. Ni Cuvier, ni Lacépède, ni M. Dumeril, ni M. de Quatrefages n'eussent admis l'existence d'un tel monstre — à moins de l'avoir vu, ce qui s'appelle vu de leurs propres yeux de savants. A prendre la moyenne des observations faites à diverses reprises — en rejetant les évaluations timides qui assignaient à cet objet une longueur de deux cents pieds et en repoussant les opinions exagérées qui le disaient large d'un mille et long de trois — on pouvait affirmer, cependant, que cet être phénoménal dépassait de beaucoup toutes les dimensions admises jusqu'à ce jour par les ichtyologistes — s'il existait toutefois. Or, il existait, le fait en lui-même n'était plus niable, et, avec ce penchant qui pousse au merveilleux la cervelle humaine, on comprendra l'émotion produite dans le monde entier par cette surnaturelle apparition. Quant à la rejeter au rang des fables, il fallait y renoncer.",
-    "industryIdentifiers": [
-     {
-      "type": "ISBN_13",
-      "identifier": "9781465555175"
-     },
-     {
-      "type": "ISBN_10",
-      "identifier": "146555517X"
+      "identifier": "8726311097"
      }
     ],
     "readingModes": {
      "text": true,
      "image": false
     },
-    "pageCount": 404,
+    "pageCount": 450,
     "printType": "BOOK",
+    "categories": [
+     "Fiction"
+    ],
     "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.7.7.0.preview.2",
+    "allowAnonLogging": false,
+    "contentVersion": "1.5.4.0.preview.2",
     "panelizationSummary": {
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=Zk3HAcZr5R8C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=Zk3HAcZr5R8C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=r62zDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=r62zDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=Zk3HAcZr5R8C&printsec=frontcover&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=Zk3HAcZr5R8C&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=Zk3HAcZr5R8C"
+    "previewLink": "http://books.google.fr/books?id=r62zDwAAQBAJ&printsec=frontcover&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=r62zDwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=r62zDwAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
     "saleability": "FOR_SALE",
     "isEbook": true,
     "listPrice": {
-     "amount": 4.21,
+     "amount": 5.23,
      "currencyCode": "EUR"
     },
     "retailPrice": {
-     "amount": 4.0,
+     "amount": 4.97,
      "currencyCode": "EUR"
     },
-    "buyLink": "https://play.google.com/store/books/details?id=Zk3HAcZr5R8C&rdid=book-Zk3HAcZr5R8C&rdot=1&source=gbs_api",
+    "buyLink": "https://play.google.com/store/books/details?id=r62zDwAAQBAJ&rdid=book-r62zDwAAQBAJ&rdot=1&source=gbs_api",
     "offers": [
      {
       "finskyOfferType": 1,
       "listPrice": {
-       "amountInMicros": 4210000.0,
+       "amountInMicros": 5230000.0,
        "currencyCode": "EUR"
       },
       "retailPrice": {
-       "amountInMicros": 4000000.0,
+       "amountInMicros": 4970000.0,
        "currencyCode": "EUR"
       },
       "giftable": true
@@ -294,17 +165,82 @@ X-Xss-Protection: 1; mode=block
     "textToSpeechPermission": "ALLOWED",
     "epub": {
      "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_Mille_Lieues_Sous_Les_Mers_Complet-sample-epub.acsm?id=Zk3HAcZr5R8C&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers-sample-epub.acsm?id=r62zDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
     },
     "pdf": {
      "isAvailable": false
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=Zk3HAcZr5R8C&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=r62zDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "L&#39;année 1866 fut marquée par un événement bizarre, un phénomène inexpliqué et inexplicable que personne n&#39;a sans doute oublié."
+    "textSnippet": "Jules Verne (1828-1905) naquit dans la ville portuaire de Nantes et aurait dû devenir avocat, comme son père, mais il quitta très jeune le nid pour écrire des nouvelles et des articles pour des gazettes."
+   }
+  },
+  {
+   "kind": "books#volume",
+   "id": "rJ0OyAEACAAJ",
+   "etag": "n7JnYMNZ8Qs",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/rJ0OyAEACAAJ",
+   "volumeInfo": {
+    "title": "Vingt Mille Lieues Sous les Mers. Edition Illustrée",
+    "authors": [
+     "Jules VERNE"
+    ],
+    "publishedDate": "2019-07-15",
+    "description": "Ce roman, parmi les plus célèbres et des plus traduits de notre littérature, apparaît sans conteste comme une des oeuvres les plus puissantes, les plus originales et les plus représentatives de Jules Verne. Tout commence en 1866 : la peur règne sur les océans. Plusieurs navires prétendent avoir rencontré un monstre effrayant. Et quand certains rentrent gravement avariés après avoir heurté la créature, la rumeur devient certitude. L'Abraham Lincoln, frégate américaine, se met en chasse pour débarrasser les mers de ce terrible danger. Elle emporte notamment le professeur Aronnax, fameux ichthyologue du Muséum de Paris, son domestique, le dévoué Conseil, et le Canadien Ned Land, «roi des harponneurs». Après six mois de recherches infructueuses, le 5 novembre 1867, on repère ce que l'on croit être un «narwal gigantesque». Mais sa vitesse rend le monstre insaisissable et lorsqu'enfin on réussit à l'approcher pour le harponner, il aborde violemment le vaisseau et le laisse désemparé. Aronnax, Conseil et Ned Land trouvent refuge sur le dos du narwal. Ils s'aperçoivent alors qu'il s'agit d'un navire sous-marin...",
+    "industryIdentifiers": [
+     {
+      "type": "ISBN_10",
+      "identifier": "1080808760"
+     },
+     {
+      "type": "ISBN_13",
+      "identifier": "9781080808762"
+     }
+    ],
+    "readingModes": {
+     "text": false,
+     "image": false
+    },
+    "pageCount": 631,
+    "printType": "BOOK",
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "panelizationSummary": {
+     "containsEpubBubbles": false,
+     "containsImageBubbles": false
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=rJ0OyAEACAAJ&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+    "infoLink": "http://books.google.fr/books?id=rJ0OyAEACAAJ&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&source=gbs_api",
+    "canonicalVolumeLink": "https://books.google.com/books/about/Vingt_Mille_Lieues_Sous_les_Mers_Edition.html?hl=&id=rJ0OyAEACAAJ"
+   },
+   "saleInfo": {
+    "country": "FR",
+    "saleability": "NOT_FOR_SALE",
+    "isEbook": false
+   },
+   "accessInfo": {
+    "country": "FR",
+    "viewability": "NO_PAGES",
+    "embeddable": false,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+     "isAvailable": false
+    },
+    "pdf": {
+     "isAvailable": false
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=rJ0OyAEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "NONE",
+    "quoteSharingAllowed": false
+   },
+   "searchInfo": {
+    "textSnippet": "Ce roman, parmi les plus célèbres et des plus traduits de notre littérature, apparaît sans conteste comme une des oeuvres les plus puissantes, les plus originales et les plus représentatives de Jules Verne."
    }
   },
   {
@@ -406,74 +342,70 @@ X-Xss-Protection: 1; mode=block
   },
   {
    "kind": "books#volume",
-   "id": "OdDFCQAAQBAJ",
-   "etag": "+ZNJidkllKY",
-   "selfLink": "https://www.googleapis.com/books/v1/volumes/OdDFCQAAQBAJ",
+   "id": "_YwbCwAAQBAJ",
+   "etag": "XCL8vzfewwE",
+   "selfLink": "https://www.googleapis.com/books/v1/volumes/_YwbCwAAQBAJ",
    "volumeInfo": {
-    "title": "Vingt mille lieues sous les mers (B1)",
+    "title": "Voyage au centre de la terre (suivi de Vingt mille lieues sous les mers)",
+    "subtitle": "édition intégrale et entièrement illustrée",
     "authors": [
      "Jules Verne"
     ],
-    "publisher": "Hachette Français Langue Etrangère",
-    "publishedDate": "2014-01-24",
-    "description": "Une seule collection de lecture pour tous niveaux ! Stucture : Une collection de lecture en français pour se divertir, s'enrichir et perfectionner ses connaissances des grands classiques de la littérature française. Cette collection est accessible dès le niveau débutant, elle est organisée en quatre niveaux : A1, A2, B1 et B2 Une dossier pédagogique à la fin de l'oeuvre propose des activités pour contrôler la lecture et l'écoute du texte, réemployer le vocabulaire ainsi que des fiches pour aller plus loin. Les définitions des mots et des expressions difficiles figurent en bas de page Descriptif : \"C'est aujour'hui le 8 novembre à midi que commence notre voyage sous les eaux\". À bord du Nautilus, quel but poursuit donce le capitaine Nemo ? Composant : Livre numérique avec enregistrement audio intégré",
+    "publisher": "Ink book",
+    "publishedDate": "2013-01-28",
+    "description": "Sont réunis dans cette édition spéciale entièrement illustrée, deux grands romans de Jules Verne consacrés à la découverte des profondeurs de la terre et des mers : « Voyage au centre de la terre » suivi de « Vingt mille lieues sous les mers » « Voyage au centre de la terre » Nous sommes en 1863 à Hambourg lorsque le professeur Lindenbrock, vieux savant débordant d’énergie, parvient à traduire un parchemin révélant l’emplacement d’un volcan désormais éteint qui doit tout simplement déboucher... sur le centre même de la terre ! Suivi de « Vingt mille lieues sous les mers » Le roman le plus célèbre de Jules Verne, avec le capitaine Nemo aux commandes du Nautilus, un sous-marin de première (ou plutôt avant-première) génération. Capable d'éperonner navires et monstres marins, le Nautilus permet en outre de découvrir les merveilles des fonds marins... Avec des illustrations, certaines en couleur d’Alphonse de Neuville et Édouard Riou. Format professionnel électronique © Ink Book édition.",
     "industryIdentifiers": [
      {
       "type": "ISBN_13",
-      "identifier": "9782011561688"
-     },
-     {
-      "type": "ISBN_10",
-      "identifier": "201156168X"
+      "identifier": "9791023202359"
      }
     ],
     "readingModes": {
      "text": true,
      "image": true
     },
-    "pageCount": 96,
     "printType": "BOOK",
     "categories": [
-     "Foreign Language Study"
+     "Juvenile Fiction"
     ],
     "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": true,
-    "contentVersion": "1.1.1.0.preview.3",
+    "allowAnonLogging": false,
+    "contentVersion": "1.3.4.0.preview.3",
     "panelizationSummary": {
      "containsEpubBubbles": false,
      "containsImageBubbles": false
     },
     "imageLinks": {
-     "smallThumbnail": "http://books.google.com/books/content?id=OdDFCQAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-     "thumbnail": "http://books.google.com/books/content?id=OdDFCQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+     "smallThumbnail": "http://books.google.com/books/content?id=_YwbCwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+     "thumbnail": "http://books.google.com/books/content?id=_YwbCwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
     },
     "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=OdDFCQAAQBAJ&printsec=frontcover&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=OdDFCQAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=OdDFCQAAQBAJ"
+    "previewLink": "http://books.google.fr/books?id=_YwbCwAAQBAJ&printsec=frontcover&dq=intitle:Vingt+mille+lieues+sous+les+mers%2Binauthor:Jules+Verne&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=_YwbCwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=_YwbCwAAQBAJ"
    },
    "saleInfo": {
     "country": "FR",
     "saleability": "FOR_SALE",
     "isEbook": true,
     "listPrice": {
-     "amount": 5.49,
+     "amount": 1.49,
      "currencyCode": "EUR"
     },
     "retailPrice": {
-     "amount": 5.49,
+     "amount": 1.49,
      "currencyCode": "EUR"
     },
-    "buyLink": "https://play.google.com/store/books/details?id=OdDFCQAAQBAJ&rdid=book-OdDFCQAAQBAJ&rdot=1&source=gbs_api",
+    "buyLink": "https://play.google.com/store/books/details?id=_YwbCwAAQBAJ&rdid=book-_YwbCwAAQBAJ&rdot=1&source=gbs_api",
     "offers": [
      {
       "finskyOfferType": 1,
       "listPrice": {
-       "amountInMicros": 5490000.0,
+       "amountInMicros": 1490000.0,
        "currencyCode": "EUR"
       },
       "retailPrice": {
-       "amountInMicros": 5490000.0,
+       "amountInMicros": 1490000.0,
        "currencyCode": "EUR"
       },
       "giftable": true
@@ -487,19 +419,17 @@ X-Xss-Protection: 1; mode=block
     "publicDomain": false,
     "textToSpeechPermission": "ALLOWED",
     "epub": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers_B1-sample-epub.acsm?id=OdDFCQAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "isAvailable": true
     },
     "pdf": {
-     "isAvailable": true,
-     "acsTokenLink": "http://books.google.fr/books/download/Vingt_mille_lieues_sous_les_mers_B1-sample-pdf.acsm?id=OdDFCQAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+     "isAvailable": true
     },
-    "webReaderLink": "http://play.google.com/books/reader?id=OdDFCQAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+    "webReaderLink": "http://play.google.com/books/reader?id=_YwbCwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
     "accessViewStatus": "SAMPLE",
     "quoteSharingAllowed": false
    },
    "searchInfo": {
-    "textSnippet": "Une seule collection de lecture pour tous niveaux !"
+    "textSnippet": "Sont réunis dans cette édition spéciale entièrement illustrée, deux grands romans de Jules Verne consacrés à la découverte des profondeurs de la terre et des mers : « Voyage au centre de la terre » suivi de « Vingt mille lieues ..."
    }
   }
  ]
