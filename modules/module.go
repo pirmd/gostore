@@ -74,7 +74,7 @@ func Register(name string, newFn func(ConfigUnmarshaler, *log.Logger) (Module, e
 	})
 }
 
-// List returns all availbale modules names
+// List returns all available modules names
 func List() (m []string) {
 	for _, factory := range availableModules {
 		m = append(m, factory.Name)
