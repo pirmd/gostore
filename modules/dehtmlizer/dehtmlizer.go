@@ -20,19 +20,19 @@ const (
 )
 
 var (
-	//Makes sure that dehtmlizer implements modules.Module
+	// Makes sure that dehtmlizer implements modules.Module
 	_ modules.Module = (*dehtmlizer)(nil)
 )
 
-//Config defines the different configurations that can be used to customized
-//the behavior of a dehtmlizer module.
+// Config defines the different configurations that can be used to customized
+// the behavior of a dehtmlizer module.
 type Config struct {
-	//Fields2Clean lists the record's fields that should be dehtlmized.
-	//Non-existing fields are ignored.
+	// Fields2Clean lists the record's fields that should be dehtlmized.
+	// Non-existing fields are ignored.
 	Fields2Clean []string
 
-	//OutputStyle is the name of the target style to use when converting html
-	//to text. Known styles are text and markdown.
+	// OutputStyle is the name of the target style to use when converting html
+	// to text. Known styles are text and markdown.
 	OutputStyle string
 }
 
@@ -46,8 +46,7 @@ type dehtmlizer struct {
 	//TODO(pirmd): Allow configuration of which field to clean (maybe depending
 	//on Record's Type like renamer)
 	fields2clean []string
-
-	outputStyle style.Styler
+	outputStyle  style.Styler
 }
 
 func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
@@ -69,9 +68,10 @@ func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	return d, nil
 }
 
-//ProcessRecord transforms any text in HTML format into markdown,
+// ProcessRecord transforms any text in HTML format into markdown,
 func (d *dehtmlizer) ProcessRecord(r *store.Record) error {
 	for _, field := range d.fields2clean {
+		log.Printf("Module '%s': clean field '%s'", moduleName, field)
 		if err := d.html2txt(r, field); err != nil {
 			return err
 		}
@@ -101,8 +101,9 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 	return nil
 }
 
-//New creates a new dehtmlizer module whose configuration information
+// New creates a new dehtmlizer module whose configuration information
 func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {

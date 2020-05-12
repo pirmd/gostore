@@ -12,16 +12,13 @@ import (
 )
 
 const (
-	// Name of the module
-	Name = "GoogleBooksQuerier"
+	// moduleName of the gostore's module
+	moduleName = "GoogleBooksQuerier"
 )
 
 var (
 	// Makes sure that we implement modules.Module
 	_ modules.Module = (*querier)(nil)
-
-	// ErrNoMetadataFound reports an error when no Metadata found
-	ErrNoMetadataFound = fmt.Errorf("module '%s': no metadata found", Name)
 )
 
 // Config defines the different configurations that can be used to customize
@@ -46,47 +43,46 @@ func newQuerier(cfg *Config, logger *log.Logger) (*querier, error) {
 	}, nil
 }
 
-// ProcessRecord modifies the record's name to match a standardized naming scheme.
+// ProcessRecord updates a record's metadata based on the first result returned
+// by google books.
+// If provided record is not an ebook, record metadata is not modified.
+// If no result is found, record metadata is not modified.
 func (q *querier) ProcessRecord(r *store.Record) error {
-	typ, ok := r.GetValue(media.TypeField).(string)
-	if !ok {
-		return fmt.Errorf("module '%s': invalid or unknown record's type", Name)
-	}
-	//TODO(pirmd): make it better way to capture it, or media/books.Types()
-	//             maybe have googlebooks depends of media/books and
-	//             provide feedback in case of unaccurate media type
-	if typ != "epub" {
+	if !media.IsOfType(r.Value(), "book") {
+		q.log.Printf("Module '%s': record is not an ebook, aborting", moduleName)
 		return nil
-		//XXX: return ErrNotSupportedMEdiaType
 	}
 
+	q.log.Printf("Module '%s': query GoogleBooks for '%v'", moduleName, r.Value())
 	found, err := q.LookForBooks(r.Value())
 	if err != nil {
 		return err
 	}
 
 	if len(found) == 0 {
-		return ErrNoMetadataFound
+		q.log.Printf("Module '%s': no match found, aborting", moduleName)
+		return nil
 	}
 
-	//TODO(pirmd): do something clever than using the first result from
+	//TODO(pirmd): do something more clever than using the first result from
 	//googleBooks
+	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(found), found[0])
 	r.MergeValues(found[0])
 	return nil
 }
 
-// New creates a new organizer module
+// New creates a new GoogleBooksQuerier module
 func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
-	log.Printf("Module '%s': new logger with config '%v'", Name, rawcfg)
+	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
-		return nil, fmt.Errorf("module '%s': bad configuration: %v", Name, err)
+		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
 	return newQuerier(cfg, log)
 }
 
 func init() {
-	modules.Register(Name, New)
+	modules.Register(moduleName, New)
 }

@@ -16,11 +16,12 @@ const (
 	googleBooksURL = "https://www.googleapis.com/books/v1/volumes"
 )
 
+// TODO(pirmd): check again googl book api to improve the query
+
 var (
-	//TODO: should be configurable
-	//reSerieGuesser is a collection of regexp to extract series information
-	//from title/subtitles.
-	//It should be made of 3 named capturing groups (title, serie, serie number).
+	// reSerieGuesser is a collection of regexp to extract series information
+	// from title/subtitles.
+	// It should be made of 3 named capturing groups (title, serie, serie number).
 	reSerieGuesser = []*regexp.Regexp{
 		regexp.MustCompile(`^(?P<title>.+)\s\((?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)\)$`),
 		regexp.MustCompile(`^(?P<title>.+)\s-\s(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),
@@ -55,7 +56,7 @@ type identifier struct {
 	Identifier string `json:"identifier"`
 }
 
-//googleBooks wraps google books api into a Fetcher
+// googleBooks wraps google books api
 type googleBooks struct{}
 
 func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, error) {
@@ -114,8 +115,7 @@ func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	q.Set("q", strings.Join(query, "+"))
 	q.Set("orderBy", "relevance")
 	q.Set("printType", "books")
-	q.Set("maxResults", "5") //TODO: config this part
-	//TODO: q.Set("langRestrict", "fr") Is it really needed?
+	q.Set("maxResults", "5")
 
 	return googleBooksURL + "?" + q.Encode(), nil
 }

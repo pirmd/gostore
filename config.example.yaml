@@ -49,8 +49,8 @@ ui:
     # Template's follow golang text/template specification. 
     formatters:
         list:
-            _default: '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
-            epub:     '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
+            _default:  '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
+            book:      '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
 
         full:
             _default: |
@@ -59,7 +59,7 @@ ui:
                 {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol }}
                 {{ end -}}
 
-            epub: |
+            book: |
                 {{ range $i, $r := . -}}
                 {{ if $i }}{{ println }}{{ end -}}
                 {{ get $r "Name" "Title" "?SubTitle" "?Serie" "?SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
@@ -68,7 +68,8 @@ ui:
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
 importmodules: &importmodules
-    # XXX
+    # GoogleBookQuerier is a module that looks for information from Google
+    # Books API to compelete a record metadata.
     GoogleBooksQuerier:
 
     # organizer is a modules that rationalizes the name of a media based on its

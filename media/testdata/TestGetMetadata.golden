@@ -8,7 +8,7 @@
       "Fantasy"
     ],
     "Title": "Alice's Adventures in Wonderland",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -19,7 +19,7 @@
       "Donkeys -- Juvenile fiction"
     ],
     "Title": "Les Mémoires d'un âne.",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -32,7 +32,7 @@
       "Detective and mystery stories, English"
     ],
     "Title": "The Adventures of Sherlock Holmes",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -46,7 +46,7 @@
       "Chinese fiction -- Ming dynasty, 1368-1644"
     ],
     "Title": "西遊記",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -57,7 +57,7 @@
       "Rabbits -- Juvenile fiction"
     ],
     "Title": "Histoire de Pierre Lapin",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -71,7 +71,7 @@
       "Voyages, Imaginary -- Fiction"
     ],
     "Title": "Voyage au Centre de la Terre",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -86,7 +86,7 @@
       "Tall tales"
     ],
     "Title": "Aventures de Baron de Münchausen",
-    "Type": "epub"
+    "Type": "book/epub"
   },
   {
     "Authors": [
@@ -94,6 +94,6 @@
     ],
     "PublishedDate": "2017-06-09T00:00:00Z",
     "Title": "Vingt mille lieues sous les mers",
-    "Type": "epub"
+    "Type": "book/epub"
   }
 ]
