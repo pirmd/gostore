@@ -25,8 +25,8 @@ require (
 	github.com/pirmd/clapp v0.4.0
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.3.2
-	github.com/pirmd/text v0.5.2
-	github.com/pirmd/verify v0.4.1
+	github.com/pirmd/text v0.5.3
+	github.com/pirmd/verify v0.4.2
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
 	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect

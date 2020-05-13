@@ -99,12 +99,16 @@ github.com/pirmd/text v0.4.1/go.mod h1:Okfp3RfUl/dyYmJpDU6ChXLawYI5H/hSfLSC3naYk
 github.com/pirmd/text v0.5.1/go.mod h1:hnz1evTCIMeXQfoGk9M4JAM1i/P2xqrVC6pLE5SLwag=
 github.com/pirmd/text v0.5.2 h1:tW7xEcd1cTtTBDoyIs67q0CF2OkVolOGRuesIbXaGPg=
 github.com/pirmd/text v0.5.2/go.mod h1:JbZ5T8NTXpaeP4yHsW3FUyx/Ra1jucBhnf/g1Xlc3zk=
+github.com/pirmd/text v0.5.3 h1:DmmgZQhczDs1gLpJUiNYI7ZVv/VnC/GBcL0JdMczDGM=
+github.com/pirmd/text v0.5.3/go.mod h1:JbZ5T8NTXpaeP4yHsW3FUyx/Ra1jucBhnf/g1Xlc3zk=
 github.com/pirmd/verify v0.2.0 h1:woyyRGbgZp4SnWGsMco3BCVwTfomkFZl/+xRKiGZ5FM=
 github.com/pirmd/verify v0.2.0/go.mod h1:/McQWCtPnQ52qjQCYc0JKdwFyTxd5oRfwtCUq9m+eG0=
 github.com/pirmd/verify v0.3.0 h1:P2HPGIPz/M9s2XMLjCtAcpJ9ndrTpbqN5aOxo9auDrI=
 github.com/pirmd/verify v0.3.0/go.mod h1:mGtcZ/bkSilRDPsyIb8gz5cq8d+3GmkTZpSK7nNVuzs=
 github.com/pirmd/verify v0.4.0/go.mod h1:9RfQm4bsxaOGr/CWqbOhCdAJAN+tx1KAmk+/BnNlYA8=
 github.com/pirmd/verify v0.4.1/go.mod h1:9RfQm4bsxaOGr/CWqbOhCdAJAN+tx1KAmk+/BnNlYA8=
+github.com/pirmd/verify v0.4.2 h1:yvA9JtShkELdDGS45nU1fSpR6nom8OGtxpb/warQDos=
+github.com/pirmd/verify v0.4.2/go.mod h1:D/5knF7PQE9pywslvtsyGdASHULb6biciB2Dx+SFQYg=
 github.com/pmezard/go-difflib v0.0.0-20151028094244-d8ed2627bdf0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
