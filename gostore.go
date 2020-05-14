@@ -133,22 +133,19 @@ func (gs *Gostore) Import(path string) error {
 		return err
 	}
 	r := store.NewRecord(filepath.Base(path), mdataFromFile)
-	//XXX: have a function for that file -> record
 
 	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return err
 	}
 
-	//XXX: do we need to use intermediate mdata or can we directly work on r
 	//TODO(pirmd) add a --raw flag to edit all record's values and not only the
 	//ones selected as 'editable'
-	mdata, err := gs.ui.Merge(r.Value(), mdataFromFile)
+	mdata, err := gs.ui.Merge(r.UserValue(), mdataFromFile)
 	if err != nil {
 		return err
 	}
-	//XXX: use name instead of Key (if Name was edited (?)
-	//XXX: what if edition modifies fields that Name relies upon (?)
 	r = store.NewRecord(r.Key(), mdata)
+	//XXX: what if edition modifies fields that Name relies upon (?)
 
 	if err := gs.store.Open(); err != nil {
 		return err
@@ -166,8 +163,8 @@ func (gs *Gostore) Import(path string) error {
 }
 
 // Info retrieves information about any collection's record.
-// If fromFile flag is set, Info also displays actual metadata stored in the
-// media file
+// If fromFile flag is set, Info also displays difference with actual metadata
+// stored in the media file.
 func (gs *Gostore) Info(key string, fromFile bool) error {
 	if err := gs.store.Open(); err != nil {
 		return err
