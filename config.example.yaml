@@ -76,22 +76,38 @@ importmodules: &importmodules
     # metadata values
     organizer:
         # namingschemes is a collection of templates to define a media name
-        # based on its metadata values. DIffernet naming schemes can be adopted
-        # based on the media's type.  Fall-back templates or generic template
-        # can be defined using the "_default" keyword. Template's follow golang
-        # text/template specification. 
+        # based on its metadata values.
+        #
+        # Different naming schemes can be adopted based on the media's type.
+        # Fall-back templates or generic template can be defined using the
+        # "_default" keyword.
+        # 
+        # Templates follow golang text/template specification. Extensions are
+        # made available to simplify common operation:
+        # - ext: file extension
+        # - tmpl: execute a sub-template by name
+        # - tmplExec: execute a template text
+        # - tmplFile: execute a template stored in a file
+        # - sanitize: replace special chars that don'tusually work well when
+        # use in path name
+        # - nospace: get rid of spaces
+        #
+        # It is also possible to define intermediate sub-tmeplates and re-use
+        # them when defining a naming scheme.
         namingschemes:
-            _default: "{{if not .Authors}}unknown{{else}}{{with index .Authors 0}}{{.}}{{end}}{{end}} - {{.Title}}"
+            author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
+            serie:  "{{if .Serie}}{{.Serie .SeriePosition}}{{end}}"
+
+            book/epub: |
+                {{ $a := (tmpl "author" .) -}}
+                {{ $s := (tmpl "serie" .)  -}}
+                {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name)| sanitize -}}
             
-        # sanitizer allows to clean the filename of media to get rid of
-        # unwanted chars. Available sanitizers are none (default), standard or
-        # nospace
-        sanitizer: standard
 
     # dehtmlizer is a modules that removes any html tags from a media metadata.
-    # it can optionally convert th ehtml taging into another idioms (like
+    # It can optionally convert the html taging into another idioms (like
     # markdown)
-    dehtmlizer: &dehtmlizer
+    dehtmlizer:
         # fields2clean is the list of metadata fields to clean from html tags
         fields2clean:
             - Description
