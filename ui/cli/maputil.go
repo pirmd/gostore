@@ -49,18 +49,16 @@ func (kv *keyVal) KV() [][]string {
 }
 
 // mergeMaps completes m with n content with the following logic: values of m are
-// copied and supersed n values if any. Values of n that are not in m are added.
+// copied and supersede n values if any. Values of n that are not in m are added.
 func mergeMaps(m, n map[string]interface{}) (map[string]interface{}, error) {
 	merged := make(map[string]interface{})
 
-	for k, v := range m {
+	for k, v := range n {
 		merged[k] = v
 	}
 
-	for k, v := range n {
-		if _, exist := merged[k]; !exist {
-			merged[k] = v
-		}
+	for k, v := range m {
+		merged[k] = v
 	}
 
 	return merged, nil
