@@ -147,6 +147,7 @@ func (gs *Gostore) Import(path string) error {
 		return err
 	}
 	//XXX: use name instead of Key (if Name was edited (?)
+	//XXX: what if edition modifies fields that Name relies upon (?)
 	r = store.NewRecord(r.Key(), mdata)
 
 	if err := gs.store.Open(); err != nil {
@@ -160,7 +161,7 @@ func (gs *Gostore) Import(path string) error {
 		}
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Flatted())
 	return nil
 }
 
@@ -190,11 +191,11 @@ func (gs *Gostore) Info(key string, fromFile bool) error {
 			return err
 		}
 
-		gs.ui.PrettyDiff(r.Fields(), mdata)
+		gs.ui.PrettyDiff(r.Flatted(), mdata)
 		return nil
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Flatted())
 	return nil
 }
 
@@ -210,7 +211,7 @@ func (gs *Gostore) ListAll() error {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Fields()...)
+	gs.ui.PrettyPrint(r.Flatted()...)
 	return nil
 }
 
@@ -227,7 +228,7 @@ func (gs *Gostore) Search(query string) error {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Fields()...)
+	gs.ui.PrettyPrint(r.Flatted()...)
 	return nil
 }
 
@@ -243,11 +244,11 @@ func (gs *Gostore) Edit(key string) error {
 		return err
 	}
 
-	mdata, err := gs.ui.Edit(r.OrigValue())
+	mdata, err := gs.ui.Edit(r.UserValue())
 	if err != nil {
 		return err
 	}
-	r.ReplaceValues(mdata)
+	r.ReplaceValue(mdata)
 
 	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
 		return err
@@ -259,7 +260,7 @@ func (gs *Gostore) Edit(key string) error {
 		}
 	}
 
-	gs.ui.PrettyPrint(r.Fields())
+	gs.ui.PrettyPrint(r.Flatted())
 	return nil
 }
 

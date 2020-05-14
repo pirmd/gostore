@@ -80,7 +80,7 @@ func (d *dehtmlizer) ProcessRecord(r *store.Record) error {
 }
 
 func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
-	value := r.GetValue(field)
+	value := r.Get(field)
 	if value == nil {
 		return nil
 	}
@@ -97,7 +97,7 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 		return err
 	}
 
-	r.SetValue(field, txt)
+	r.Set(field, txt)
 	return nil
 }
 

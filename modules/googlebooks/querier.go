@@ -67,7 +67,7 @@ func (q *querier) ProcessRecord(r *store.Record) error {
 	//TODO(pirmd): do something more clever than using the first result from
 	//googleBooks
 	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(found), found[0])
-	r.MergeValues(found[0])
+	r.SetValue(found[0])
 	return nil
 }
 

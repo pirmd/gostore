@@ -68,7 +68,7 @@ func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 
 // ProcessRecord modifies the record's name to match a standardized naming scheme.
 func (o *organizer) ProcessRecord(r *store.Record) error {
-	name, err := o.namers.Format(r.Fields())
+	name, err := o.namers.Format(r.Flatted())
 	if err != nil {
 		return err
 	}

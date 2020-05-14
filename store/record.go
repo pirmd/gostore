@@ -21,6 +21,11 @@ const (
 	UpdatedAtField = "UpdatedAt"
 )
 
+var (
+	// names of fields that are auto-managed by the Record struct
+	autoManagedFields = []string{CreatedAtField, UpdatedAtField}
+)
+
 // Record represents a Store's record.
 type Record struct {
 	key   string
@@ -30,8 +35,10 @@ type Record struct {
 // NewRecord creates a Record.
 func NewRecord(key string, value map[string]interface{}) *Record {
 	r := &Record{key, make(Value)}
+	for k, v := range value {
+		r.value.Set(k, v)
+	}
 	r.stamp()
-	r.ReplaceValues(value)
 	return r
 }
 
@@ -50,9 +57,9 @@ func (r *Record) SetKey(key string) {
 	r.stamp()
 }
 
-// Value returns a copy of all information stored about Record. It contains the
-// information supplied by the user at Record's creation and auto-generated
-// information like creation/update stamps.
+// Value returns a copy of all information known about Record. It contains the
+// information supplied by the end-user as well as information auto-generated
+// during Record's management (like creation/update stamps).
 func (r *Record) Value() map[string]interface{} {
 	val := make(map[string]interface{})
 	for k, v := range r.value {
@@ -61,53 +68,17 @@ func (r *Record) Value() map[string]interface{} {
 	return val
 }
 
-// OrigValue returns a copy of the Record's values that are not managed by the
-// store.
-func (r *Record) OrigValue() map[string]interface{} {
-	orig := r.Value()
-	for _, k := range []string{CreatedAtField, UpdatedAtField} {
-		delete(orig, k)
-	}
-	return orig
-}
-
-// Fields returns all Record's attributes in a single flat map including the key
-// value
-func (r *Record) Fields() map[string]interface{} {
-	fields := r.Value()
-	fields[KeyField] = r.key
-	return fields
-}
-
-// GetValue retrieves a record's value.
-func (r *Record) GetValue(k string) interface{} {
-	return r.value.Get(k)
-}
-
-// SetValue adds/modifies a record's value. SetValue ensures that fields supposed
-// to host a time stamp or a date are of time type.  SetValue creates or updates
-// "CreatedAtField" and "UpdatedAtField"
-func (r *Record) SetValue(k string, v interface{}) {
-	r.value.Set(k, v)
-	r.stamp()
-}
-
-// MergeValues updates record with the given fields' values.  MergeValues
-// ensures that fields supposed to host a time stamp or a date are of time type.
-// MergeValues creates or updates "CreatedAtField" and "UpdatedAtField"
-func (r *Record) MergeValues(fields map[string]interface{}) {
-	for k, v := range fields {
+// SetValue set/updates record's information.
+func (r *Record) SetValue(m map[string]interface{}) {
+	for k, v := range m {
 		r.value.Set(k, v)
 	}
 	r.stamp()
 }
 
-// ReplaceValues replaces record's values with the given fields.
+// ReplaceValue replaces Record's content with the given information.
 // Initial CreatedAtField value is kept if not explicitly asked to be replaced.
-// ReplaceValues ensures that fields supposed to host a time stamp or a date
-// are of time type.
-// ReplaceValues creates or updates "CreatedAtField" and "UpdatedAtField"
-func (r *Record) ReplaceValues(fields map[string]interface{}) {
+func (r *Record) ReplaceValue(fields map[string]interface{}) {
 	createdAt := r.value.Get(CreatedAtField)
 
 	r.value = make(Value)
@@ -116,6 +87,34 @@ func (r *Record) ReplaceValues(fields map[string]interface{}) {
 	}
 
 	r.value.SetIfNotExists(CreatedAtField, createdAt)
+	r.stamp()
+}
+
+// UserValue returns a copy of the end-user supplied information, information auto-managed by the Record are filtered out.
+func (r *Record) UserValue() map[string]interface{} {
+	orig := r.Value()
+	for _, k := range autoManagedFields {
+		delete(orig, k)
+	}
+	return orig
+}
+
+// Flatted returns all Record's data in a single flat map including Record's Key
+func (r *Record) Flatted() map[string]interface{} {
+	flatted := r.Value()
+	flatted[KeyField] = r.key
+	return flatted
+}
+
+// Get retrieves a Record's stored information.
+func (r *Record) Get(k string) interface{} {
+	return r.value.Get(k)
+}
+
+// Set adds/modifies a record's stored information.
+// Set ensures that fields supposed to host a time stamp or a date are of time type.
+func (r *Record) Set(k string, v interface{}) {
+	r.value.Set(k, v)
 	r.stamp()
 }
 
@@ -128,7 +127,7 @@ func (r *Record) stamp() {
 // Records represents a collection of Record
 type Records []*Record
 
-// Key returns for each record in the collection their key
+// Key returns the Key() for each record in the collection.
 func (r Records) Key() (k []string) {
 	for _, i := range r {
 		k = append(k, i.Key())
@@ -136,7 +135,7 @@ func (r Records) Key() (k []string) {
 	return
 }
 
-// Value returns for each record in the collection their value
+// Value returns the Value() for each record in the collection.
 func (r Records) Value() (v []map[string]interface{}) {
 	for _, i := range r {
 		v = append(v, i.Value())
@@ -144,11 +143,10 @@ func (r Records) Value() (v []map[string]interface{}) {
 	return
 }
 
-// Fields returns for each record in the collection their value and key in a
-// single flat map
-func (r Records) Fields() (v []map[string]interface{}) {
+// Flatted returns the Flatted() form for each record in the collection.
+func (r Records) Flatted() (v []map[string]interface{}) {
 	for _, i := range r {
-		v = append(v, i.Fields())
+		v = append(v, i.Flatted())
 	}
 	return
 }
