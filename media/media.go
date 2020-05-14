@@ -1,7 +1,7 @@
 package media
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"os"
 	"strings"
@@ -21,7 +21,7 @@ const (
 
 var (
 	// ErrNoMetadataFound reports an error when no Metadata found
-	ErrNoMetadataFound = fmt.Errorf("no metadata found")
+	ErrNoMetadataFound = errors.New("media: no metadata found")
 )
 
 // Metadata represents a set of media's metadata, it is essentially a set of (key,
@@ -46,7 +46,7 @@ func Type(mdata Metadata) string {
 // sub-family.
 func IsOfType(mdata Metadata, typ string) bool {
 	t := Type(mdata)
-	return t == typ || strings.HasPrefix(t, typ) || strings.HasSuffix(t, typ)
+	return t == typ || strings.HasPrefix(t, typ+"/") || strings.HasSuffix(t, "/"+typ)
 }
 
 // File represents a media file
