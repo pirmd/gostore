@@ -6,17 +6,12 @@ import (
 	"sort"
 	"strings"
 	"time"
-
-	"github.com/pirmd/gostore/ui/formatter"
 )
 
 const (
 	noOrEmptyValue = "<no value>"
 	timeStampFmt   = time.RFC1123Z
 	dateFmt        = "2006-01-02"
-
-	emptyType   = "empty"
-	variousType = "media"
 )
 
 // keyVal represents a collection of (key, values) couples.
@@ -62,28 +57,6 @@ func mergeMaps(m, n map[string]interface{}) (map[string]interface{}, error) {
 	}
 
 	return merged, nil
-}
-
-// typeOf returns a common type for a collection of maps. If maps are not of
-// the same type, it returns variousType
-func typeOf(maps ...map[string]interface{}) string {
-	if len(maps) == 0 {
-		return emptyType
-	}
-
-	var typ string
-	for i, m := range maps {
-		if i == 0 {
-			typ = formatter.TypeOf(m)
-			continue
-		}
-
-		if formatter.TypeOf(m) != typ {
-			return variousType
-		}
-	}
-
-	return typ
 }
 
 // 'key'   -> field key

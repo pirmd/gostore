@@ -21,7 +21,7 @@ var (
 	// Makes sure that organizer implements modules.Module
 	_ modules.Module = (*organizer)(nil)
 
-	// DefaultNamingScheme is the name of eth default NamingScheme
+	// DefaultNamingScheme is the name of the default NamingScheme
 	DefaultNamingScheme = media.DefaultType
 
 	// ErrNoNamingScheme is raised when no naming scheme is found, even
@@ -94,21 +94,21 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 	return nil
 }
 
-func (o *organizer) name(v interface{}) (string, error) {
-	t := o.namerFor(v)
+func (o *organizer) name(m map[string]interface{}) (string, error) {
+	t := o.namerFor(m)
 	if t == nil {
 		return "", ErrNoNamingScheme
 	}
 
 	buf := new(bytes.Buffer)
-	if err := t.Execute(buf, v); err != nil {
+	if err := t.Execute(buf, m); err != nil {
 		return "", err
 	}
 	return buf.String(), nil
 }
 
-func (o *organizer) namerFor(v interface{}) *template.Template {
-	typ := media.TypeOf(v.(map[string]interface{}))
+func (o *organizer) namerFor(m map[string]interface{}) *template.Template {
+	typ := media.TypeOf(m)
 
 	if tmpl := o.namers.Lookup(typ); tmpl != nil {
 		return tmpl

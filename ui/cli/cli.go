@@ -1,18 +1,27 @@
 package cli
 
 import (
+	"bytes"
 	"fmt"
+	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/pirmd/style"
 	"github.com/pirmd/text/diff"
 
+	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/ui"
-	"github.com/pirmd/gostore/ui/formatter"
+)
+
+const (
+	// DefaultFormatter is the name of the fallback Formatter
+	DefaultFormatter = media.DefaultType
 )
 
 var (
 	_ ui.UserInterfacer = (*CLI)(nil) //Makes sure that CLI implements UserInterfacer
+
 )
 
 // CLI is a user interface built for the command line.
@@ -23,24 +32,18 @@ type CLI struct {
 	merger []string
 
 	style    style.Styler
-	printers formatter.Formatters
+	printers *template.Template
 }
 
 // New creates CLI User Interface with default values
 func New() *CLI {
-	return &CLI{
-		style: style.NewColorterm(),
-
-		printers: formatter.Formatters{
-			formatter.DefaultFormatter: func(v interface{}) (string, error) {
-				names := []string{}
-				for _, m := range v.([]map[string]interface{}) {
-					names = append(names, get(m, "Name"))
-				}
-				return strings.Join(names, "\n") + "\n", nil
-			},
-		},
+	ui := &CLI{
+		style:    style.NewColorterm(),
+		printers: template.New("pprinter"),
 	}
+	ui.printers.Funcs(ui.funcmap())
+
+	return ui
 }
 
 // Printf displays a message to the user (has same behaviour than fmt.Printf)
@@ -50,7 +53,7 @@ func (ui *CLI) Printf(format string, a ...interface{}) {
 
 // PrettyPrint shows in a pleasant manner a metadata set
 func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
-	fmt.Print(ui.format(medias...))
+	fmt.Print(ui.print(medias...))
 }
 
 // PrettyDiff shows in a pleasant manner differences between two metadata sets
@@ -88,7 +91,55 @@ func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error
 	return mergeMaps(m, n)
 }
 
-func (ui *CLI) format(medias ...map[string]interface{}) string {
+func (ui *CLI) print(medias ...map[string]interface{}) string {
+	t := ui.printerFor(medias...)
+	if t == nil {
+		return fmt.Sprintf("%+v", medias)
+	}
+
+	buf := new(bytes.Buffer)
+	if err := t.Execute(buf, medias); err != nil {
+		return fmt.Sprintf("!Err(%s)", err)
+	}
+	return buf.String()
+}
+
+func (ui *CLI) printerFor(medias ...map[string]interface{}) *template.Template {
 	typ := typeOf(medias...)
-	return ui.printers.MustFormatUsingType(typ, medias)
+
+	if tmpl := ui.printers.Lookup(typ); tmpl != nil {
+		return tmpl
+	}
+
+	if tmpl := ui.printers.Lookup(filepath.Base(typ)); tmpl != nil {
+		return tmpl
+	}
+
+	if tmpl := ui.printers.Lookup(filepath.Dir(typ)); tmpl != nil {
+		return tmpl
+	}
+
+	return ui.printers.Lookup(DefaultFormatter)
+}
+
+// typeOf returns a common type for a collection of maps. If maps are not of
+// the same type, it returns variousType
+func typeOf(maps ...map[string]interface{}) string {
+	if len(maps) == 0 {
+		return media.DefaultType
+	}
+
+	var typ string
+	for i, m := range maps {
+		if i == 0 {
+			typ = media.TypeOf(m)
+			continue
+		}
+
+		if media.TypeOf(m) != typ {
+			return media.DefaultType
+		}
+	}
+
+	return typ
 }

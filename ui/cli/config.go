@@ -2,11 +2,8 @@ package cli
 
 import (
 	"fmt"
-	"text/template"
 
 	"github.com/kballard/go-shellquote"
-
-	"github.com/pirmd/gostore/ui/formatter"
 )
 
 // Config describes configuration for User Interface
@@ -41,12 +38,18 @@ func (cfg *Config) ListStyles() (styles []string) {
 func NewFromConfig(cfg *Config) (*CLI, error) {
 	ui := New()
 
-	if printers, exists := cfg.Formatters[cfg.OutputFormat]; exists {
-		tmpl := template.New("UI").Funcs(ui.funcmap())
+	printers, exists := cfg.Formatters[cfg.OutputFormat]
+	if !exists {
+		printers = map[string]string{
+			DefaultFormatter: `{{ range . -}}
+{{ .Name }}
+{{ end -}}`,
+		}
+	}
 
-		for typ, txt := range printers {
-			fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
-			ui.printers.Register(typ, fmtFn)
+	for typ, txt := range printers {
+		if _, err := ui.printers.New(typ).Parse(txt); err != nil {
+			return nil, err
 		}
 	}
 
