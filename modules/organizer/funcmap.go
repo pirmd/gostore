@@ -8,8 +8,10 @@ import (
 
 func funcmap(t *template.Template) template.FuncMap {
 	return template.FuncMap{
-		"ext":      filepath.Ext,
-		"extend":   extendMap,
+		"ext": filepath.Ext,
+		//XXX: it is dangerous as it modify the input data structure
+		"extend": extendMap,
+
 		"tmpl":     tmplName(t),
 		"tmplExec": tmplExec,
 		"tmplFile": tmplFile,

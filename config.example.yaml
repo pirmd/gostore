@@ -98,7 +98,7 @@ importmodules: &importmodules
             author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
             serie:  "{{if .Serie}}{{.Serie .SeriePosition}}{{end}}"
 
-            book/epub: |
+            book: |
                 {{ $a := (tmpl "author" .) -}}
                 {{ $s := (tmpl "serie" .)  -}}
                 {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name)| sanitize -}}

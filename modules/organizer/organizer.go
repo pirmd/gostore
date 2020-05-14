@@ -1,14 +1,16 @@
 package organizer
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"log"
 	"path/filepath"
 	"text/template"
 
+	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
-	"github.com/pirmd/gostore/ui/formatter"
 )
 
 const (
@@ -19,11 +21,18 @@ var (
 	// Makes sure that organizer implements modules.Module
 	_ modules.Module = (*organizer)(nil)
 
+	// DefaultNamingScheme is the name of eth default NamingScheme
+	DefaultNamingScheme = media.DefaultType
+
+	// ErrNoNamingScheme is raised when no naming scheme is found, even
+	// DefaultNamingScheme
+	ErrNoNamingScheme = errors.New(moduleName + ": no naming scheme found")
+
 	// ErrEmptyName error is raised when the generated name is empty, main
 	// reason is probably that the namer scheme does not match with the provided
 	// attribute map (for example, lack of meaningful record's information like
 	// book "Title").
-	ErrEmptyName = fmt.Errorf("generated name is empty")
+	ErrEmptyName = errors.New(moduleName + ": generated name is empty")
 )
 
 // Config defines the different configurations that can be used to customize
@@ -39,7 +48,7 @@ type Config struct {
 func newConfig() *Config {
 	return &Config{
 		NamingSchemes: map[string]string{
-			"_default": "{{ .Name }}",
+			DefaultNamingScheme: "{{ .Name }}",
 		},
 	}
 }
@@ -47,20 +56,20 @@ func newConfig() *Config {
 type organizer struct {
 	log *log.Logger
 
-	namers formatter.Formatters
+	namers *template.Template
 }
 
 func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 	o := &organizer{
-		namers: formatter.Formatters{},
 		log:    logger,
+		namers: template.New("organizer"),
 	}
+	o.namers.Funcs(funcmap(o.namers))
 
-	tmpl := template.New("organizer")
-	tmpl.Funcs(funcmap(tmpl))
 	for typ, txt := range cfg.NamingSchemes {
-		fmtFn := formatter.TemplateFormatter(tmpl.New(typ), txt)
-		o.namers.Register(typ, fmtFn)
+		if _, err := o.namers.New(typ).Parse(txt); err != nil {
+			return nil, err
+		}
 	}
 
 	return o, nil
@@ -68,7 +77,7 @@ func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 
 // ProcessRecord modifies the record's name to match a standardized naming scheme.
 func (o *organizer) ProcessRecord(r *store.Record) error {
-	name, err := o.namers.Format(r.Flatted())
+	name, err := o.name(r.Flatted())
 	if err != nil {
 		return err
 	}
@@ -83,6 +92,37 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 
 	r.SetKey(name)
 	return nil
+}
+
+func (o *organizer) name(v interface{}) (string, error) {
+	t := o.namerFor(v)
+	if t == nil {
+		return "", ErrNoNamingScheme
+	}
+
+	buf := new(bytes.Buffer)
+	if err := t.Execute(buf, v); err != nil {
+		return "", err
+	}
+	return buf.String(), nil
+}
+
+func (o *organizer) namerFor(v interface{}) *template.Template {
+	typ := media.TypeOf(v.(map[string]interface{}))
+
+	if tmpl := o.namers.Lookup(typ); tmpl != nil {
+		return tmpl
+	}
+
+	if tmpl := o.namers.Lookup(filepath.Base(typ)); tmpl != nil {
+		return tmpl
+	}
+
+	if tmpl := o.namers.Lookup(filepath.Dir(typ)); tmpl != nil {
+		return tmpl
+	}
+
+	return o.namers.Lookup(DefaultNamingScheme)
 }
 
 // New creates a new organizer module

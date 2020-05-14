@@ -4,19 +4,8 @@ import (
 	"errors"
 	"io"
 	"os"
-	"strings"
 
 	"github.com/pirmd/gostore/store"
-)
-
-const (
-	// TypeField is the name of the field that contains the type of the media
-	TypeField = "Type"
-
-	// DefaultMediaType is the name used by default to identify a media type.
-	// It is usually used in case media cannot be identified (either missing
-	// or incorrect value)
-	DefaultMediaType = "media"
 )
 
 var (
@@ -27,27 +16,6 @@ var (
 // Metadata represents a set of media's metadata, it is essentially a set of (key,
 // value).
 type Metadata = store.Value
-
-// Type returns the media's type corresponding to the TypeField attribute
-// value. If no information exists for TypeField attribute or if it is not of
-// the appropriate type, it feedbacks DefaultMediaType
-func Type(mdata Metadata) string {
-	typ, ok := mdata.Get(TypeField).(string)
-	if !ok || typ == "" {
-		return DefaultMediaType
-	}
-
-	return typ
-}
-
-// IsOfType checks whether the media is of the given type.
-// IsOfType considers media's type of the form "family/sub-family" and checks
-// if the provided type name is either the complete type, only the family of the
-// sub-family.
-func IsOfType(mdata Metadata, typ string) bool {
-	t := Type(mdata)
-	return t == typ || strings.HasPrefix(t, typ+"/") || strings.HasSuffix(t, "/"+typ)
-}
 
 // File represents a media file
 type File interface {
