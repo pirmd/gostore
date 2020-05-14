@@ -317,7 +317,9 @@ func TestRebuildIndex(t *testing.T) {
 }
 
 func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message string) {
-	rInJSON, err := json.Marshal(r.Value())
+	tb.Helper()
+
+	rInJSON, err := json.Marshal(r.OrigValue())
 	if err != nil {
 		tb.Fatalf("Failed to marshall to JSON: %v", err)
 	}
@@ -327,12 +329,14 @@ func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message 
 		tb.Fatalf("Failed to marshal to JSON: %v", err)
 	}
 
-	if failure := verify.Equal(rInJSON, mInJSON); failure != nil {
+	if failure := verify.Equal(string(rInJSON), string(mInJSON)); failure != nil {
 		tb.Errorf("%s:\n%v", message, failure)
 	}
 }
 
 func shouldExistInStore(tb testing.TB, s *Store, key string) {
+	tb.Helper()
+
 	exists, err := s.Exists(key)
 	if err != nil {
 		tb.Errorf("Cannot check existence of '%s': %v", key, err)
@@ -344,6 +348,8 @@ func shouldExistInStore(tb testing.TB, s *Store, key string) {
 }
 
 func shouldNotExistInStore(tb testing.TB, s *Store, key string) {
+	tb.Helper()
+
 	exists, err := s.Exists(key)
 	if err != nil {
 		tb.Errorf("Cannot check existence of '%s': %v", key, err)
