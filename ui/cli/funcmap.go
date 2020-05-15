@@ -1,39 +1,81 @@
 package cli
 
 import (
+	"bytes"
+	"encoding/json"
 	"text/template"
 
+	"github.com/pirmd/style"
 	"github.com/pirmd/text"
 )
 
 func (ui *CLI) funcmap() template.FuncMap {
-	return template.FuncMap{
-		//TODO(pirmd): add json, yaml...
-		//TODO(pirmd): document available formatting in the config.example
-		//TODO(pirmd): modify github.com/pirmd/style to introduce ui.style.Funcmap
-
+	funcs := template.FuncMap{
 		"getAll": getAllMetadata,
 		"get":    getMetadata,
 		"bycol":  tableCol,
 		"byrow":  tableRow,
 
-		"upper":     styleTable(ui.style.Upper),
-		"lower":     styleTable(ui.style.Lower),
-		"titlecase": styleTable(ui.style.TitleCase),
-		"black":     styleTable(ui.style.Black),
-		"red":       styleTable(ui.style.Red),
-		"green":     styleTable(ui.style.Green),
-		"yellow":    styleTable(ui.style.Yellow),
-		"blue":      styleTable(ui.style.Blue),
-		"magenta":   styleTable(ui.style.Magenta),
-		"cyan":      styleTable(ui.style.Cyan),
-		"white":     styleTable(ui.style.White),
-		"inverse":   styleTable(ui.style.Inverse),
-		"bold":      styleTable(ui.style.Bold),
-		"italic":    styleTable(ui.style.Italic),
-		"underline": styleTable(ui.style.Underline),
-		"crossout":  styleTable(ui.style.Crossout),
+		"tmpl":     tmplName(ui.printers),
+		"tmplExec": tmplExec,
+		"tmplFile": tmplFile,
+
+		"extend": func(m map[string]interface{}, key, val string) string {
+			m[key] = val
+			return ""
+		},
+
+		"json": func(v interface{}) (string, error) {
+			output, err := json.Marshal(v)
+			if err != nil {
+				return "", err
+			}
+			return string(output), nil
+		},
+		"jsonForHuman": func(v interface{}) (string, error) {
+			output, err := json.MarshalIndent(v, "", "  ")
+			if err != nil {
+				return "", err
+			}
+			return string(output), nil
+		},
 	}
+
+	for stName, stFunc := range style.FuncMap(ui.style) {
+		funcs[stName] = styleTable(stFunc.(func(string) string))
+	}
+
+	return funcs
+}
+
+func tmplName(t *template.Template) func(string, interface{}) (string, error) {
+	return func(name string, v interface{}) (string, error) {
+		buf := &bytes.Buffer{}
+		err := t.ExecuteTemplate(buf, name, v)
+		return buf.String(), err
+	}
+}
+
+func tmplExec(src string, v interface{}) (string, error) {
+	t, err := template.New("temp").Parse(src)
+	if err != nil {
+		return "", err
+	}
+
+	buf := &bytes.Buffer{}
+	err = t.Execute(buf, v)
+	return buf.String(), err
+}
+
+func tmplFile(name string, v interface{}) (string, error) {
+	t, err := template.ParseFiles(name)
+	if err != nil {
+		return "", err
+	}
+
+	buf := &bytes.Buffer{}
+	err = t.Execute(buf, v)
+	return buf.String(), err
 }
 
 func getAllMetadata(maps []map[string]interface{}, fields ...string) [][]string {

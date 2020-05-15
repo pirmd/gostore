@@ -6,18 +6,16 @@ import (
 	"text/template"
 )
 
-func funcmap(t *template.Template) template.FuncMap {
+func (o *organizer) funcmap() template.FuncMap {
 	return template.FuncMap{
 		"ext": filepath.Ext,
-		//XXX: it is dangerous as it modify the input data structure
-		"extend": extendMap,
 
-		"tmpl":     tmplName(t),
+		"tmpl":     tmplName(o.namers),
 		"tmplExec": tmplExec,
 		"tmplFile": tmplFile,
 
-		"sanitize": pathSanitizer,
-		"nospace":  nospaceSanitizer,
+		"sanitizePath": pathSanitizer,
+		"nospace":      nospaceSanitizer,
 	}
 }
 
@@ -49,9 +47,4 @@ func tmplFile(name string, v interface{}) (string, error) {
 	buf := &bytes.Buffer{}
 	err = t.Execute(buf, v)
 	return buf.String(), err
-}
-
-func extendMap(m map[string]interface{}, key, val string) string {
-	m[key] = val
-	return ""
 }

@@ -64,7 +64,7 @@ func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 		log:    logger,
 		namers: template.New("organizer"),
 	}
-	o.namers.Funcs(funcmap(o.namers))
+	o.namers.Funcs(o.funcmap())
 
 	for typ, txt := range cfg.NamingSchemes {
 		if _, err := o.namers.New(typ).Parse(txt); err != nil {

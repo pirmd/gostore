@@ -45,15 +45,30 @@ ui:
 
     # formatters is the set of available styles for printing media metadata. For
     # each style, customized template can be proposed for a given media type.
-    # Default template can be defined using the "_default" keyword.
-    # Template's follow golang text/template specification. 
+    # Default template can be defined using the "media" keyword.
+    #
+    # Templates follow golang text/template specification. Extensions are
+    # made available to simplify common operation:
+    # - tmpl: execute a sub-template by name
+    # - tmplExec: execute a template text
+    # - tmplFile: execute a template stored in a file
+    # - get/getAll: filter out specific fields from a set of medias and order them accordingly.
+    #      Specific indications can be provided:
+    #      . "*": any remaining fields
+    #      . "?xxx"/"?*": only display the field if non empty
+    #      . "!xxx": do not display the information
+    #  - extend: create a new field that can be called afterwards to be displayed.
+    #  - json/jsonForHuman: convert to json
+    #
+    # It is also possible to define intermediate sub-templates and re-use
+    # them.
     formatters:
         list:
-            _default:  '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
-            book:      '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
+            media:  '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
+            book:   '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
 
         full:
-            _default: |
+            media: |
                 {{ range $i, $r := . -}}
                 {{ if $i }}{{ println }}{{ end -}}
                 {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol }}
@@ -61,9 +76,17 @@ ui:
 
             book: |
                 {{ range $i, $r := . -}}
+                {{ if .Serie}}{{ extend . "SerieName" (tmplExec "{{Serie}} {{SeriePosition}}" .)}}{{ end -}}
                 {{ if $i }}{{ println }}{{ end -}}
-                {{ get $r "Name" "Title" "?SubTitle" "?Serie" "?SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
                 {{ end -}}
+
+        json:
+            media: '{{ json . }}'
+
+        #html:
+        #   media:
+        #       {{ tmplFile "html.tmpl" . }}
 
 # importmodules lists the different processings that will modified the media's
 # metadata during the import stage.
@@ -80,20 +103,20 @@ importmodules: &importmodules
         #
         # Different naming schemes can be adopted based on the media's type.
         # Fall-back templates or generic template can be defined using the
-        # "_default" keyword.
+        # "media" keyword.
         # 
         # Templates follow golang text/template specification. Extensions are
         # made available to simplify common operation:
-        # - ext: file extension
         # - tmpl: execute a sub-template by name
         # - tmplExec: execute a template text
         # - tmplFile: execute a template stored in a file
-        # - sanitize: replace special chars that don'tusually work well when
-        # use in path name
+        # - ext: get file extension
+        # - sanitizePath: replace special chars that don'tusually work well when
+        #   use in path name
         # - nospace: get rid of spaces
         #
         # It is also possible to define intermediate sub-tmeplates and re-use
-        # them when defining a naming scheme.
+        # them.
         namingschemes:
             author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
             serie:  "{{if .Serie}}{{.Serie .SeriePosition}}{{end}}"
@@ -101,7 +124,7 @@ importmodules: &importmodules
             book: |
                 {{ $a := (tmpl "author" .) -}}
                 {{ $s := (tmpl "serie" .)  -}}
-                {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name)| sanitize -}}
+                {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name) | sanitizePath -}}
             
 
     # dehtmlizer is a modules that removes any html tags from a media metadata.
