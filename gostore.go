@@ -99,7 +99,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	}
 
 	for modName, modRawCfg := range cfg.ImportModules {
-		m, err := modules.New(modName, modRawCfg, gs.log)
+		m, err := modules.New(modName, modRawCfg, gs.log, gs.ui)
 		if err != nil {
 			return nil, err
 		}
@@ -109,7 +109,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 
 	for modName, modRawCfg := range cfg.UpdateModules {
 		//XXX: mutualize module creation between Import and Update
-		m, err := modules.New(modName, modRawCfg, gs.log)
+		m, err := modules.New(modName, modRawCfg, gs.log, gs.ui)
 		if err != nil {
 			return nil, err
 		}
@@ -137,15 +137,6 @@ func (gs *Gostore) Import(path string) error {
 	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return err
 	}
-
-	//TODO(pirmd) add a --raw flag to edit all record's values and not only the
-	//ones selected as 'editable'
-	mdata, err := gs.ui.Merge(r.UserValue(), mdataFromFile)
-	if err != nil {
-		return err
-	}
-	r = store.NewRecord(r.Key(), mdata)
-	//XXX: what if edition modifies fields that Name relies upon (?)
 
 	if err := gs.store.Open(); err != nil {
 		return err

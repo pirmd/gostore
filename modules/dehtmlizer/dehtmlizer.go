@@ -13,6 +13,7 @@ import (
 
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/ui"
 )
 
 const (
@@ -102,7 +103,7 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 }
 
 // New creates a new dehtmlizer module whose configuration information
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
 	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 

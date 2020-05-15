@@ -11,6 +11,7 @@ import (
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/ui"
 )
 
 const (
@@ -126,7 +127,7 @@ func (o *organizer) namerFor(m map[string]interface{}) *template.Template {
 }
 
 // New creates a new organizer module
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
 	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 

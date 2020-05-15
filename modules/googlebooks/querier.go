@@ -9,6 +9,7 @@ import (
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/ui"
 )
 
 const (
@@ -34,11 +35,13 @@ type querier struct {
 	*googleBooks
 
 	log *log.Logger
+	ui  ui.UserInterfacer
 }
 
-func newQuerier(cfg *Config, logger *log.Logger) (*querier, error) {
+func newQuerier(cfg *Config, logger *log.Logger, UI ui.UserInterfacer) (*querier, error) {
 	return &querier{
 		log:         logger,
+		ui:          UI,
 		googleBooks: &googleBooks{},
 	}, nil
 }
@@ -54,25 +57,34 @@ func (q *querier) ProcessRecord(r *store.Record) error {
 	}
 
 	q.log.Printf("Module '%s': query GoogleBooks for '%v'", moduleName, r.Value())
-	found, err := q.LookForBooks(r.Value())
+	matches, err := q.LookForBooks(r.Value())
 	if err != nil {
 		return err
 	}
 
-	if len(found) == 0 {
+	if len(matches) == 0 {
 		q.log.Printf("Module '%s': no match found, aborting", moduleName)
 		return nil
 	}
+	bestMatch := matches[0]
 
-	//TODO(pirmd): do something more clever than using the first result from
+	//TODO(pirmd): do something cleverer than using the first result from
 	//googleBooks
-	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(found), found[0])
-	r.SetValue(found[0])
+	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(matches), bestMatch)
+
+	mdata, err := q.ui.Merge(bestMatch, r.UserValue())
+	if err != nil {
+		return err
+	}
+
+	q.log.Printf("Module '%s': record updated to: %v", moduleName, mdata)
+	r.SetValue(mdata)
+
 	return nil
 }
 
 // New creates a new GoogleBooksQuerier module
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, error) {
+func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
 	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
@@ -80,7 +92,7 @@ func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger) (modules.Module, err
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newQuerier(cfg, log)
+	return newQuerier(cfg, log, UI)
 }
 
 func init() {

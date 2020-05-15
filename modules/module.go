@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/pirmd/gostore/store"
+	"github.com/pirmd/gostore/ui"
 )
 
 var (
@@ -35,7 +36,7 @@ type factory struct {
 	Name string
 
 	// NewModule creates a new instance of the module
-	NewModule func(rawcfg ConfigUnmarshaler, logger *log.Logger) (Module, error)
+	NewModule func(ConfigUnmarshaler, *log.Logger, ui.UserInterfacer) (Module, error)
 }
 
 type factories []*factory
@@ -55,19 +56,19 @@ func (f *factories) get(name string) *factory {
 
 // New returns a new module instance of module "name".
 // If the provided name is not a registered module, ErrUnknownModule is raised.
-func New(name string, rawcfg ConfigUnmarshaler, logger *log.Logger) (Module, error) {
+func New(name string, rawcfg ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (Module, error) {
 	factory := availableModules.get(name)
 	if factory == nil {
 		return nil, ErrUnknownModule
 	}
 
-	return factory.NewModule(rawcfg, logger)
+	return factory.NewModule(rawcfg, logger, UI)
 }
 
 // Register registers a new Module.
 // If a Module already exists for the supplied name, it will be replaced by the
 // new provided module's factory.
-func Register(name string, newFn func(ConfigUnmarshaler, *log.Logger) (Module, error)) {
+func Register(name string, newFn func(ConfigUnmarshaler, *log.Logger, ui.UserInterfacer) (Module, error)) {
 	availableModules.append(&factory{
 		Name:      name,
 		NewModule: newFn,
