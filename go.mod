@@ -20,7 +20,7 @@ require (
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.4.0
 	github.com/pirmd/text v0.5.3
-	github.com/pirmd/verify v0.4.2
+	github.com/pirmd/verify v0.5.0
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20190705090504-162552197222 // indirect
 	github.com/tinylib/msgp v1.1.2 // indirect

@@ -15,7 +15,8 @@ func setupStore(tb testing.TB) (*Store, func()) {
 		tb.Fatalf("Fail to create test folder: %v", err)
 	}
 
-	s, err := New(tstDir.Root, UsingFrozenTimeStamps())
+	UseFrozenTimeStamps()
+	s, err := New(tstDir.Root)
 	if err != nil {
 		tstDir.Clean()
 		tb.Fatalf("Fail to create testing Store: %s", err)

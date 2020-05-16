@@ -3,7 +3,6 @@ package store
 import (
 	"io/ioutil"
 	"log"
-	"time"
 
 	"github.com/blevesearch/bleve/mapping"
 )
@@ -102,20 +101,6 @@ func UsingTypeField(name string) Option {
 	return func(s *Store) error {
 		if name != "" {
 			s.idx.Mapping.TypeField = name
-		}
-		return nil
-	}
-}
-
-var timestamper = time.Now
-
-// UsingFrozenTimeStamps sets the time-stamp function to returns a fixed
-// time-stamp. It is especially useful for time-sensitive tests and a normal
-// user would probably never wants this feature to be set.
-func UsingFrozenTimeStamps() Option {
-	return func(s *Store) error {
-		timestamper = func() time.Time {
-			return time.Unix(190701725, 0)
 		}
 		return nil
 	}

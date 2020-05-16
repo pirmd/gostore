@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"path/filepath"
 	"testing"
 
@@ -17,37 +16,27 @@ const (
 	testdataPath = "./testdata"
 )
 
-var (
-	debug = flag.Bool("test.debug", false, "print debug information from gostore during testing steps")
-)
-
 type testGostore struct {
 	*Gostore
 	*verify.TestFolder
 }
 
 func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
-	cfg.ShowLog = *debug
-	cfg.UI.Auto = true
-
 	tstDir, err := verify.NewTestFolder(tb.Name())
 	if err != nil {
 		tb.Fatalf("Failed to create test folder: %v", err)
 	}
 
-	if cfg.Store == nil {
-		cfg.Store = &store.Config{}
-	}
+	store.UseFrozenTimeStamps()
+
+	cfg.UI.Auto = true
 	cfg.Store.Path = tstDir.Root
 
 	gs, err := newGostore(cfg)
 	if err != nil {
 		tb.Fatalf("cannot generate gostore from config: %s", err)
 	}
-
-	if err := store.UsingFrozenTimeStamps()(gs.store); err != nil {
-		tb.Fatalf("cannot force store to use frozen time-stamps for test duration: %s", err)
-	}
+	gs.log = verify.NewLogger(tb)
 
 	return &testGostore{gs, tstDir}
 }
