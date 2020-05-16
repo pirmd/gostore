@@ -9,6 +9,8 @@ var (
 	_ media.Handler = (*epubHandler)(nil)
 )
 
+//TODO: rename ISBN to ISBN_13 (?)
+
 type epubHandler struct{}
 
 func (mh *epubHandler) Type() string {
@@ -27,7 +29,6 @@ func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
 	return epub2mdata(epubData), nil
 }
 
-//XXX: rename ISBN to ISBN_13 (?)
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
 	mdata := make(media.Metadata)
 
