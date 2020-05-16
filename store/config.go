@@ -18,7 +18,7 @@ type Config struct {
 
 	// TypeField is the name used for identifying record's type to apply
 	// specific indexing scheme.
-	// Default to "_type"
+	// Default to "Type"
 	TypeField string
 
 	// IndexingAnalyzer is the default analyzer used to index store's records.
@@ -28,6 +28,15 @@ type Config struct {
 	// IndexingScheme is the bleve's document mapping used to index store's
 	// records.
 	IndexingScheme *mapping.IndexMappingImpl
+}
+
+// NewConfig creates config
+func NewConfig() *Config {
+	return &Config{
+		Path:      ".",
+		Logger:    log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		TypeField: "Type",
+	}
 }
 
 // NewFromConfig creates a Store from a given Config

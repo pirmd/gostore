@@ -41,10 +41,6 @@ type Store struct {
 // New creates a new Store. New accepts options to costumize default Store
 // behaviour
 func New(path string, opts ...Option) (*Store, error) {
-	if path == "" {
-		path = "."
-	}
-
 	s := &Store{
 		log: log.New(ioutil.Discard, "store ", log.LstdFlags),
 	}
@@ -113,7 +109,7 @@ func (s *Store) Close() error {
 	return err.Err()
 }
 
-// Create creates a new record in the Store Create does not replace existing
+// Create creates a new record in the Storer. Create does not replace existing
 // Record (you have to use Update for that) but will replace partially existing
 // records resulting from an inconsistent state of the Store (e.g. file exists
 // but entry in db does not)

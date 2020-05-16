@@ -26,6 +26,20 @@ type Config struct {
 	Formatters map[string]map[string]string
 }
 
+// NewConfig create a new Config
+func NewConfig() *Config {
+	return &Config{
+		OutputFormat: "name",
+		Formatters: map[string]map[string]string{
+			"name": {
+				DefaultFormatter: `{{ range . -}}
+{{ .Name }}
+{{ end -}}`,
+			},
+		},
+	}
+}
+
 // ListStyles lists all available styles for printing records' details.
 func (cfg *Config) ListStyles() (styles []string) {
 	for k := range cfg.Formatters {
@@ -40,11 +54,7 @@ func NewFromConfig(cfg *Config) (*CLI, error) {
 
 	printers, exists := cfg.Formatters[cfg.OutputFormat]
 	if !exists {
-		printers = map[string]string{
-			DefaultFormatter: `{{ range . -}}
-{{ .Name }}
-{{ end -}}`,
-		}
+		return nil, fmt.Errorf("CLI config: '%s': unknown formatter", cfg.OutputFormat)
 	}
 
 	for typ, txt := range printers {

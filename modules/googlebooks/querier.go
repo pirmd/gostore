@@ -66,12 +66,15 @@ func (q *querier) ProcessRecord(r *store.Record) error {
 		q.log.Printf("Module '%s': no match found, aborting", moduleName)
 		return nil
 	}
-	bestMatch := matches[0]
 
 	//TODO(pirmd): do something cleverer than using the first result from
 	//googleBooks
-	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(matches), bestMatch)
+	bestMatch := r.UserValue()
+	for k, v := range matches[0] {
+		bestMatch[k] = v
+	}
 
+	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(matches), bestMatch)
 	mdata, err := q.ui.Merge(bestMatch, r.UserValue())
 	if err != nil {
 		return err

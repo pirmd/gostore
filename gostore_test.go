@@ -1,7 +1,9 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	yaml "gopkg.in/yaml.v2"
@@ -22,7 +24,8 @@ type testGostore struct {
 }
 
 func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
-	tstDir, err := verify.NewTestFolder(tb.Name())
+	tstPathName := strings.Replace(tb.Name(), string(os.PathSeparator), "_", -1)
+	tstDir, err := verify.NewTestFolder(tstPathName)
 	if err != nil {
 		tb.Fatalf("Failed to create test folder: %v", err)
 	}
@@ -47,14 +50,20 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
-	gs := newTestGostore(t, cfg)
-	defer gs.Clean()
+	for _, style := range cfg.UI.ListStyles() {
+		t.Run(style+"Fmt", func(t *testing.T) {
+			cfg.UI.OutputFormat = style
 
-	testImport(t, gs)
-	testInfo(t, gs)
-	testListAll(t, gs)
-	testSearch(t, gs)
-	testDelete(t, gs)
+			gs := newTestGostore(t, cfg)
+			defer gs.Clean()
+
+			testImport(t, gs)
+			testInfo(t, gs)
+			testListAll(t, gs)
+			testSearch(t, gs)
+			testDelete(t, gs)
+		})
+	}
 }
 
 func TestGostoreWithConfigExample(t *testing.T) {
@@ -73,14 +82,20 @@ func TestGostoreWithConfigExample(t *testing.T) {
 	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
-	gs := newTestGostore(t, cfg)
-	defer gs.Clean()
+	for _, style := range cfg.UI.ListStyles() {
+		t.Run(style+"Fmt", func(t *testing.T) {
+			cfg.UI.OutputFormat = style
 
-	testImport(t, gs)
-	testInfo(t, gs)
-	testListAll(t, gs)
-	testSearch(t, gs)
-	testDelete(t, gs)
+			gs := newTestGostore(t, cfg)
+			defer gs.Clean()
+
+			testImport(t, gs)
+			testInfo(t, gs)
+			testListAll(t, gs)
+			testSearch(t, gs)
+			testDelete(t, gs)
+		})
+	}
 }
 
 func testImport(t *testing.T, gs *testGostore) {

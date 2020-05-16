@@ -45,8 +45,8 @@ func (cfg *Config) expandEnv() {
 
 func newConfig() *Config {
 	return &Config{
-		Store: &store.Config{},
-		UI:    &cli.Config{},
+		Store: store.NewConfig(),
+		UI:    cli.NewConfig(),
 	}
 }
 
