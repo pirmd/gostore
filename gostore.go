@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -108,10 +109,9 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	}
 
 	for modName, modRawCfg := range cfg.UpdateModules {
-		//XXX: mutualize module creation between Import and Update
 		m, err := modules.New(modName, modRawCfg, gs.log, gs.ui)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("cannot create module '%s': %v", modName, err)
 		}
 
 		gs.updateModules = append(gs.updateModules, m)
