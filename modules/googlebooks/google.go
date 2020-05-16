@@ -125,20 +125,21 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	title, subtitle, serie, seriePos := g.parseTitle(vi)
 
 	mdata.Set("Title", title)
-	mdata.Set("SubTitle", subtitle)
-	mdata.Set("Serie", serie)
-	mdata.Set("SeriePosition", seriePos)
 	mdata.Set("Authors", vi.Authors)
 	mdata.Set("Description", vi.Description)
 	mdata.Set("Subject", vi.Subject)
-	mdata.Set("Publisher", vi.Publisher)
-	mdata.Set("PublishedDate", vi.PublishedDate)
-	mdata.Set("PageCount", vi.PageCount)
-	mdata.Set("Language", vi.Language)
+
+	mdata.SetIfNotZero("SubTitle", subtitle)
+	mdata.SetIfNotZero("Serie", serie)
+	mdata.SetIfNotZero("SeriePosition", seriePos)
+	mdata.SetIfNotZero("Publisher", vi.Publisher)
+	mdata.SetIfNotZero("PublishedDate", vi.PublishedDate)
+	mdata.SetIfNotZero("PageCount", vi.PageCount)
+	mdata.SetIfNotZero("Language", vi.Language)
 
 	for _, id := range vi.Identifier {
 		if id.Type == "ISBN_13" {
-			mdata.Set("ISBN", id.Identifier)
+			mdata.SetIfNotZero("ISBN", id.Identifier)
 		}
 	}
 

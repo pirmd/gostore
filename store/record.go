@@ -3,6 +3,7 @@ package store
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -192,6 +193,13 @@ func (val Value) Set(key string, value interface{}) {
 	val[key] = value
 }
 
+// SetIfNotZero adds a new (key, value) only if the value is not Zero.
+func (val Value) SetIfNotZero(key string, value interface{}) {
+	if !isZero(value) {
+		val.Set(key, value)
+	}
+}
+
 // SetIfNotExists adds a new (key, value) only if no value already exists for
 // the provided key
 func (val Value) SetIfNotExists(key string, value interface{}) {
@@ -215,4 +223,9 @@ func (val Value) UnmarshalJSON(b []byte) error {
 		val.Set(k, v)
 	}
 	return nil
+}
+
+func isZero(v interface{}) bool {
+	val := reflect.ValueOf(v)
+	return !val.IsValid() || reflect.DeepEqual(val.Interface(), reflect.Zero(val.Type()).Interface())
 }
