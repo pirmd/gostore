@@ -76,7 +76,7 @@ ui:
 
             book: |
                 {{ range $i, $r := . -}}
-                {{ if .Serie}}{{ extend . "SerieName" (tmplExec "{{Serie}} {{SeriePosition}}" .)}}{{ end -}}
+                {{ if .Serie }}{{ extend . "SerieName" (tmplExec "{{.Serie}} {{.SeriePosition}}" .)}}{{ end -}}
                 {{ if $i }}{{ println }}{{ end -}}
                 {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
                 {{ end -}}
@@ -119,7 +119,7 @@ importmodules:
         # them.
         namingschemes:
             author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
-            serie:  "{{if .Serie}}{{.Serie .SeriePosition}}{{end}}"
+            serie:  "{{if .Serie}}{{.Serie}} {{.SeriePosition}}{{end}}"
 
             book: |
                 {{ $a := (tmpl "author" .) -}}
