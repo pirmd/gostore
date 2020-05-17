@@ -59,11 +59,13 @@ func mergeMaps(m, n map[string]interface{}) (map[string]interface{}, error) {
 	return merged, nil
 }
 
-// 'key'   -> field key
-// '!key'  -> ignore field 'key'
-// '?keys' -> include field 'key' if value is non null
-// '*'     -> all remaining fields
-// '?*'    -> include all remaining keys only if value is non null
+// getKeys retrieves key-value couples from a collection of maps. Specific
+// notation can be used to identify which key to retrieve:
+//  . 'key'   -> field named "key"
+//  . '!key'  -> ignore field named "key"
+//  . '?keys' -> include field named "key" if value is non null
+//  . '*'     -> all remaining fields
+//  . '?*'    -> include all remaining fields only if value is non null
 func getKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 	if len(fields) == 0 {
 		fields = []string{"*"}
@@ -143,7 +145,7 @@ func get(m map[string]interface{}, key string) string {
 		}
 
 		if !isZero(v) {
-			// TODO(pirmd): implement a better formatting approach of slices: use 'litter' prettyprinter?
+			// TODO(pirmd): implement a better formatting approach of slices: use 'litter' pretty printer?
 			return fmt.Sprintf("%v", v)
 		}
 	}
@@ -190,6 +192,7 @@ func isZero(v interface{}) bool {
 }
 
 //TODO: depreciate this function?
+
 func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
 	if len(maps) == 0 {
 		return

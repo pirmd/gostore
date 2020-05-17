@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// The readonlyfs restricts all operations that modify in way or another the
+// readonlyfs restricts all operations that modify in way or another the
 // filesystem.
 //
 // readonlyfs is not a standalone vfs.filesystem as it passes all read

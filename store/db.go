@@ -12,7 +12,7 @@ const (
 )
 
 var (
-	//ErrRecordNotFoundInDb alerts if no record is found
+	// ErrRecordNotFoundInDb alerts if no record is found
 	ErrRecordNotFoundInDb = fmt.Errorf("Record not found")
 )
 
@@ -21,12 +21,12 @@ type storedb struct {
 	db   *bolt.DB
 }
 
-//newDB creates a new database
+// newDB creates a new database
 func newDB(path string) *storedb {
 	return &storedb{path: path}
 }
 
-//Open opens a new database.
+// Open opens a new database.
 func (s *storedb) Open() (err error) {
 	if s.db, err = bolt.Open(s.path, 0666, nil); err != nil {
 		return
@@ -38,12 +38,12 @@ func (s *storedb) Open() (err error) {
 	})
 }
 
-//Close closes database
+// Close closes database
 func (s *storedb) Close() error {
 	return s.db.Close()
 }
 
-//Put adds a new Record into the database
+// Put adds a new Record into the database
 func (s *storedb) Put(r *Record) error {
 	buf, err := json.Marshal(r.value)
 	if err != nil {
@@ -60,7 +60,7 @@ func (s *storedb) Put(r *Record) error {
 	return nil
 }
 
-//Delete remove a Record entry from the database
+// Delete remove a Record entry from the database
 func (s *storedb) Delete(key string) error {
 	return s.db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName))
@@ -68,7 +68,7 @@ func (s *storedb) Delete(key string) error {
 	})
 }
 
-//Get retrieves a value from the database and unmarshal it
+// Get retrieves a value from the database and unmarshal it
 func (s *storedb) Get(key string) (*Record, error) {
 	var buf []byte
 	if err := s.db.View(func(tx *bolt.Tx) error {
@@ -90,7 +90,7 @@ func (s *storedb) Get(key string) (*Record, error) {
 	return r, nil
 }
 
-//Exists check if a value is in the storedb
+// Exists check if a value is in the storedb
 func (s *storedb) Exists(key string) (bool, error) {
 	var buf []byte
 
@@ -106,15 +106,15 @@ func (s *storedb) Exists(key string) (bool, error) {
 	return (buf != nil), nil
 }
 
-//Walk iterates over all storedb items and call walkFn for each item
-//Walk does not stop if an error is reported by walkFn, such errors will
-//be captured and reported back once Walk is over
+// Walk iterates over all storedb items and call walkFn for each item
+// Walk does not stop if an error is reported by walkFn, such errors will
+// be captured and reported back once Walk is over
 func (s *storedb) Walk(walkFn func(string) error) error {
 	errWalk := new(NonBlockingErrors)
 
-	//boltdb does not support modifying the database during
-	//iteration, so we first get the all keys, then we act on
-	//them
+	// boltdb does not support modifying the database during
+	// iteration, so we first get the all keys, then we act on
+	// them
 
 	keys := []string{}
 	if err := s.db.View(func(tx *bolt.Tx) error {

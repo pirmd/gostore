@@ -32,7 +32,7 @@ func PopulateFs(fs *VFS, root string, tree []string) error {
 	return nil
 }
 
-//returns list of relative path inside root
+// ListFs returns the list of relative path inside root
 func ListFs(fs *VFS, root string) (files []string, err error) {
 	err = fs.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

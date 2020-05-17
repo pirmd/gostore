@@ -19,10 +19,9 @@ const (
 )
 
 var (
-	// Makes sure that organizer implements modules.Module
-	_ modules.Module = (*organizer)(nil)
+	_ modules.Module = (*organizer)(nil) // Makes sure that organizer implements modules.Module
 
-	// DefaultNamingScheme is the name of the default NamingScheme
+	// DefaultNamingScheme is the name of the default NamingSchemes
 	DefaultNamingScheme = media.DefaultType
 
 	// ErrNoNamingScheme is raised when no naming scheme is found, even
@@ -41,8 +40,8 @@ var (
 type Config struct {
 	// NamingSchemes defines, for each record's type, the templates to rename a
 	// record according to its attribute.  You can define a default naming
-	// scheme for all record's type not defined in NamingScheme using the
-	// special "_default" type.
+	// scheme for all record's type not defined in NamingSchemes using the
+	// special DefaultNamingScheme key.
 	NamingSchemes map[string]string
 }
 
@@ -87,8 +86,7 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 		return ErrEmptyName
 	}
 
-	//name should be relative to the collection's root, clean
-	//unuseful cruft.
+	//name should be relative to the collection's root
 	name = filepath.ToSlash(filepath.Clean("/" + name))[1:]
 
 	r.SetKey(name)

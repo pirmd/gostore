@@ -16,7 +16,7 @@ const (
 
 // TypeOf returns the media's type corresponding to the TypeField attribute
 // value. If no information exists for TypeField attribute or if it is not of
-// the appropriate type, it feedbacks DefaultMediaType
+// the appropriate type, it feedbacks DefaultType
 func TypeOf(mdata Metadata) string {
 	typ, ok := mdata.Get(TypeField).(string)
 	if !ok || typ == "" {

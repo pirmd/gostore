@@ -67,8 +67,8 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 }
 
 func TestGostoreWithConfigExample(t *testing.T) {
-	//TODO: Directly reuse cmd.go code to load configfile (for instance if add
-	//ExpandEnv we need to do it twice and create mismatch)
+	//TODO: Directly reuse cmd.go code to load configuration file (for instance
+	//if add ExpandEnv we need to do it twice and create mismatch)
 	cfg := newConfig()
 	appCfg := &clapp.Config{
 		Unmarshaller: yaml.Unmarshal,
@@ -121,7 +121,7 @@ func testImport(t *testing.T, gs *testGostore) {
 			t.Errorf("Import output is not as expected.\n%v", failure)
 		}
 
-		// TODO(pirmd): update store's api to get quicker information regarding store's consitenbcy state
+		// TODO(pirmd): update store's API to get quicker information regarding store's consistency state
 		if err := gs.store.Open(); err != nil {
 			t.Errorf("Collection is inconsistent: %v", err)
 		}

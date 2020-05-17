@@ -8,7 +8,7 @@ type UserInterfacer interface {
 	// PrettyPrint displays values from the provided map
 	PrettyPrint(...map[string]interface{})
 
-	// PrettyDiff displays povided maps, higlighting their differences
+	// PrettyDiff displays provided maps, highlighting their differences
 	PrettyDiff(map[string]interface{}, map[string]interface{})
 
 	// Edit spawns an editor dialog to modified provided map

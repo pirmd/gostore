@@ -20,15 +20,18 @@ const (
 	moduleName = "dehtmlizer"
 )
 
+//TODO(pirmd): Allow configuration of which field to clean (maybe depending
+//on Record's Type like module organizer)
+
 var (
-	// Makes sure that dehtmlizer implements modules.Module
-	_ modules.Module = (*dehtmlizer)(nil)
+	_ modules.Module = (*dehtmlizer)(nil) // Makes sure that dehtmlizer implements modules.Module
 )
 
 // Config defines the different configurations that can be used to customized
 // the behavior of a dehtmlizer module.
 type Config struct {
-	// Fields2Clean lists the record's fields that should be dehtlmized.
+	// Fields2Clean lists the record's fields that should be cleaned from any
+	// html tags.
 	// Non-existing fields are ignored.
 	Fields2Clean []string
 
@@ -44,8 +47,6 @@ func newConfig() *Config {
 type dehtmlizer struct {
 	log *log.Logger
 
-	//TODO(pirmd): Allow configuration of which field to clean (maybe depending
-	//on Record's Type like renamer)
 	fields2clean []string
 	outputStyle  style.Styler
 }

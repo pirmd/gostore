@@ -16,8 +16,8 @@ var (
 	reRedundantSpaces = regexp.MustCompile(`[\s\p{Zs}]{2,}`)
 )
 
-//html2txt converts input string containing html tags into a simple text using
-//the given syle.Styler
+// html2txt converts input string containing html tags into a simple text using
+// the given style.Styler
 func html2txt(s string, st style.Styler) (string, error) {
 	root, err := html.Parse(strings.NewReader(s))
 	if err != nil {
@@ -27,7 +27,7 @@ func html2txt(s string, st style.Styler) (string, error) {
 	return renderNode(root, st), nil
 }
 
-//renderNode returns text from all root's descendant text nodes
+// renderNode returns text from all root's descendant text nodes
 func renderNode(root *html.Node, st style.Styler) string {
 	var txt string
 
@@ -161,8 +161,8 @@ func renderNode(root *html.Node, st style.Styler) string {
 	return txt
 }
 
-//getAttr returns the value of an HTML node attribute.  If no attribute exists
-//corresponding to the given name, returns an empty string
+// getAttr returns the value of an HTML node attribute.  If no attribute exists
+// corresponding to the given name, returns an empty string
 func getAttr(node *html.Node, attr string) string {
 	for _, a := range node.Attr {
 		if a.Key == attr {

@@ -30,10 +30,10 @@ type Config struct {
 	// UI contains configuration for anything related to user interface
 	UI *cli.Config
 
-	// ImportModules lists of processings to be applied when importing a record
+	// ImportModules lists of modules to be applied when importing a record
 	ImportModules map[string]*rawYAMLConfig
 
-	// UpdateModules lists of processings to be applied when updating a record
+	// UpdateModules lists of modules to be applied when updating a record
 	UpdateModules map[string]*rawYAMLConfig
 }
 
@@ -269,9 +269,6 @@ func (gs *Gostore) Delete(key string) error {
 }
 
 // Export copies a record's media file from the collection to the given destination.
-// Destination is considered as a folder where the record's media file will be
-// copied to (final file's will be dst/key, keeping any sub-folder(s) coming
-// with the record's key name).
 func (gs *Gostore) Export(key, dstFolder string) (err error) {
 	dstPath := filepath.Join(key, dstFolder)
 

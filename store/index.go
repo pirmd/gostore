@@ -8,8 +8,8 @@ import (
 )
 
 type storeidx struct {
-	//Mapping defines specific index mapping
-	//Mapping follows bleve's index mapping principles
+	// Mapping defines specific index mapping
+	// Mapping follows bleve's index mapping principles
 	Mapping *mapping.IndexMappingImpl
 
 	path string
@@ -23,7 +23,7 @@ func newIdx(path string) *storeidx {
 	}
 }
 
-//Open opens or creates a new storeidx
+// Open opens or creates a new storeidx
 func (s *storeidx) Open() (err error) {
 	if s.idx, err = bleve.Open(s.path); err == nil {
 		return
@@ -36,12 +36,12 @@ func (s *storeidx) Open() (err error) {
 	return
 }
 
-//Close cleanly closes the storeidx
+// Close cleanly closes the storeidx
 func (s *storeidx) Close() error {
 	return s.idx.Close()
 }
 
-//Empty removes all content from the index and restart from scratch
+// Empty removes all content from the index and restart from scratch
 func (s *storeidx) Empty() (err error) {
 	if err = s.idx.Close(); err != nil {
 		return
@@ -55,12 +55,12 @@ func (s *storeidx) Empty() (err error) {
 	return
 }
 
-//Put adds a new value to the new index
+// Put adds a new value to the new index
 func (s *storeidx) Put(r *Record) error {
 	return s.idx.Index(r.key, r.value)
 }
 
-//Exists checks if an entry  exists for the given key
+// Exists checks if an entry  exists for the given key
 func (s *storeidx) Exists(key string) (bool, error) {
 	doc, err := s.idx.Document(key)
 	if err != nil {
@@ -69,13 +69,13 @@ func (s *storeidx) Exists(key string) (bool, error) {
 	return (doc != nil), nil
 }
 
-//Delete suppresses Record from the index
+// Delete suppresses Record from the index
 func (s *storeidx) Delete(key string) error {
 	return s.idx.Delete(key)
 }
 
-//Search looks for known Records'Id regitered in the Index
-//The query should follow bleve's query style
+// Search looks for known Records' Id registered in the Index.
+// The query should follow bleve's query style.
 func (s *storeidx) Search(query string) (keys []string, err error) {
 	q := bleve.NewQueryStringQuery(query)
 	results, err := s.idx.Search(bleve.NewSearchRequest(q))
@@ -89,14 +89,14 @@ func (s *storeidx) Search(query string) (keys []string, err error) {
 	return keys, nil
 }
 
-//Walk iterates over all storeidx items and call walkFn for each item
-//Walk does not stop if an error is reported by walkFn, such errors will
-//be captured and reported back once Walk is over
+// Walk iterates over all storeidx items and call walkFn for each item
+// Walk does not stop if an error is reported by walkFn, such errors will
+// be captured and reported back once Walk is over
 func (s *storeidx) Walk(walkFn func(string) error) error {
 	errWalk := new(NonBlockingErrors)
 
 	//bleve does not support modifying the database during
-	//iteration, so we first get all keys, then we act uppon
+	//iteration, so we first get all keys, then we act upon
 	//them
 	keys, err := s.matchAll()
 	if err != nil {
@@ -112,7 +112,8 @@ func (s *storeidx) Walk(walkFn func(string) error) error {
 	return errWalk.Err()
 }
 
-//TODO: For some reason using NewMatchAllQuery does not return all Documents
+// matchAll retrieves all known records.
+// TODO: For some reason using NewMatchAllQuery does not return all Documents
 //      So that I use this func that seems to work. No time to investigate
 func (s *storeidx) matchAll() ([]string, error) {
 	idx, _, err := s.idx.Advanced()

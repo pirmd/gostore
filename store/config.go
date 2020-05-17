@@ -50,8 +50,7 @@ func NewFromConfig(cfg *Config) (*Store, error) {
 	)
 }
 
-// Options are using a set of variadic functional options for more
-// user-friendly api. Idea is coming from
+// Options are using a set of variadic functional options. Idea is coming from
 // [[https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis]]
 
 // Option is a function that can tweak the behavior of a Store
@@ -70,7 +69,7 @@ func UsingLogger(l *log.Logger) Option {
 	}
 }
 
-// UsingDefaultAnalyzer sets the default anaylzer of the Store's index
+// UsingDefaultAnalyzer sets the default analyzer of the Store's index
 //
 // Available analyzer are any analyzer compatible with bleve-search.
 func UsingDefaultAnalyzer(analyzer string) Option {
@@ -85,7 +84,7 @@ func UsingDefaultAnalyzer(analyzer string) Option {
 
 // UsingIndexingScheme adds bleve's document mapping to the Store's index
 //
-// Available mapings are any mappings compatible with bleve-search The index
+// Available mappings are any mappings compatible with bleve-search The index
 // mapping can take benefit of Record implementing bleve.Classifier interface.
 //
 // Mapping only applies to newly created indexes so that you might need to
@@ -100,10 +99,9 @@ func UsingIndexingScheme(idxMappings *mapping.IndexMappingImpl) Option {
 	}
 }
 
-// UsingTypeField custumizes the name of the field used to identified the type
+// UsingTypeField customizes the name of the field used to identified the type
 // of the stored record. Type is used to implement specific indexing scheme
 // that can be customized with UsingIndexingScheme.
-// Default is "_type".
 //
 // UsingTypeField shall be used after UsingIndexingScheme
 func UsingTypeField(name string) Option {

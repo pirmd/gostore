@@ -19,11 +19,11 @@ var (
 
 // Module represents a gostore's module that can act on collection's records
 type Module interface {
-	//ProcessRecord performs an action on a collection's record
+	// ProcessRecord performs an action on a collection's record
 	ProcessRecord(*store.Record) error
 }
 
-// ConfigUnmarshaler represents a raw configuration that can be unmarshalled to
+// ConfigUnmarshaler represents a raw configuration that can be unmarshaled to
 // a given module's config.
 type ConfigUnmarshaler interface {
 	// Unmarshal decodes a raw configuration into a module's config
@@ -84,7 +84,7 @@ func List() (m []string) {
 }
 
 // ProcessRecord applies the specified series of modules to a record. If an
-// error occures, ProcessRecord stops and feedback the error.
+// error occurs, ProcessRecord stops and feedback the error.
 func ProcessRecord(r *store.Record, mods []Module) error {
 	for _, mod := range mods {
 		if err := mod.ProcessRecord(r); err != nil {

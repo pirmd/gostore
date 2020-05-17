@@ -29,7 +29,7 @@ func TestFSPut(t *testing.T) {
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
-	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale)
+	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available)
 
 	for _, k := range tstCases {
 		if err := fs.Put(NewRecord(k, nil), verify.MockROFile("")); err != nil {
@@ -37,7 +37,7 @@ func TestFSPut(t *testing.T) {
 		}
 	}
 
-	//This works because populate does not create subfolders
+	//This works because populate does not create sub-folders
 	if failure := tstDir.ShouldHaveContent(tstCases); failure != nil {
 		t.Errorf("fs Put did not work as expected:\n%v", failure)
 	}
@@ -51,7 +51,7 @@ func TestFSWalk(t *testing.T) {
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
-	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale
+	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available
 
 	tstDir.Populate(tstCases)
 
@@ -76,7 +76,7 @@ func TestFSDelete(t *testing.T) {
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
-	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale
+	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available
 
 	tstDir.Populate(tstCases)
 
@@ -89,7 +89,6 @@ func TestFSDelete(t *testing.T) {
 				t.Errorf("Storefs cannot delete files:\n%v", failure)
 			}
 		}
-		//TODO(pirmd): create in verify: ShouldBeEmpty
 		if failure := tstDir.ShouldHaveContent(nil); failure != nil {
 			t.Errorf("storefs cannot delete files:\n%v", failure)
 		}
@@ -111,7 +110,7 @@ func TestFSForbiddenPath(t *testing.T) {
 	defer tstDir.Clean()
 
 	fs := newFS(tstDir.Root, validFn)
-	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is availbale
+	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available
 
 	tstCasesUnauthorized := []string{"folder_toFilter", "folder_toFilter/file.txt", "folder/file_toFilter.txt"}
 

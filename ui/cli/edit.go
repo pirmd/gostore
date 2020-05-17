@@ -52,8 +52,8 @@ func editAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
 		return nil, err
 	}
 
-	//I'm not that sure that v needs to be reurned as for most of the cases the
-	//Unmashal directive should have already propagated the mods. It happen,
+	//I'm not that sure that v needs to be returned as for most of the cases the
+	//Unmarshal directive should have already propagated the mods. It happens
 	//that it is not working at least for map (that should nee to be
 	//reallocated), so result is also returned to the user.
 	//
@@ -125,8 +125,8 @@ func mergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, inte
 		return nil, nil, err
 	}
 
-	//TODO(pirmd): like for EditAsJson, it is probably not the right way to do,
-	//try harder to find a correct approach
+	//TODO(pirmd): it is probably not the right way to do, try harder to find a
+	//correct approach
 	return left, right, nil
 }
 

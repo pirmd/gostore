@@ -58,8 +58,6 @@ func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
 
 // PrettyDiff shows in a pleasant manner differences between two metadata sets
 func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
-	//TODO: create printers for diff (using "diff_typeof(media)" name) to customize
-	//diff format (like old -> new)
 	deltaL := make(map[string]interface{})
 
 	allkeys := getKeys([]map[string]interface{}{mediaL, mediaR}, "?*")
@@ -71,7 +69,7 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	ui.PrettyPrint(deltaL)
 }
 
-// Edit fires-up a new editor to modif m
+// Edit fires-up a new editor to modify a map
 func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.editor) > 0 {
 		edited, err := editAsJSON(m, ui.editor)
@@ -123,7 +121,7 @@ func (ui *CLI) printerFor(medias ...map[string]interface{}) *template.Template {
 }
 
 // typeOf returns a common type for a collection of maps. If maps are not of
-// the same type, it returns variousType
+// the same type, it returns media.DefaultType
 func typeOf(maps ...map[string]interface{}) string {
 	if len(maps) == 0 {
 		return media.DefaultType

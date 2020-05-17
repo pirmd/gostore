@@ -6,27 +6,27 @@ import (
 	"syscall"
 )
 
-//Create creates the named file mode 0666 (before umask) on the given Filesystem,
-//truncating it if it already exists.
-//The associated file descriptor has mode os.O_RDWR.
-//If there is an error, it will be of type *os.PathError.
+// Create creates the named file mode 0666 (before umask) on the given
+// filesystem, truncating it if it already exists.  The associated file
+// descriptor has mode os.O_RDWR.  If there is an error, it will be of type
+// *os.PathError.
 //
-//'ported' from standard lib os.Create
+// "ported" from standard lib os.Create
 func (vfs *VFS) Create(name string) (File, error) {
 	return vfs.OpenFile(name, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 }
 
-//Open opens the named file on the given Filesystem for reading.
-//If successful, methods on the returned file can be used for reading.
-//The associated file descriptor has mode os.O_RDONLY.
-//If there is an error, it will be of type *PathError.
+// Open opens the named file on the given filesystem for reading.
+// If successful, methods on the returned file can be used for reading.
+// The associated file descriptor has mode os.O_RDONLY.
+// If there is an error, it will be of type *PathError.
 //
-//'ported' from standard lib os.Open
+// "ported" from standard lib os.Open
 func (vfs *VFS) Open(name string) (File, error) {
 	return vfs.OpenFile(name, os.O_RDONLY, 0)
 }
 
-// MkdirAll creates a directory named path on the given Filesystem,
+// MkdirAll creates a directory named path on the given filesystem,
 // along with any necessary parents, and returns nil,
 // or else returns an error.
 // The permission bits perm are used for all
@@ -34,7 +34,7 @@ func (vfs *VFS) Open(name string) (File, error) {
 // If path is already a directory, MkdirAll does nothing
 // and returns nil.
 //
-//'ported' from standard lib os.MkdirAll
+//"ported" from standard lib os.MkdirAll
 func (vfs *VFS) MkdirAll(path string, perm os.FileMode) error {
 	dir, err := vfs.Stat(path)
 	if err == nil {
@@ -72,12 +72,12 @@ func (vfs *VFS) MkdirAll(path string, perm os.FileMode) error {
 	return nil
 }
 
-//RemoveAll removes path and any children it contains.
-//It removes everything it can but returns the first error
-//it encounters.  If the path does not exist, RemoveAll
-//returns nil.
+// RemoveAll removes path and any children it contains.
+// It removes everything it can but returns the first error
+// it encounters.  If the path does not exist, RemoveAll
+// returns nil.
 //
-//'ported' from standard lib os.RemoveAll
+// "ported" from standard lib os.RemoveAll
 func (vfs *VFS) RemoveAll(path string) error {
 	err := vfs.Remove(path)
 	if err == nil || os.IsNotExist(err) {

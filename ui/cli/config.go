@@ -8,21 +8,22 @@ import (
 
 // Config describes configuration for User Interface
 type Config struct {
-	// Flag to switch between automatic or manual actions when editing or
-	// merging records' attributes
+	// Auto is the flag that switches between automatic or manual actions when
+	// editing or merging records' attributes
 	Auto bool
 
-	// Command line to open a text editor
+	// EditorCmd contains the command line to open a text editor
 	EditorCmd string
 
-	// Command line to open a text merger
+	// MergerCmd contains the command line to open a text merger
 	MergerCmd string
 
-	// Select the style of output to format answers (UIFormatters[UIFormatStyle])
+	// OutputFormat selects the style of output to format records when printing
+	// them.
 	OutputFormat string
 
-	// Templates to display information from the store.
-	// Templates are organized by output style
+	// Formatters contains the list of templates to display information from
+	// the store. Templates are organized by output style
 	Formatters map[string]map[string]string
 }
 

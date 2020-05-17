@@ -13,11 +13,11 @@ const (
 	// record's key when exported through Fields()
 	KeyField = "Name"
 
-	// CreatedAtField contains the name of the record's value field containint
+	// CreatedAtField contains the name of the record's value field containing
 	// the time stamp corresponding to the record's creation
 	CreatedAtField = "CreatedAt"
 
-	// UpdatedAtField contains the name of the record's value field containint
+	// UpdatedAtField contains the name of the record's value field containing
 	// the time stamp corresponding to the last known record's update
 	UpdatedAtField = "UpdatedAt"
 )
@@ -47,12 +47,12 @@ func (r *Record) String() string {
 	return fmt.Sprintf("%s:%#v", r.key, r.value)
 }
 
-// Key is Record's (uniq) identifier in the store
+// Key is Record's (unique) identifier in the store
 func (r *Record) Key() string {
 	return r.key
 }
 
-// SetKey modifies Record's (uniq) identifier
+// SetKey modifies Record's (unique) identifier
 func (r *Record) SetKey(key string) {
 	r.key = key
 	r.stamp()
@@ -179,7 +179,7 @@ func (val Value) Set(key string, value interface{}) {
 			val[key] = t
 			return
 		}
-		//TODO: do someting if date is not readable
+		//TODO: do something if date is not readable
 	}
 
 	if strings.HasSuffix(key, "Index") || strings.HasSuffix(key, "Position") ||
@@ -208,7 +208,7 @@ func (val Value) SetIfNotExists(key string, value interface{}) {
 	}
 }
 
-// UnmarshalJSON personnalizes records retrieving from store It mainly detects
+// UnmarshalJSON personalizes records retrieving from store It mainly detects
 // fields supposed to handle time-stamps or date. If it fails to parse a time,
 // it falls back to a string
 func (val Value) UnmarshalJSON(b []byte) error {

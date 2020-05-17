@@ -1,5 +1,5 @@
 // Package googlebooks is a gostore module that retrieves ebook metadata from
-// google books online database.
+// Google books online database.
 package googlebooks
 
 import (
@@ -18,8 +18,7 @@ const (
 )
 
 var (
-	// Makes sure that we implement modules.Module
-	_ modules.Module = (*querier)(nil)
+	_ modules.Module = (*querier)(nil) // Makes sure that we implement modules.Module
 )
 
 // Config defines the different configurations that can be used to customize
@@ -47,7 +46,7 @@ func newQuerier(cfg *Config, logger *log.Logger, UI ui.UserInterfacer) (*querier
 }
 
 // ProcessRecord updates a record's metadata based on the first result returned
-// by google books.
+// by Google books.
 // If provided record is not an ebook, record metadata is not modified.
 // If no result is found, record metadata is not modified.
 func (q *querier) ProcessRecord(r *store.Record) error {

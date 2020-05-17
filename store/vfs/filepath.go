@@ -25,7 +25,7 @@ func (vfs *VFS) Walk(root string, walkFn filepath.WalkFunc) error {
 	return err
 }
 
-//copied from https://golang.org/src/path/filepath/path.go
+// walk is copied from https://golang.org/src/path/filepath/path.go
 func walk(vfs *VFS, path string, info os.FileInfo, walkFn filepath.WalkFunc) error {
 	err := walkFn(path, info, nil)
 	if err != nil {
@@ -63,8 +63,8 @@ func walk(vfs *VFS, path string, info os.FileInfo, walkFn filepath.WalkFunc) err
 	return nil
 }
 
-//copied from https://golang.org/src/path/filepath/path.go
-//with small adaptation to accommodate Readdir instead of Readdirnames
+// readDirNames is copied from https://golang.org/src/path/filepath/path.go
+// with small adaptation to accommodate Readdir instead of Readdirnames
 func readDirNames(vfs *VFS, dirname string) ([]string, error) {
 	f, err := vfs.Open(dirname)
 	if err != nil {

@@ -16,7 +16,7 @@ const (
 	googleBooksURL = "https://www.googleapis.com/books/v1/volumes"
 )
 
-// TODO(pirmd): check again googl book api to improve the query
+// TODO(pirmd): check again Google book API to improve the query
 
 var (
 	// reSerieGuesser is a collection of regexp to extract series information
@@ -56,7 +56,7 @@ type identifier struct {
 	Identifier string `json:"identifier"`
 }
 
-// googleBooks wraps google books api
+// googleBooks wraps Google books API
 type googleBooks struct{}
 
 func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, error) {
@@ -146,7 +146,7 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	return mdata
 }
 
-// parseTitle use a simple heuristic to decipher google books information aout
+// parseTitle use a simple heuristic to decipher Google books information about
 // series hidden in title/subtitle volume information
 func (g *googleBooks) parseTitle(vi *googleVolumeInfo) (title string, subtitle string, serieName string, seriePos string) {
 	for _, re := range reSerieGuesser {

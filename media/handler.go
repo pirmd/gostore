@@ -24,19 +24,19 @@ var (
 
 // Handler represents a media handler
 type Handler interface {
-	//Type provides the name of the handler. An handler's name is mainly used
-	//to identify a media type and adopt customized behavior based on a media
-	//type.
+	// Type provides the name of the handler. An handler's name is mainly used
+	// to identify a media type and adopt customized behavior based on a media
+	// type.
 	Type() string
 
-	//Mimetype provides the mimetype that the handler can manage.
+	// Mimetype provides the mimetype that the handler can manage.
 	Mimetype() string
 
-	//GetMetadata retrieves the metadata from a given file.
+	// GetMetadata retrieves the metadata from a given file.
 	GetMetadata(File) (Metadata, error)
 }
 
-// Handlers represent th elist of known media handlers
+// Handlers represent the list of known media handlers
 type Handlers []Handler
 
 // ForReader retrieves the handler for corresponding to the given file based on
@@ -106,6 +106,7 @@ func RegisterHandler(mh Handler) {
 	handlers = append(handlers, mh)
 }
 
+// getMimetype returns mimetype for the provided reader.
 // Always returns a valid content-type by returning "application/octet-stream"
 // if no others seemed to match or if an error occurred.
 func getMimetype(r io.Reader) (string, error) {

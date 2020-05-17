@@ -29,7 +29,7 @@ var (
 )
 
 // Store represents the actual storing engine. It is made of a filesystem, a
-// keystore (leveldb) and an indexer (bleve)
+// key-value database and an indexer (bleve)
 type Store struct {
 	fs  *storefs
 	db  *storedb
@@ -38,7 +38,7 @@ type Store struct {
 	log *log.Logger
 }
 
-// New creates a new Store. New accepts options to costumize default Store
+// New creates a new Store. New accepts options to customize default Store
 // behaviour
 func New(path string, opts ...Option) (*Store, error) {
 	s := &Store{
@@ -295,7 +295,7 @@ func (s *Store) Delete(key string) error {
 }
 
 // Search returns the list of keys corresponding to the given search query. The
-// query should follow the bleve search engine synthax.
+// query should follow the bleve search engine syntax.
 func (s *Store) Search(query string) (Records, error) {
 	s.log.Printf("Search records for '%s'", query)
 
@@ -318,7 +318,7 @@ func (s *Store) Search(query string) (Records, error) {
 
 // RebuildIndex deletes then rebuild the index from scratch based on the
 // database content It can be used for example to implement a new mapping
-// startégy or if things are really going bad
+// strategy or if things are really going bad
 func (s *Store) RebuildIndex() error {
 	s.log.Printf("Create a new index from scratch")
 	if err := s.idx.Empty(); err != nil {
