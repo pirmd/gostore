@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.3] - 2020.05.17
+## Modified
+- Google books is converted to module format for better flexibility and later
+  extendability
+- improve template support to define output format as well as media naming
+  schemes. 
+- FIX various bugs, spelling errors and extend test coverage.
+
 ## [0.3.2] - 2020.05.05
 ## Added
 - Add new template function to only display a metadata if non empty.
