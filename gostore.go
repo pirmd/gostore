@@ -129,37 +129,46 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 	}
 	defer gs.store.Close()
 
+	//TODO: should be in store or in an util package?
+	importErr := new(store.NonBlockingErrors)
+
 	for _, path := range mediaFiles {
 		gs.log.Printf("Adding media file %s to the collection", path)
 		f, err := os.Open(path)
 		if err != nil {
-			return err
+			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
+			continue
 		}
 		defer f.Close()
 
 		mdataFromFile, err := media.GetMetadata(f)
 		if err != nil {
-			return err
+			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
+			continue
 		}
 		r := store.NewRecord(filepath.Base(path), mdataFromFile)
 
 		if err := modules.ProcessRecord(r, gs.importModules); err != nil {
-			return err
+			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
+			continue
 		}
 
 		if !gs.pretend {
 			gs.log.Printf("Creating new record %v to the collection", r)
 			if err := gs.store.Create(r, f); err != nil {
-				return err
+				importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
+				continue
 			}
 		}
 
 		newRecords = append(newRecords, r)
-
 	}
-	gs.ui.PrettyPrint(newRecords.Flatted()...)
 
-	return nil
+	if len(newRecords) != 0 {
+		gs.ui.PrettyPrint(newRecords.Flatted()...)
+	}
+
+	return importErr.Err()
 }
 
 // Info retrieves information about any collection's record.

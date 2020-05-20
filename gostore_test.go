@@ -135,14 +135,34 @@ func testImport(t *testing.T, gs *testGostore) {
 	})
 
 	t.Run("ImportTwiceEpubs", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
 		if err := gs.Import(testCases); err == nil {
 			t.Errorf("Importing '%s' a second time worked but should not", testCases)
+		}
+
+		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
+			t.Errorf("Importing an existing record should not print anything:\n%v", failure)
 		}
 	})
 
 	t.Run("ImportNonExistingEpub", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
 		if err := gs.Import([]string{"non_existing.epub"}); err == nil {
 			t.Errorf("Importing non existing epub worked but should not")
+		}
+
+		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
+			t.Errorf("Importing non existing epub should not print anything:\n%v", failure)
 		}
 	})
 }
@@ -190,8 +210,18 @@ func testInfo(t *testing.T, gs *testGostore) {
 	})
 
 	t.Run("InfoNonExisting", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
 		if err := gs.Info("non existing record", false); err == nil {
 			t.Errorf("Getting info for non existing record does no fail")
+		}
+
+		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
+			t.Errorf("Info output is not as expected:\n%v", failure)
 		}
 	})
 }

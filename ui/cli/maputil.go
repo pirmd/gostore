@@ -23,6 +23,10 @@ type keyVal struct {
 func map2kv(maps []map[string]interface{}, fields ...string) *keyVal {
 	kv := &keyVal{}
 
+	if len(maps) == 0 {
+		return kv
+	}
+
 	keys := getKeys(maps, fields...)
 	for _, k := range keys {
 		if k[0] == '?' {
@@ -40,6 +44,9 @@ func map2kv(maps []map[string]interface{}, fields ...string) *keyVal {
 }
 
 func (kv *keyVal) KV() [][]string {
+	if len(kv.Keys) == 0 {
+		return [][]string{}
+	}
 	return append([][]string{kv.Keys}, kv.Values...)
 }
 
