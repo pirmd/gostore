@@ -19,14 +19,14 @@ require (
 	github.com/pirmd/clapp v0.4.0
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.4.0
-	github.com/pirmd/text v0.5.3
+	github.com/pirmd/text v0.5.4
 	github.com/pirmd/verify v0.5.0
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20190705090504-162552197222 // indirect
 	github.com/tinylib/msgp v1.1.2 // indirect
 	go.etcd.io/bbolt v1.3.4
-	golang.org/x/net v0.0.0-20200513185701-a91f0712d120
-	golang.org/x/sys v0.0.0-20200513112337-417ce2331b5c // indirect
+	golang.org/x/net v0.0.0-20200520004742-59133d7f0dd7
+	golang.org/x/sys v0.0.0-20200519105757-fe76b779f299 // indirect
 	golang.org/x/text v0.3.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )

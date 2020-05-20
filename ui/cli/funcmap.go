@@ -88,18 +88,10 @@ func getMetadata(m map[string]interface{}, fields ...string) [][]string {
 }
 
 func tableCol(col [][]string) string {
-	//XXX BUG: dans text.table?
-	if len(col) == 0 {
-		return ""
-	}
 	return text.NewTable().Col(col...).Draw()
 }
 
 func tableRow(rows [][]string) string {
-	//XXX BUG: dans text.table?
-	if len(rows) == 0 {
-		return ""
-	}
 	return text.NewTable().Rows(rows...).Draw()
 }
 
