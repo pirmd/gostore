@@ -1,47 +1,23 @@
-[1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-Arthur Conan   The Adventures <no value> <no value> <no value>    [Arthur Conan 
-Doyle - The    of Sherlock                                        Doyle]        
-Adventures of  Holmes                                                           
-Sherlock                                                                        
-Holmes.epub                                                                     [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-Beatrix Potter Histoire de    <no value> <no value> <no value>    [Beatrix      
-- Histoire de  Pierre Lapin                                       Potter]       
-Pierre                                                                          
-Lapin.epub                                                                      [1mName[22m                    [1mTitle[22m  [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-Chengen Wu -            西遊記 <no value> <no value> <no value>    [Cheng'en Wu]
-西遊記.epub                                                                     [1mName[22m          [1mTitle[22m         [1mSubTitle[22m    [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-Gottfried     Aventures de  Large Print <no value> <no value>    [Gottfried   
-Bürger -      Baron de                                           Bürger Rudolf
-Aventures de  Munchausen                                         Raspe]       
-Baron de                                                                      
-Munchausen.ep                                                                 
-ub                                                                            [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-Jules Verne -  Fiche de       <no value> <no value> <no value>    [Jules Verne]
-Fiche de       lecture Voyage                                                  
-lecture Voyage au centre de                                                    
-au centre de   la Terre                                                        
-la Terre       (résumé                                                         
-résumé         détaillé et                                                     
-détaillé et    analyse                                                         
-analyse        littéraire de                                                   
-littéraire de  référence)                                                      
-référence.epub                                                                 [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-Jules Verne -  Vingt mille    <no value> <no value> <no value>    [Jules Verne]
-Vingt mille    lieues sous                                                     
-lieues sous    les mers                                                        
-les mers.epub                                                                  [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-Lewis Carroll  Alice's        <no value> <no value> <no value>    [Lewis        
-- Alices       Adventures in                                      Carroll]      
-Adventures in  Wonderland &                                                     
-Wonderland     Through the                                                      
-Through the    Looking-glass                                                    
-Looking-glass.                                                                  
-epub                                                                            [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-Sophie         Les mémoires   <no value> <no value> <no value>    [Sophie       
-Rostopchine    d’un âne                                           Rostopchine,  
-comtesse de                                                       comtesse de   
-Ségur présenté                                                    Ségur,        
-par Didier                                                        présenté par  
-Hallépée - Les                                                    Didier        
-mémoires dun                                                      Hallépée]     
-âne.epub                                                                        
+[1mName[22m                          [1mTitle[22m                         [1mAuthors[22m             
+Arthur Conan Doyle - The      The Adventures of Sherlock    [Arthur Conan Doyle]
+Adventures of Sherlock        Holmes                                            
+Holmes.epub                                                                     [1mName[22m                                   [1mTitle[22m                    [1mAuthors[22m         
+Beatrix Potter - Histoire de Pierre    Histoire de Pierre Lapin [Beatrix Potter]
+Lapin.epub                                                                      [1mName[22m                     [1mTitle[22m  [1mAuthors[22m      
+Chengen Wu - 西遊記.epub 西遊記 [Cheng'en Wu][1mName[22m                   [1mTitle[22m                  [1mSubTitle[22m    [1mAuthors[22m               
+Gottfried Bürger -     Aventures de Baron de  Large Print [Gottfried Bürger     
+Aventures de Baron de  Munchausen                         Rudolf Raspe]         
+Munchausen.epub                                                                 [1mName[22m                             [1mTitle[22m                            [1mAuthors[22m      
+Jules Verne - Fiche de lecture   Fiche de lecture Voyage au       [Jules Verne]
+Voyage au centre de la Terre     centre de la Terre (résumé                    
+résumé détaillé et analyse       détaillé et analyse littéraire                
+littéraire de référence.epub     de référence)                                 [1mName[22m                              [1mTitle[22m                            [1mAuthors[22m      
+Jules Verne - Vingt mille lieues  Vingt mille lieues sous les mers [Jules Verne]
+sous les mers.epub                                                              [1mName[22m                            [1mTitle[22m                           [1mAuthors[22m        
+Lewis Carroll - Alices          Alice's Adventures in           [Lewis Carroll]
+Adventures in Wonderland        Wonderland & Through the                       
+Through the Looking-glass.epub  Looking-glass                                  [1mName[22m                         [1mTitle[22m                 [1mAuthors[22m                     
+Sophie Rostopchine comtesse  Les mémoires d’un âne [Sophie Rostopchine,        
+de Ségur présenté par Didier                       comtesse de Ségur, présenté 
+Hallépée - Les mémoires dun                        par Didier Hallépée]        
+âne.epub                                                                       

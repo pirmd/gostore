@@ -65,7 +65,7 @@ ui:
     formatters:
         list:
             media:  '{{ getAll . "Name" "Title" "Authors" | bold | byrow }}'
-            book:   '{{ getAll . "Name" "Title" "SubTitle" "Serie" "SeriePosition" "Authors" | bold | byrow }}'
+            book:   '{{ getAll . "Name" "Title" "?SubTitle" "?Serie" "?SeriePosition" "Authors" | bold | byrow }}'
 
         full:
             media: |

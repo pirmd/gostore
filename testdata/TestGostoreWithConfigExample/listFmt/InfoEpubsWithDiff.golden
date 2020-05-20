@@ -1,49 +1,25 @@
-[1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-[34mArthur Conan [0m  The Adventures <no value> <no value> <no value>    [Arthur Conan 
-[34mDoyle - The [0m   of Sherlock                                        Doyle]        
-[34mAdventures of [0m Holmes                                                           
-[34mSherlock [0m                                                                       
-[34mHolmes.epub[39m[9m[29m                                                                     [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-[34mBeatrix Potter[0m Histoire de    <no value> <no value> <no value>    [Beatrix      
-[34m- Histoire de [0m Pierre Lapin                                       Potter]       
-[34mPierre [0m                                                                         
-[34mLapin.epub[39m[9m[29m                                                                      [1mName[22m                    [1mTitle[22m  [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-[34mChengen Wu - [0m           西遊記 <no value> <no value> <no value>    [Cheng'en Wu]
-[34m西遊記.epub[39m[9m[29m                                                                     [1mName[22m          [1mTitle[22m         [1mSubTitle[22m    [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-[34mGottfried [0m    Aventures de  [34mLarge Print[39m[9m[29m <no value> <no value>    [Gottfried   
-[34mBürger - [0m     Baron de                                           [9mAugust[29m[9m [29mBürger
-[34mAventures de [0m [34mMunchausen[39m[9mMün[0m                                      Rudolf[9m [29m[9mErich[29m 
-[34mBaron de [0m     [9mchausen[29m                                            Raspe]       
-[34mMunchausen.ep[0m                                                                 
-[34mub[39m[9m[29m                                                                            [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-[34mJules Verne - [0m [34mFiche de [0m      <no value> <no value> <no value>    [Jules Verne]
-[34mFiche de [0m      [34mlecture Voyage[0m                                                  
-[34mlecture Voyage[0m [34mau centre de [0m                                                   
-[34mau centre de [0m  [34mla Terre [0m                                                       
-[34mla Terre [0m      [34m(résumé [0m                                                        
-[34mrésumé [0m        [34mdétaillé et [0m                                                    
-[34mdétaillé et [0m   [34manalyse [0m                                                        
-[34manalyse [0m       [34mlittéraire de [0m                                                  
-[34mlittéraire de [0m [34mréférence)[39m[9mVoya[0m                                                  
-[34mréférence.epub[39m[9m[29m [9mge au Centre [0m                                                   
-               [9mde la Terre[29m                                                     [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m      
-[34mJules Verne - [0m Vingt mille    <no value> <no value> <no value>    [Jules Verne]
-[34mVingt mille [0m   lieues sous                                                     
-[34mlieues sous [0m   les mers                                                        
-[34mles mers.epub[39m[9m[29m                                                                  [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-[34mLewis Carroll [0m Alice's        <no value> <no value> <no value>    [Lewis        
-[34m- Alices [0m      Adventures in                                      Carroll]      
-[34mAdventures in [0m Wonderland[34m [39m[34m&[39m[34m [0m                                                    
-[34mWonderland  [0m   [34m[39m[34mThrough[39m[34m [39m[34mthe[39m[34m [0m                                                     
-[34mThrough the [0m   [34m[39m[34mLooking[39m[34m-[39m[34mglass[39m                                                    
-[34mLooking-glass.[0m                                                                  
-[34mepub[39m[9m[29m                                                                            [1mName[22m           [1mTitle[22m          [1mSubTitle[22m   [1mSerie[22m      [1mSeriePosition[22m [1mAuthors[22m       
-[34mSophie [0m        Les            <no value> <no value> <no value>    [34m[Sophie [0m      
-[34mRostopchine [0m   [34mmémoires[39m[9mMémoir[0m                                     [34mRostopchine, [0m 
-[34mcomtesse de [0m   [9mes[29m d[34m’[39m[34m��un[39m[9m'[29m[9mun[29m                                       [34mcomtesse de [0m  
-[34mSégur présenté[0m âne[9m.[29m                                               [34mSégur, [0m       
-[34mpar Didier [0m                                                       [34mprésenté par [0m 
-[34mHallépée - Les[0m                                                    [34mDidier [0m       
-[34mmémoires dun [0m                                                     [34mHallépée][39m[9m[comt[0m
-[34mâne.epub[39m[9m[29m                                                          [9messe de Sophie[0m
-                                                                  [9mSégur][29m        
+[1mName[22m                          [1mTitle[22m                         [1mAuthors[22m             
+[34mArthur Conan Doyle - The [0m     The Adventures of Sherlock    [Arthur Conan Doyle]
+[34mAdventures of Sherlock [0m       Holmes                                            
+[34mHolmes.epub[39m[9m[29m                                                                     [1mName[22m                                   [1mTitle[22m                    [1mAuthors[22m         
+[34mBeatrix Potter - Histoire de Pierre [0m   Histoire de Pierre Lapin [Beatrix Potter]
+[34mLapin.epub[39m[9m[29m                                                                      [1mName[22m                     [1mTitle[22m  [1mAuthors[22m      
+[34mChengen Wu - 西遊記.epub[39m[9m[29m 西遊記 [Cheng'en Wu][1mName[22m                   [1mTitle[22m                  [1mSubTitle[22m    [1mAuthors[22m               
+[34mGottfried Bürger - [0m    Aventures de Baron de  [34mLarge Print[39m[9m[29m [Gottfried [9mAugust[29m[9m [0m    
+[34mAventures de Baron de [0m [34mMunchausen[39m[9mMünchausen[29m               [9m[29mBürger Rudolf[9m [29m[9mErich[29m   
+[34mMunchausen.epub[39m[9m[29m                                           Raspe]                [1mName[22m                             [1mTitle[22m                            [1mAuthors[22m      
+[34mJules Verne - Fiche de lecture [0m  [34mFiche de lecture Voyage au [0m      [Jules Verne]
+[34mVoyage au centre de la Terre [0m    [34mcentre de la Terre (résumé [0m                   
+[34mrésumé détaillé et analyse [0m      [34mdétaillé et analyse littéraire [0m               
+[34mlittéraire de référence.epub[39m[9m[29m     [34mde référence)[39m[9mVoyage au Centre de[0m              
+                                 [9mla Terre[29m                                      [1mName[22m                              [1mTitle[22m                            [1mAuthors[22m      
+[34mJules Verne - Vingt mille lieues [0m Vingt mille lieues sous les mers [Jules Verne]
+[34msous les mers.epub[39m[9m[29m                                                              [1mName[22m                            [1mTitle[22m                           [1mAuthors[22m        
+[34mLewis Carroll - Alices [0m         Alice's Adventures in           [Lewis Carroll]
+[34mAdventures in Wonderland  [0m      Wonderland[34m [39m[34m&[39m[34m [39m[34mThrough[39m[34m [39m[34mthe[39m[34m [0m                      
+[34mThrough the Looking-glass.epub[39m[9m[29m  [34m[39m[34mLooking[39m[34m-[39m[34mglass[39m                                  [1mName[22m                       [1mTitle[22m                      [1mAuthors[22m                   
+[34mSophie Rostopchine [0m        Les [34mmémoires[39m[9mMémoires[29m       [34m[Sophie Rostopchine, [0m     
+[34mcomtesse de Ségur présenté[0m d[34m’[39m[34m��un[39m[9m'[29m[9mun[29m âne[9m.[29m             [34mcomtesse de Ségur, [0m       
+[34mpar Didier Hallépée - Les [0m                            [34mprésenté par Didier [0m      
+[34mmémoires dun âne.epub[39m[9m[29m                                 [34mHallépée][39m[9m[comtesse de [0m    
+                                                      [9mSophie Ségur][29m             
