@@ -53,8 +53,9 @@ type dehtmlizer struct {
 
 func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	d := &dehtmlizer{
-		log:         logger,
-		outputStyle: style.NewPlaintext(),
+		log:          logger,
+		fields2clean: cfg.Fields2Clean,
+		outputStyle:  style.NewPlaintext(),
 	}
 
 	switch cfg.OutputStyle {
@@ -73,7 +74,7 @@ func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 // ProcessRecord transforms any text in HTML format into markdown,
 func (d *dehtmlizer) ProcessRecord(r *store.Record) error {
 	for _, field := range d.fields2clean {
-		log.Printf("Module '%s': clean field '%s'", moduleName, field)
+		d.log.Printf("Module '%s': clean field '%s'", moduleName, field)
 		if err := d.html2txt(r, field); err != nil {
 			return err
 		}
@@ -104,15 +105,15 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 }
 
 // New creates a new dehtmlizer module whose configuration information
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
+	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newDehtmlizer(cfg, log)
+	return newDehtmlizer(cfg, logger)
 }
 
 func init() {

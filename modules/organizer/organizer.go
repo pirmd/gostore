@@ -89,6 +89,7 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 	//name should be relative to the collection's root
 	name = filepath.ToSlash(filepath.Clean("/" + name))[1:]
 
+	o.log.Printf("Module '%s': renaming '%s' to '%s'", moduleName, r, name)
 	r.SetKey(name)
 	return nil
 }
@@ -125,15 +126,15 @@ func (o *organizer) namerFor(m map[string]interface{}) *template.Template {
 }
 
 // New creates a new organizer module
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
+	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newOrganizer(cfg, log)
+	return newOrganizer(cfg, logger)
 }
 
 func init() {

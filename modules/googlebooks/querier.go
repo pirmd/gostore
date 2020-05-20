@@ -86,15 +86,15 @@ func (q *querier) ProcessRecord(r *store.Record) error {
 }
 
 // New creates a new GoogleBooksQuerier module
-func New(rawcfg modules.ConfigUnmarshaler, log *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	log.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
+	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newQuerier(cfg, log, UI)
+	return newQuerier(cfg, logger, UI)
 }
 
 func init() {
