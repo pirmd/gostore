@@ -9,7 +9,7 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __version__
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __import__ *media*
+[--__style__=*STYLE*] __import__ *media* ...
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __info__ [--__from-file__] *name*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
@@ -55,7 +55,7 @@ __help__
 __version__
 :Show version information.
 
-__import__ *media*
+__import__ *media* ...
 :Import a new media into the collection.
 
 __info__ [<flags>] *name*

@@ -56,7 +56,7 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	}
 
-	var mediaPath string
+	var mediaPath []string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "import",
 		Usage: "Import a new media into the collection.",

@@ -111,10 +111,8 @@ func testImport(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		for _, tc := range testCases {
-			if err := gs.Import(tc); err != nil {
-				t.Errorf("Fail to import epub '%s': %v", tc, err)
-			}
+		if err := gs.Import(testCases); err != nil {
+			t.Errorf("Fail to import epub '%s': %v", testCases, err)
 		}
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
@@ -137,15 +135,13 @@ func testImport(t *testing.T, gs *testGostore) {
 	})
 
 	t.Run("ImportTwiceEpubs", func(t *testing.T) {
-		for _, tc := range testCases {
-			if err := gs.Import(tc); err == nil {
-				t.Errorf("Importing '%s' a second time worked but should not", tc)
-			}
+		if err := gs.Import(testCases); err == nil {
+			t.Errorf("Importing '%s' a second time worked but should not", testCases)
 		}
 	})
 
 	t.Run("ImportNonExistingEpub", func(t *testing.T) {
-		if err := gs.Import("non_existing.epub"); err == nil {
+		if err := gs.Import([]string{"non_existing.epub"}); err == nil {
 			t.Errorf("Importing non existing epub worked but should not")
 		}
 	})

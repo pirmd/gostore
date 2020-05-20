@@ -120,36 +120,45 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	return gs, nil
 }
 
-// Import adds a new media into the collection
-func (gs *Gostore) Import(path string) error {
-	f, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	mdataFromFile, err := media.GetMetadata(f)
-	if err != nil {
-		return err
-	}
-	r := store.NewRecord(filepath.Base(path), mdataFromFile)
-
-	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
-		return err
-	}
+// Import adds new media into the collection
+func (gs *Gostore) Import(mediaFiles []string) error {
+	var newRecords store.Records
 
 	if err := gs.store.Open(); err != nil {
 		return err
 	}
 	defer gs.store.Close()
 
-	if !gs.pretend {
-		if err := gs.store.Create(r, f); err != nil {
+	for _, path := range mediaFiles {
+		gs.log.Printf("Adding media file %s to the collection", path)
+		f, err := os.Open(path)
+		if err != nil {
 			return err
 		}
-	}
+		defer f.Close()
 
-	gs.ui.PrettyPrint(r.Flatted())
+		mdataFromFile, err := media.GetMetadata(f)
+		if err != nil {
+			return err
+		}
+		r := store.NewRecord(filepath.Base(path), mdataFromFile)
+
+		if err := modules.ProcessRecord(r, gs.importModules); err != nil {
+			return err
+		}
+
+		if !gs.pretend {
+			gs.log.Printf("Creating new record %v to the collection", r)
+			if err := gs.store.Create(r, f); err != nil {
+				return err
+			}
+		}
+
+		newRecords = append(newRecords, r)
+
+	}
+	gs.ui.PrettyPrint(newRecords.Flatted()...)
+
 	return nil
 }
 

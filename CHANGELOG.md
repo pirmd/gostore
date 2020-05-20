@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+## Added
+- Add support to import multiple files at once.
+
 ## [0.3.4] - 2020.05.17
 ## Modified
 - Google books is converted to module format for better flexibility and later
