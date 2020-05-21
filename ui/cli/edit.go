@@ -10,12 +10,15 @@ import (
 
 // edit spans an editor to modify the input text and feedbacks the result.
 func edit(data []byte, cmdEditor []string) ([]byte, error) {
+	if len(cmdEditor) == 0 {
+		return data, nil
+	}
+
 	tmpfile, err := data2file(data)
 	if err != nil {
 		return nil, err
 	}
 
-	//TODO(pirmd): handle case where cmdEditor is empty?
 	cmdArgs := append(cmdEditor, tmpfile)
 	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	ed.Stdout = os.Stdout
@@ -64,6 +67,10 @@ func editAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
 
 // merge spans an editor to merge the input texts and feedbacks the result.
 func merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
+	if len(cmdMerger) == 0 {
+		return left, right, nil
+	}
+
 	tmpfileL, err := data2file(left)
 	if err != nil {
 		return nil, nil, err
