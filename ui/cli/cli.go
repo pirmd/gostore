@@ -53,7 +53,7 @@ func (ui *CLI) Printf(format string, a ...interface{}) {
 
 // PrettyPrint shows in a pleasant manner a metadata set
 func (ui *CLI) PrettyPrint(medias ...map[string]interface{}) {
-	fmt.Print(ui.print(medias...))
+	fmt.Println(ui.print(medias...))
 }
 
 // PrettyDiff shows in a pleasant manner differences between two metadata sets

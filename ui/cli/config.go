@@ -33,9 +33,10 @@ func NewConfig() *Config {
 		OutputFormat: "name",
 		Formatters: map[string]map[string]string{
 			"name": {
-				DefaultFormatter: `{{ range . -}}
-{{ .Name }}
-{{ end -}}`,
+				DefaultFormatter: `{{ range $i, $r := . -}}
+				{{- if $i }}{{ println }}{{ end -}}
+				{{- .Name -}}
+				{{- end -}}`,
 			},
 		},
 	}

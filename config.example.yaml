@@ -70,15 +70,15 @@ ui:
         full:
             media: |
                 {{ range $i, $r := . -}}
-                {{ if $i }}{{ println }}{{ end -}}
-                {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ if $i }}{{ printf "\n\n" }}{{ end -}}
+                {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol -}}
                 {{ end -}}
 
             book: |
                 {{ range $i, $r := . -}}
                 {{ if .Serie }}{{ extend . "SerieName" (tmplExec "{{.Serie}} {{.SeriePosition}}" .)}}{{ end -}}
-                {{ if $i }}{{ println }}{{ end -}}
-                {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol }}
+                {{ if $i }}{{ printf "\n\n" }}{{ end -}}
+                {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol -}}
                 {{ end -}}
 
         json:
