@@ -30,11 +30,11 @@ type Config struct {
 	// UI contains configuration for anything related to user interface
 	UI *cli.Config
 
-	// ImportModules lists of modules to be applied when importing a record
-	ImportModules map[string]*rawYAMLConfig
+	// Import list of actions to apply when importing a record
+	Import []*moduleConfig
 
-	// UpdateModules lists of modules to be applied when updating a record
-	UpdateModules map[string]*rawYAMLConfig
+	// Update list of actions to apply when importing a record
+	Update []*moduleConfig
 }
 
 func (cfg *Config) expandEnv() {
@@ -48,6 +48,11 @@ func newConfig() *Config {
 		Store: store.NewConfig(),
 		UI:    cli.NewConfig(),
 	}
+}
+
+type moduleConfig struct {
+	Name   string
+	Config *rawYAMLConfig
 }
 
 type rawYAMLConfig struct {
@@ -99,19 +104,19 @@ func newGostore(cfg *Config) (*Gostore, error) {
 		return nil, err
 	}
 
-	for modName, modRawCfg := range cfg.ImportModules {
-		m, err := modules.New(modName, modRawCfg, gs.log, gs.ui)
+	for _, module := range cfg.Import {
+		m, err := modules.New(module.Name, module.Config, gs.log, gs.ui)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
 		}
 
 		gs.importModules = append(gs.importModules, m)
 	}
 
-	for modName, modRawCfg := range cfg.UpdateModules {
-		m, err := modules.New(modName, modRawCfg, gs.log, gs.ui)
+	for _, module := range cfg.Update {
+		m, err := modules.New(module.Name, module.Config, gs.log, gs.ui)
 		if err != nil {
-			return nil, fmt.Errorf("cannot create module '%s': %v", modName, err)
+			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
 		}
 
 		gs.updateModules = append(gs.updateModules, m)

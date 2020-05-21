@@ -88,16 +88,27 @@ ui:
         #   media:
         #       {{ tmplFile "html.tmpl" . }}
 
-# importmodules lists the different processings that will modified the media's
-# metadata during the import stage.
-importmodules:
+# import lists the different actions to operate on metadata during the import step.
+import:
     # GoogleBookQuerier is a module that looks for information from Google
     # Books API to compelete a record metadata.
-    GoogleBooksQuerier:
+    - name: GoogleBooksQuerier
+      
+    # dehtmlizer is a modules that removes any html tags from a media metadata.
+    # It can optionally convert the html taging into another idioms (like
+    # markdown)
+    - name: dehtmlizer
+      config: &dehtmlizer
+          # fields2clean is the list of metadata fields to clean from html tags
+          fields2clean: [ Description ]
 
-    # organizer is a modules that rationalizes the name of a media based on its
+          # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
+          outputstyle: markdown
+
+    # organizer is a module that rationalizes the name of a media based on its
     # metadata values
-    organizer: &organizer
+    - name: organizer
+      config: &organizer
         # namingschemes is a collection of templates to define a media name
         # based on its metadata values.
         #
@@ -127,21 +138,12 @@ importmodules:
                 {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name) | sanitizePath -}}
             
 
-    # dehtmlizer is a modules that removes any html tags from a media metadata.
-    # It can optionally convert the html taging into another idioms (like
-    # markdown)
-    dehtmlizer: &dehtmlizer
-        # fields2clean is the list of metadata fields to clean from html tags
-        fields2clean:
-            - Description
-
-        # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
-        outputstyle: markdown
-
-# updatemodules lists the different processings that will modified the media's
-# metadata during the update stage.
-updatemodules:
-    organizer:
+# update lists the different actions to operate on metadata during the update step.
+update:
+    - name: organizer
+      config:
         <<: *organizer
-    dehtmlizer:
+
+    - name: dehtmlizer
+      config:
         <<: *dehtmlizer
