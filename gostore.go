@@ -140,7 +140,11 @@ func openGostore(cfg *Config) (*Gostore, error) {
 
 // Open opens a gostore for read/write operation
 func (gs *Gostore) Open() error {
-	return gs.store.Open()
+	if err := gs.store.Open(); err != nil {
+		return fmt.Errorf("opening gostore failed: %s", err)
+	}
+
+	return nil
 }
 
 // Close cleanly closes a gostore
@@ -151,37 +155,15 @@ func (gs *Gostore) Close() error {
 // Import adds new media into the collection
 func (gs *Gostore) Import(mediaFiles []string) error {
 	var newRecords store.Records
-
-	//TODO: should be in store or in an util package?
-	importErr := new(store.NonBlockingErrors)
+	var importErr store.NonBlockingErrors // TODO: should be in store or in an util package?
 
 	for _, path := range mediaFiles {
-		gs.log.Printf("Adding media file %s to the collection", path)
-		f, err := os.Open(path)
+		gs.log.Printf("Importing '%s'", path)
+
+		r, err := gs.add(path)
 		if err != nil {
-			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
+			importErr.Add(fmt.Errorf("importing '%s' failed: %s", path, err))
 			continue
-		}
-		defer f.Close()
-
-		mdataFromFile, err := media.GetMetadata(f)
-		if err != nil {
-			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
-			continue
-		}
-		r := store.NewRecord(filepath.Base(path), mdataFromFile)
-
-		if err := modules.ProcessRecord(r, gs.importModules); err != nil {
-			importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
-			continue
-		}
-
-		if !gs.pretend {
-			gs.log.Printf("Creating new record %v to the collection", r)
-			if err := gs.store.Create(r, f); err != nil {
-				importErr.Add(fmt.Errorf("failed to import %s: %s", path, err))
-				continue
-			}
 		}
 
 		newRecords = append(newRecords, r)
@@ -327,4 +309,30 @@ func (gs *Gostore) CheckAndRepair() error {
 		gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
 	}
 	return nil
+}
+
+func (gs *Gostore) add(path string) (*store.Record, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	mdataFromFile, err := media.GetMetadata(f)
+	if err != nil {
+		return nil, err
+	}
+	r := store.NewRecord(filepath.Base(path), mdataFromFile)
+
+	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
+		return nil, err
+	}
+
+	if !gs.pretend {
+		if err := gs.store.Create(r, f); err != nil {
+			return nil, err
+		}
+	}
+
+	return r, nil
 }
