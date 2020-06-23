@@ -68,10 +68,11 @@ func newApp(cfg *Config) *clapp.Command {
 			},
 		},
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.Import(mediaPath); err != nil {
 				return fmt.Errorf("importing '%s' failed: %s", mediaPath, err)
@@ -103,10 +104,11 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.Info(recordID, readInfoFromMediaFile); err != nil {
 				return fmt.Errorf("getting information about '%s' failed: %s", recordID, err)
@@ -131,10 +133,11 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if searchPattern == "*" {
 				if err := gs.ListAll(); err != nil {
@@ -163,10 +166,11 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.Edit(recordID); err != nil {
 				return fmt.Errorf("editing '%s' failed: %s", recordID, err)
@@ -188,10 +192,11 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.Delete(recordID); err != nil {
 				return fmt.Errorf("deleting '%s' failed: %s", recordID, err)
@@ -220,10 +225,11 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.Export(recordID, dstFolder); err != nil {
 				return fmt.Errorf("exporting '%s' to '%s' failed: %s", recordID, dstFolder, err)
@@ -236,10 +242,11 @@ func newApp(cfg *Config) *clapp.Command {
 		Name:  "check",
 		Usage: "Verify collection's consistency and repairs or reports found inconsistencies.",
 		Execute: func() error {
-			gs, err := newGostore(cfg)
+			gs, err := openGostore(cfg)
 			if err != nil {
 				return err
 			}
+			defer gs.Close()
 
 			if err := gs.CheckAndRepair(); err != nil {
 				return fmt.Errorf("checking collection failed: %s", err)

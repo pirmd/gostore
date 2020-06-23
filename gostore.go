@@ -125,14 +125,32 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	return gs, nil
 }
 
+func openGostore(cfg *Config) (*Gostore, error) {
+	gs, err := newGostore(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := gs.Open(); err != nil {
+		return nil, err
+	}
+
+	return gs, nil
+}
+
+// Open opens a gostore for read/write operation
+func (gs *Gostore) Open() error {
+	return gs.store.Open()
+}
+
+// Close cleanly closes a gostore
+func (gs *Gostore) Close() error {
+	return gs.store.Close()
+}
+
 // Import adds new media into the collection
 func (gs *Gostore) Import(mediaFiles []string) error {
 	var newRecords store.Records
-
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
 
 	//TODO: should be in store or in an util package?
 	importErr := new(store.NonBlockingErrors)
@@ -180,11 +198,6 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 // If fromFile flag is set, Info also displays difference with actual metadata
 // stored in the media file.
 func (gs *Gostore) Info(key string, fromFile bool) error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	r, err := gs.store.Read(key)
 	if err != nil {
 		return err
@@ -212,11 +225,6 @@ func (gs *Gostore) Info(key string, fromFile bool) error {
 
 // ListAll lists all collection's records
 func (gs *Gostore) ListAll() error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	r, err := gs.store.ReadAll()
 	if err != nil {
 		return err
@@ -229,11 +237,6 @@ func (gs *Gostore) ListAll() error {
 // Search the collection for records matching given query. Query follows
 // blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
 func (gs *Gostore) Search(query string) error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	r, err := gs.store.Search(query)
 	if err != nil {
 		return err
@@ -245,11 +248,6 @@ func (gs *Gostore) Search(query string) error {
 
 // Edit updates an existing record from the collection
 func (gs *Gostore) Edit(key string) error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	r, err := gs.store.Read(key)
 	if err != nil {
 		return err
@@ -277,11 +275,6 @@ func (gs *Gostore) Edit(key string) error {
 
 // Delete removes a record from the collection.
 func (gs *Gostore) Delete(key string) error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	if !gs.pretend {
 		if err := gs.store.Delete(key); err != nil {
 			return err
@@ -294,11 +287,6 @@ func (gs *Gostore) Delete(key string) error {
 // Export copies a record's media file from the collection to the given destination.
 func (gs *Gostore) Export(key, dstFolder string) (err error) {
 	dstPath := filepath.Join(key, dstFolder)
-
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
 
 	f, err := gs.store.OpenRecord(key)
 	if err != nil {
@@ -329,11 +317,6 @@ func (gs *Gostore) Export(key, dstFolder string) (err error) {
 
 // CheckAndRepair verifies collection's consistency and repairs or reports found inconsistencies.
 func (gs *Gostore) CheckAndRepair() error {
-	if err := gs.store.Open(); err != nil {
-		return err
-	}
-	defer gs.store.Close()
-
 	orphans, err := gs.store.CheckAndRepair()
 	if err != nil {
 		return err

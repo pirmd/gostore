@@ -23,6 +23,11 @@ type testGostore struct {
 	*verify.TestFolder
 }
 
+func (gs *testGostore) Close() {
+	gs.Gostore.Close()
+	gs.TestFolder.Clean()
+}
+
 func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 	tstPathName := strings.Replace(tb.Name(), string(os.PathSeparator), "_", -1)
 	tstDir, err := verify.NewTestFolder(tstPathName)
@@ -35,7 +40,7 @@ func newTestGostore(tb testing.TB, cfg *Config) *testGostore {
 	cfg.UI.Auto = true
 	cfg.Store.Path = tstDir.Root
 
-	gs, err := newGostore(cfg)
+	gs, err := openGostore(cfg)
 	if err != nil {
 		tb.Fatalf("cannot generate gostore from config: %s", err)
 	}
@@ -55,7 +60,7 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 			cfg.UI.OutputFormat = style
 
 			gs := newTestGostore(t, cfg)
-			defer gs.Clean()
+			defer gs.Close()
 
 			testImport(t, gs)
 			testInfo(t, gs)
@@ -87,7 +92,7 @@ func TestGostoreWithConfigExample(t *testing.T) {
 			cfg.UI.OutputFormat = style
 
 			gs := newTestGostore(t, cfg)
-			defer gs.Clean()
+			defer gs.Close()
 
 			testImport(t, gs)
 			testInfo(t, gs)
@@ -120,10 +125,10 @@ func testImport(t *testing.T, gs *testGostore) {
 		}
 
 		// TODO(pirmd): update store's API to get quicker information regarding store's consistency state
-		if err := gs.store.Open(); err != nil {
-			t.Errorf("Collection is inconsistent: %v", err)
-		}
-		defer gs.store.Close()
+		//if err := gs.store.Open(); err != nil {
+		//		t.Errorf("Collection is inconsistent: %v", err)
+		//}
+		//defer gs.store.Close()
 
 		orphans, err := gs.store.CheckAndRepair()
 		if err != nil {
