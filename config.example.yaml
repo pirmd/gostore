@@ -17,6 +17,14 @@ store:
     # If root is not set, it defaults to the current working directory.
     path: /tmp/gostore-test/
 
+    # indexingAnalyzer identify the analyzer used to index the media metadata when
+    # searching your collection.
+    # To take benefit of a new analyzer you usually have to rebuild an existing index.
+    # Available analyzers are:
+    # - "en" (English), "stemmer_en_snowball" (English using Snowball stemmer)
+    # - "fr" (French), "stemmer_fr_snowball" (Fench using Snowball stemmer)
+    indexingAnalyzer: fr
+
 
 # ui contains any customization to manage the way gostore interacts with the
 # user
