@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/pirmd/clapp"
@@ -75,7 +73,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.Import(mediaPath); err != nil {
-				return fmt.Errorf("importing '%s' failed: %s", mediaPath, err)
+				return err
 			}
 			return nil
 		},
@@ -111,7 +109,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.Info(recordID, readInfoFromMediaFile); err != nil {
-				return fmt.Errorf("getting information about '%s' failed: %s", recordID, err)
+				return err
 			}
 			return nil
 		},
@@ -141,13 +139,13 @@ func newApp(cfg *Config) *clapp.Command {
 
 			if searchPattern == "*" {
 				if err := gs.ListAll(); err != nil {
-					return fmt.Errorf("listing collection's content failed: %s", err)
+					return err
 				}
 				return nil
 			}
 
 			if err := gs.Search(searchPattern); err != nil {
-				return fmt.Errorf("listing records matching '%s' failed: %s", searchPattern, err)
+				return err
 			}
 			return nil
 		},
@@ -173,7 +171,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.Edit(recordID); err != nil {
-				return fmt.Errorf("editing '%s' failed: %s", recordID, err)
+				return err
 			}
 			return nil
 		},
@@ -199,7 +197,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.Delete(recordID); err != nil {
-				return fmt.Errorf("deleting '%s' failed: %s", recordID, err)
+				return err
 			}
 			return nil
 		},
@@ -232,7 +230,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.Export(recordID, dstFolder); err != nil {
-				return fmt.Errorf("exporting '%s' to '%s' failed: %s", recordID, dstFolder, err)
+				return err
 			}
 			return nil
 		},
@@ -249,7 +247,7 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if err := gs.CheckAndRepair(); err != nil {
-				return fmt.Errorf("checking collection failed: %s", err)
+				return err
 			}
 			return nil
 		},
