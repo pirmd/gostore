@@ -124,18 +124,8 @@ func testImport(t *testing.T, gs *testGostore) {
 			t.Errorf("Import output is not as expected.\n%v", failure)
 		}
 
-		// TODO(pirmd): update store's API to get quicker information regarding store's consistency state
-		//if err := gs.store.Open(); err != nil {
-		//		t.Errorf("Collection is inconsistent: %v", err)
-		//}
-		//defer gs.store.Close()
-
-		orphans, err := gs.store.CheckAndRepair()
-		if err != nil {
-			t.Errorf("Collection is inconsistent: %v", err)
-		}
-		if len(orphans) > 0 {
-			t.Errorf("Collection is inconsistent: several orphans have been found: %v", orphans)
+		if gs.store.IsDirty() {
+			t.Errorf("Collection is inconsistent")
 		}
 	})
 

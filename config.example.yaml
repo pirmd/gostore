@@ -9,6 +9,25 @@
 # It can be set at runtime using the '--pretend' flag
 #readonly:   false
 
+# DeleteGhosts is a flag that instructs gostore.Check to delete any  
+# database entries that does not correspond to an existing file in th
+# store's filesystem (so called ghost record)
+# It can be set at runtime using '--delete-ghosts' flag
+#deleteGhosts: false
+                    
+# DeleteOrphans is a flag that instructs gostore.Check to delete any
+# file of the store's filesystem that is not recorded in the store's
+# database.
+# It can be set at runtime using '--delete-orphans' flag
+#deleteOrphans: false
+                                            
+# ImportOrphans is a flag that instructs gostore.Check to re-import a
+# file of the store's filesystem that is not recorded in the store's
+# database.
+# It can be set at runtime using '--import-orphans' flag
+#importOrphans: false
+
+
 # store contains any customization to manage the way the collection is stored
 store:
     # path is the path to the collection's root folder. The database, index and

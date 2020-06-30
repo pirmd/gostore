@@ -24,6 +24,21 @@ type Config struct {
 	// ReadOnly is the flag to switch the store into read only operation mode
 	ReadOnly bool
 
+	// DeleteGhosts is a flag that instructs gostore.Check to delete any
+	// database entries that does not correspond to an existing file in the
+	// store's filesystem (so called ghost record)
+	DeleteGhosts bool
+
+	// DeleteOrphans is a flag that instructs gostore.Check to delete any
+	// file of the store's filesystem that is not recorded in the store's
+	// database.
+	DeleteOrphans bool
+
+	// ImportOrphans is a flag that instructs gostore.Check to re-import any
+	// file of the store's filesystem that is not recorded in the store's
+	// database.
+	ImportOrphans bool
+
 	// Store contains configuration for anything related to storage
 	Store *store.Config
 
@@ -76,6 +91,9 @@ func (cfg *rawYAMLConfig) Unmarshal(v interface{}) error {
 type Gostore struct {
 	log           *log.Logger
 	pretend       bool
+	deleteGhosts  bool
+	deleteOrphans bool
+	importOrphans bool
 	store         *store.Store
 	ui            ui.UserInterfacer
 	importModules []modules.Module
@@ -86,8 +104,11 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	cfg.expandEnv()
 
 	gs := &Gostore{
-		log:     log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
-		pretend: cfg.ReadOnly,
+		log:           log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		pretend:       cfg.ReadOnly,
+		deleteGhosts:  cfg.DeleteGhosts,
+		deleteOrphans: cfg.DeleteOrphans,
+		importOrphans: cfg.ImportOrphans,
 	}
 
 	if cfg.ShowLog {
@@ -152,7 +173,7 @@ func (gs *Gostore) Close() error {
 	return gs.store.Close()
 }
 
-// Import adds new media into the collection
+// Import inserts new media into the collection
 func (gs *Gostore) Import(mediaFiles []string) error {
 	var newRecords store.Records
 	var importErr store.NonBlockingErrors // TODO: should be in store or in an util package?
@@ -160,7 +181,7 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 	for _, path := range mediaFiles {
 		gs.log.Printf("Importing '%s'", path)
 
-		r, err := gs.add(path)
+		r, err := gs.insert(path)
 		if err != nil {
 			importErr.Add(fmt.Errorf("importing '%s' failed: %s", path, err))
 			continue
@@ -297,21 +318,66 @@ func (gs *Gostore) Export(key, dstFolder string) (err error) {
 	return
 }
 
-// CheckAndRepair verifies collection's consistency and repairs or reports found inconsistencies.
+// CheckAndRepair verifies collection's consistency and repairs or reports
+// found inconsistencies.
+// Behaviour in case of inconsistencies depends on gostore's DeleteGhosts,
+// DeleteOrphans or ImportOrphans flags.
 func (gs *Gostore) CheckAndRepair() error {
-	orphans, err := gs.store.CheckAndRepair()
+	var errCheck store.NonBlockingErrors // TODO: should be in store or in an util package?
+
+	ghosts, err := gs.store.CheckGhosts()
 	if err != nil {
-		return err
+		errCheck.Add(err)
+	}
+	if len(ghosts) > 0 {
+		switch {
+		case gs.deleteGhosts:
+			for _, g := range ghosts {
+				// XXX: gs.Delete(ghosts)
+				if err := gs.store.Delete(g); err != nil {
+					errCheck.Add(err)
+				}
+			}
+
+		default:
+			gs.ui.Printf("Found ghosts records in the collection:\n%s\n", strings.Join(ghosts, "\n"))
+		}
 	}
 
-	if len(orphans) > 0 {
-		//TODO: use PrettyPrint to show list of orphans?
-		gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
+	orphans, err := gs.store.CheckOrphans()
+	if err != nil {
+		errCheck.Add(err)
 	}
-	return nil
+	if len(orphans) > 0 {
+		switch {
+		case gs.deleteOrphans:
+			for _, o := range orphans {
+				// XXX: gs.Delete(orphans)
+				if err := gs.store.Delete(o); err != nil {
+					errCheck.Add(err)
+				}
+			}
+
+		case gs.importOrphans:
+			for _, o := range orphans {
+				if err := gs.Edit(o); err != nil {
+					errCheck.Add(err)
+				}
+			}
+
+		default:
+			gs.ui.Printf("Found orphans files in the collection:\n%s\n", strings.Join(orphans, "\n"))
+		}
+	}
+
+	if err := gs.store.RepairIndex(); err != nil {
+		errCheck.Add(err)
+	}
+
+	return errCheck.Err()
 }
 
-func (gs *Gostore) add(path string) (*store.Record, error) {
+func (gs *Gostore) insert(path string) (*store.Record, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err

@@ -21,7 +21,8 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __export__ *name* [*dst*]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __check__
+[--__style__=*STYLE*] __check__ [--__delete-ghosts__] [--__delete-orphans__] 
+[--__import-orphans__]
 
 # DESCRIPTION
 
@@ -75,7 +76,7 @@ __delete__ *name*
 __export__ *name* [*dst*]
 :Copy a record's media file from the collection to the given destination.
 
-__check__
+__check__ [<flags>]
 :Verify collection's consistency and repairs or reports found inconsistencies.
 
 # FILES

@@ -1,4 +1,4 @@
-.TH GOSTORE 1 2020-05-20
+.TH GOSTORE 1 2020-06-26
 
 .SH Name
 .PP
@@ -14,7 +14,7 @@ gostore - A command-line minimalist media collection manager.
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBedit\fP \fIname\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBdelete\fP \fIname\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP [\fIdst\fP]
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP [--\fBdelete-ghosts\fP] [--\fBdelete-orphans\fP] [--\fBimport-orphans\fP]
 
 .SH Description
 .PP
@@ -63,7 +63,7 @@ Delete an existing record from the collection.
 \fB\fBexport\fP \fIname\fP [\fIdst\fP]\fP
 Copy a record's media file from the collection to the given destination.
 .TP
-\fB\fBcheck\fP\fP
+\fB\fBcheck\fP [<flags>]\fP
 Verify collection's consistency and repairs or reports found inconsistencies.
 
 .SH Files

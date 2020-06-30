@@ -207,9 +207,12 @@ func TestCheckAndRepair(t *testing.T) {
 
 	keys := populateStore(t, s)
 
+	if s.IsDirty() {
+		t.Errorf("Store is dirty")
+	}
+
 	testCases := []int{0, 2, 4, 6, 8}
 	testCasesAfterDelete := []int{1, 3, 5, 7}
-	orphansExpected := []string{}
 
 	t.Run("Can repair missing from index", func(t *testing.T) {
 		for _, i := range testCases {
@@ -218,12 +221,12 @@ func TestCheckAndRepair(t *testing.T) {
 			}
 		}
 
-		orphans, err := s.CheckAndRepair()
+		err := s.RepairIndex()
 		if err != nil {
 			t.Fatalf("Check and repair failed: %v", err)
 		}
-		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
-			t.Errorf("Orphans files mismatched:\n%v", failure)
+		if s.IsDirty() {
+			t.Errorf("Store is dirty")
 		}
 
 		for i := range testData {
@@ -231,60 +234,40 @@ func TestCheckAndRepair(t *testing.T) {
 		}
 	})
 
-	t.Run("Can Repair missing files", func(t *testing.T) {
+	t.Run("Can detect missing from db", func(t *testing.T) {
+		orphansExpected := []string{}
+
 		for _, i := range testCases {
-			if err := s.fs.Delete(keys[i]); err != nil {
-				t.Fatalf("Fail to delete '%s' from file-system: %v", keys[i], err)
-			}
-		}
-
-		orphans, err := s.CheckAndRepair()
-		if err != nil {
-			t.Fatalf("Check and repair failed: %v", err)
-		}
-		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
-			t.Errorf("Orphans files mismatched:\n%v", failure)
-		}
-
-		for i := range testData {
-			if isIntInList(i, testCases) {
-				shouldNotExistInStore(t, s, keys[i])
-			} else {
-				shouldExistInStore(t, s, keys[i])
-			}
-		}
-	})
-
-	t.Run("Can repair missing from db", func(t *testing.T) {
-		for _, i := range testCasesAfterDelete {
 			if err := s.db.Delete(keys[i]); err != nil {
-				t.Fatalf("Fail to delete '%s' from index: %v", keys[i], err)
+				t.Fatalf("Fail to delete '%s' from file-system: %v", keys[i], err)
 			}
 			orphansExpected = append(orphansExpected, keys[i])
 		}
 
-		orphans, err := s.CheckAndRepair()
+		orphans, err := s.CheckOrphans()
 		if err != nil {
-			t.Fatalf("Check and repair failed: %v", err)
+			t.Fatalf("Check for orphans failed: %v", err)
 		}
 		if failure := verify.EqualSliceWithoutOrder(orphans, orphansExpected); failure != nil {
 			t.Errorf("Orphans files mismatched:\n%v", failure)
 		}
+	})
 
-		for i := range testData {
-			if isIntInList(i, testCasesAfterDelete) {
-				exists, err := s.idx.Exists(keys[i])
-				if err != nil {
-					t.Fatalf("Cannot check existence of '%s': %v", keys[i], err)
-				}
-				if exists {
-					t.Errorf("'%s' was not cleared from the index", keys[i])
-				}
-			} else if isIntInList(i, testCases) {
-				shouldNotExistInStore(t, s, keys[i])
-			} else {
-				shouldExistInStore(t, s, keys[i])
+	t.Run("Can repair missing files", func(t *testing.T) {
+		ghostsExpected := []string{}
+		for _, i := range testCasesAfterDelete {
+			if err := s.fs.Delete(keys[i]); err != nil {
+				t.Fatalf("Fail to delete '%s' from index: %v", keys[i], err)
 			}
+			ghostsExpected = append(ghostsExpected, keys[i])
+		}
+
+		ghosts, err := s.CheckGhosts()
+		if err != nil {
+			t.Fatalf("Check for ghosts: %v", err)
+		}
+		if failure := verify.EqualSliceWithoutOrder(ghosts, ghostsExpected); failure != nil {
+			t.Errorf("Ghosts files mismatched:\n%v", failure)
 		}
 	})
 }

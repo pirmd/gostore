@@ -109,13 +109,14 @@ func (s *Store) Close() error {
 	return err.Err()
 }
 
-// Create creates a new record in the Storer. Create does not replace existing
+// Create creates a new record in the Store. Create does not replace existing
 // Record (you have to use Update for that) but will replace partially existing
 // records resulting from an inconsistent state of the Store (e.g. file exists
 // but entry in db does not)
 func (s *Store) Create(r *Record, file io.Reader) error {
 	s.log.Printf("Adding new record to store '%s'", r)
 
+	//XXX
 	exists, err := s.Exists(r.key)
 	if err != nil {
 		return err
@@ -154,7 +155,7 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 	return nil
 }
 
-// Exists returns whether a Record exists for the given key If the Store's state
+// Exists returns whether a Record exists for the given key. If the Store's state
 // is inconsistent for the given key (e.g. file is not present but and entry
 // exists in the database), Exists returns false
 func (s *Store) Exists(key string) (exists bool, err error) {
@@ -264,12 +265,12 @@ func (s *Store) Update(key string, r *Record) error {
 func (s *Store) Delete(key string) error {
 	s.log.Printf("Deleting record '%s' from store", key)
 
+	errDel := new(NonBlockingErrors)
+
 	s.log.Printf("Deleting record's file from store's fs")
 	if err := s.fs.Delete(key); err != nil {
-		return err
+		errDel.Add(fmt.Errorf("fail to remove old entry: %s", err))
 	}
-
-	errDel := new(NonBlockingErrors)
 
 	s.log.Printf("Deleting record from store's db")
 	if err := s.db.Delete(key); err != nil {
@@ -307,7 +308,7 @@ func (s *Store) Search(query string) (Records, error) {
 }
 
 // RebuildIndex deletes then rebuild the index from scratch based on the
-// database content It can be used for example to implement a new mapping
+// database content. It can be used for example to implement a new mapping
 // strategy or if things are really going bad
 func (s *Store) RebuildIndex() error {
 	s.log.Printf("Create a new index from scratch")
@@ -315,84 +316,54 @@ func (s *Store) RebuildIndex() error {
 		return err
 	}
 
+	errRebuild := new(NonBlockingErrors)
 	s.log.Printf("Rebuilding index")
 	return s.db.Walk(func(key string) error {
 		r, err := s.db.Get(key)
 		if err != nil {
-			return err
+			errRebuild.Add(err)
+			return nil
 		}
-		return s.idx.Put(r)
+		if err := s.idx.Put(r); err != nil {
+			errRebuild.Add(err)
+		}
+
+		return errRebuild.Err()
 	})
 }
 
-// CheckAndRepair verifies the consistency between the Store's components (file
-// system, database and index) and try to solve any issues:
-// - delete database and index entries whose file cannot be found
-// - re-create index entry with a database and file record
-// - report files found in the store without any index or database record
-func (s *Store) CheckAndRepair() ([]string, error) {
-	errCheck := new(NonBlockingErrors)
+// RepairIndex check the consistency between the index and the database. Try to
+// repair them as far as possible.
+func (s *Store) RepairIndex() error {
+	var errRepair NonBlockingErrors
 
-	s.log.Printf("Verify that all store's database entries are in the store")
+	s.log.Printf("Verify that all store's database entries are in the store's index")
 	if err := s.db.Walk(func(key string) error {
-		s.log.Printf("Verify record '%s' from database...", key)
-		exists, err := s.fs.Exists(key)
+		exists, err := s.idx.Exists(key)
 		if err != nil {
-			return err
-		}
-		if !exists {
-			errDel := new(NonBlockingErrors)
-
-			s.log.Printf("Record '%s' is in database and not in filesystem. Deleting it from database", key)
-			if err := s.db.Delete(key); err != nil {
-				errDel.Add(fmt.Errorf("fail to clean db from old entry: %s", err))
-			}
-
-			s.log.Printf("Record '%s' is in index and not in filesystem. Deleting it from index", key)
-			if err := s.idx.Delete(key); err != nil {
-				errDel.Add(fmt.Errorf("fail to clean idx from old entry: %s", err))
-			}
-
-			return errDel.Err()
-		}
-
-		exists, err = s.idx.Exists(key)
-		if err != nil {
-			return err
+			errRepair.Add(err)
+			return nil
 		}
 		if !exists {
 			s.log.Printf("Record '%s' is in database and not in index. Adding it to index", key)
 			r, err := s.db.Get(key)
 			if err != nil {
-				return err
+				errRepair.Add(err)
+				return nil
 			}
-			return s.idx.Put(r)
+			if err := s.idx.Put(r); err != nil {
+				errRepair.Add(err)
+			}
+			return nil
 		}
 
 		return nil
 	}); err != nil {
-		errCheck.Add(err)
-	}
-	s.log.Printf("Verify that all store's files are in the store database")
-	orphans := []string{}
-	if err := s.fs.Walk(func(key string) error {
-		s.log.Printf("Verify record '%s' from filesystem...", key)
-		exists, err := s.db.Exists(key)
-		if err != nil {
-			return err
-		}
-		if !exists {
-			s.log.Printf("File '%s' is not in database. Either delete it or add it to store", key)
-			orphans = append(orphans, key)
-		}
-		return nil
-	}); err != nil {
-		errCheck.Add(err)
+		errRepair.Add(err)
 	}
 
 	s.log.Printf("Verify that all indexed records are in the store's database")
 	if err := s.idx.Walk(func(key string) error {
-		s.log.Printf("Verify record '%s' from index...", key)
 		exists, err := s.db.Exists(key)
 		if err != nil {
 			return err
@@ -403,10 +374,94 @@ func (s *Store) CheckAndRepair() ([]string, error) {
 		}
 		return nil
 	}); err != nil {
-		errCheck.Add(err)
+		errRepair.Add(err)
 	}
 
-	return orphans, errCheck.Err()
+	return errRepair.Err()
+}
+
+// CheckGhosts lists any database entries that has no corresponding file
+// in the store's filesystem.
+func (s *Store) CheckGhosts() ([]string, error) {
+	var orphans []string
+
+	s.log.Printf("Verify that all store's database entries are in the store")
+	err := s.db.Walk(func(key string) error {
+		exists, err := s.fs.Exists(key)
+		if err != nil {
+			return err
+		}
+		if !exists {
+			s.log.Printf("Record '%s' is in database but not in filesystem", key)
+			orphans = append(orphans, key)
+		}
+		return nil
+	})
+
+	return orphans, err
+}
+
+// CheckOrphans Lists any file in store that is not in the database.
+func (s *Store) CheckOrphans() ([]string, error) {
+	var orphans []string
+
+	s.log.Printf("Verify that all store's files are in the store database")
+	err := s.fs.Walk(func(key string) error {
+		exists, err := s.db.Exists(key)
+		if err != nil {
+			return err
+		}
+		if !exists {
+			s.log.Printf("File '%s' is not in database", key)
+			orphans = append(orphans, key)
+		}
+		return nil
+	})
+
+	return orphans, err
+}
+
+// IsDirty verify store's general health in term of consistency between
+// database, index and filesystem.
+func (s *Store) IsDirty() bool {
+	s.log.Printf("Verify that all store's database records are in the filesystem and index")
+	if err := s.db.Walk(func(key string) error {
+		exists, err := s.fs.Exists(key)
+		if err != nil || !exists {
+			return err
+		}
+		exists, err = s.idx.Exists(key)
+		if err != nil || !exists {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return true
+	}
+
+	s.log.Printf("Verify that all store's files are in the store database")
+	if err := s.fs.Walk(func(key string) error {
+		exists, err := s.db.Exists(key)
+		if err != nil || !exists {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return true
+	}
+
+	s.log.Printf("Verify that all indexed records are in the store's database")
+	if err := s.idx.Walk(func(key string) error {
+		exists, err := s.db.Exists(key)
+		if err != nil || !exists {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return true
+	}
+
+	return false
 }
 
 func (s *Store) isValidKey(key string) bool {

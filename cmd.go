@@ -239,6 +239,25 @@ func newApp(cfg *Config) *clapp.Command {
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "check",
 		Usage: "Verify collection's consistency and repairs or reports found inconsistencies.",
+
+		Flags: clapp.Flags{
+			{
+				Name:  "delete-ghosts",
+				Usage: "Delete any database entries that does not correspond to an existing file in the store's filesystem (so called ghost record)",
+				Var:   &cfg.DeleteGhosts,
+			},
+			{
+				Name:  "delete-orphans",
+				Usage: "Delete any file of the store's filesystem that is not recorded in the store's database.",
+				Var:   &cfg.DeleteOrphans,
+			},
+			{
+				Name:  "import-orphans",
+				Usage: "Delete any database entry that does not correspond to an existing file in the store's filesystem (so called ghost record)",
+				Var:   &cfg.ImportOrphans,
+			},
+		},
+
 		Execute: func() error {
 			gs, err := openGostore(cfg)
 			if err != nil {
