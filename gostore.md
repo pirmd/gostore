@@ -17,7 +17,7 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __edit__ *name*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __delete__ *name*
+[--__style__=*STYLE*] __delete__ *name* ...
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __export__ *name* [*dst*]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
@@ -70,7 +70,7 @@ __edit__ *name*
 :Edit an existing record from the collection using user defined's editor. If 
 flag '--auto' is used, edition is skipped and nothing happens.
 
-__delete__ *name*
+__delete__ *name* ...
 :Delete an existing record from the collection.
 
 __export__ *name* [*dst*]

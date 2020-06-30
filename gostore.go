@@ -176,7 +176,7 @@ func (gs *Gostore) Close() error {
 // Import inserts new media into the collection
 func (gs *Gostore) Import(mediaFiles []string) error {
 	var newRecords store.Records
-	var importErr store.NonBlockingErrors // TODO: should be in store or in an util package?
+	var importErr store.NonBlockingErrors // TODO: should be in store or in an util package? multierr
 
 	for _, path := range mediaFiles {
 		gs.log.Printf("Importing '%s'", path)
@@ -201,6 +201,7 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 // If fromFile flag is set, Info also displays difference with actual metadata
 // stored in the media file.
 func (gs *Gostore) Info(key string, fromFile bool) error {
+	//TODO: fromFile to be a gostore attribute like pretend (?)
 	r, err := gs.store.Read(key)
 	if err != nil {
 		return err
@@ -277,14 +278,21 @@ func (gs *Gostore) Edit(key string) error {
 }
 
 // Delete removes a record from the collection.
-func (gs *Gostore) Delete(key string) error {
-	if !gs.pretend {
-		if err := gs.store.Delete(key); err != nil {
-			return err
+func (gs *Gostore) Delete(keys []string) error {
+	var delErr store.NonBlockingErrors
+
+	for _, key := range keys {
+		gs.log.Printf("Deleting '%s'", key)
+
+		if !gs.pretend {
+			if err := gs.store.Delete(key); err != nil {
+				delErr.Add(fmt.Errorf("deleting '%s' failed: %s", key, err))
+				continue
+			}
 		}
 	}
 
-	return nil
+	return delErr.Err()
 }
 
 // Export copies a record's media file from the collection to the given destination.
@@ -332,11 +340,8 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(ghosts) > 0 {
 		switch {
 		case gs.deleteGhosts:
-			for _, g := range ghosts {
-				// XXX: gs.Delete(ghosts)
-				if err := gs.store.Delete(g); err != nil {
-					errCheck.Add(err)
-				}
+			if err := gs.Delete(ghosts); err != nil {
+				errCheck.Add(err)
 			}
 
 		default:
@@ -351,11 +356,8 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(orphans) > 0 {
 		switch {
 		case gs.deleteOrphans:
-			for _, o := range orphans {
-				// XXX: gs.Delete(orphans)
-				if err := gs.store.Delete(o); err != nil {
-					errCheck.Add(err)
-				}
+			if err := gs.Delete(orphans); err != nil {
+				errCheck.Add(err)
 			}
 
 		case gs.importOrphans:

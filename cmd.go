@@ -177,6 +177,7 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
+	var recordIDs []string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "delete",
 		Usage: "Delete an existing record from the collection.",
@@ -185,7 +186,7 @@ func newApp(cfg *Config) *clapp.Command {
 			{
 				Name:  "name",
 				Usage: "Name of the record to delete.",
-				Var:   &recordID,
+				Var:   &recordIDs,
 			},
 		},
 
@@ -196,7 +197,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Delete(recordID); err != nil {
+			if err := gs.Delete(recordIDs); err != nil {
 				return err
 			}
 			return nil

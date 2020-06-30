@@ -282,7 +282,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 	}
 
 	t.Run("DeleteEpubs", func(t *testing.T) {
-		if err := gs.Delete(allepubs[0]); err != nil {
+		if err := gs.Delete([]string{allepubs[0]}); err != nil {
 			t.Fatalf("Delete failed: %v", err)
 		}
 
@@ -302,7 +302,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 	})
 
 	t.Run("DeleteNonExisting", func(t *testing.T) {
-		if err := gs.Delete("non_existing.epub"); err == nil {
+		if err := gs.Delete([]string{"non_existing.epub"}); err == nil {
 			t.Errorf("deleting non existing record does no fail")
 		}
 	})
