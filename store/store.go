@@ -200,20 +200,10 @@ func (s *Store) OpenRecord(key string) (vfs.File, error) {
 	return s.fs.Get(key)
 }
 
-// Update replaces an existing Store's record. Update only works if the record
-// is actually existing in the Store. If it corresponds to a partially existing
-// Record (e.g. no file but data in the database), Update will fail (you have to
-// use Create for that situation)
+// Update replaces an existing Store's record. Update will fail if the new
+// record key is already existing (ErrRecordAlreadyExists).
 func (s *Store) Update(key string, r *Record) error {
 	s.log.Printf("Updating record '%s' to '%s'", key, r)
-
-	exists, err := s.Exists(key)
-	if err != nil {
-		return err
-	}
-	if !exists {
-		return ErrRecordDoesNotExist
-	}
 
 	if r.key != key {
 		exists, err := s.Exists(r.key)

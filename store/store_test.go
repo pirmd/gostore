@@ -166,18 +166,6 @@ func TestUpdate(t *testing.T) {
 			sameRecordData(t, r, td, "Mismatch between stored data and added data")
 		}
 	})
-
-	t.Run("Cannot update partially existing", func(t *testing.T) {
-		for i, td := range testData {
-			if err := s.idx.Delete(newkeys[i]); err != nil {
-				t.Fatalf("Fail to delete '%s' from index: %v", newkeys[i], err)
-			}
-
-			if err := s.Update(newkeys[i], NewRecord(newkeys[i], td)); err == nil {
-				t.Errorf("Succeed to update partially existing Record '%v'", newkeys[i])
-			}
-		}
-	})
 }
 
 func TestSearch(t *testing.T) {
