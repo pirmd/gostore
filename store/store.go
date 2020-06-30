@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/pirmd/gostore/store/vfs"
+	"github.com/pirmd/gostore/util"
 )
 
 const (
@@ -89,7 +90,7 @@ func (s *Store) Open() error {
 
 // Close cleanly closes a Store
 func (s *Store) Close() error {
-	err := new(NonBlockingErrors)
+	err := new(util.MultiErrors)
 
 	s.log.Printf("Closing store's filesystem")
 	if e := s.fs.Close(); e != nil {
@@ -243,7 +244,7 @@ func (s *Store) Update(key string, r *Record) error {
 			return err
 		}
 
-		errDel := new(NonBlockingErrors)
+		errDel := new(util.MultiErrors)
 
 		s.log.Printf("Clean old entry '%s' in the store's db", key)
 		if err := s.db.Delete(key); err != nil {
@@ -265,7 +266,7 @@ func (s *Store) Update(key string, r *Record) error {
 func (s *Store) Delete(key string) error {
 	s.log.Printf("Deleting record '%s' from store", key)
 
-	errDel := new(NonBlockingErrors)
+	errDel := new(util.MultiErrors)
 
 	s.log.Printf("Deleting record's file from store's fs")
 	if err := s.fs.Delete(key); err != nil {
@@ -316,7 +317,7 @@ func (s *Store) RebuildIndex() error {
 		return err
 	}
 
-	errRebuild := new(NonBlockingErrors)
+	errRebuild := new(util.MultiErrors)
 	s.log.Printf("Rebuilding index")
 	return s.db.Walk(func(key string) error {
 		r, err := s.db.Get(key)
@@ -335,7 +336,7 @@ func (s *Store) RebuildIndex() error {
 // RepairIndex check the consistency between the index and the database. Try to
 // repair them as far as possible.
 func (s *Store) RepairIndex() error {
-	var errRepair NonBlockingErrors
+	var errRepair util.MultiErrors
 
 	s.log.Printf("Verify that all store's database entries are in the store's index")
 	if err := s.db.Walk(func(key string) error {

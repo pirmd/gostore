@@ -1,50 +1,22 @@
 package organizer
 
 import (
-	"bytes"
 	"path/filepath"
 	"text/template"
+
+	"github.com/pirmd/gostore/util"
 )
 
 func (o *organizer) funcmap() template.FuncMap {
-	return template.FuncMap{
-		"ext": filepath.Ext,
-
-		"tmpl":     tmplName(o.namers),
-		"tmplExec": tmplExec,
-		"tmplFile": tmplFile,
-
+	funcs := template.FuncMap{
+		"ext":          filepath.Ext,
 		"sanitizePath": pathSanitizer,
 		"nospace":      nospaceSanitizer,
 	}
-}
 
-func tmplName(t *template.Template) func(string, interface{}) (string, error) {
-	return func(name string, v interface{}) (string, error) {
-		buf := &bytes.Buffer{}
-		err := t.ExecuteTemplate(buf, name, v)
-		return buf.String(), err
-	}
-}
-
-func tmplExec(src string, v interface{}) (string, error) {
-	t, err := template.New("temp").Parse(src)
-	if err != nil {
-		return "", err
+	for stName, stFunc := range util.FuncMap(o.namers) {
+		funcs[stName] = stFunc
 	}
 
-	buf := &bytes.Buffer{}
-	err = t.Execute(buf, v)
-	return buf.String(), err
-}
-
-func tmplFile(name string, v interface{}) (string, error) {
-	t, err := template.ParseFiles(name)
-	if err != nil {
-		return "", err
-	}
-
-	buf := &bytes.Buffer{}
-	err = t.Execute(buf, v)
-	return buf.String(), err
+	return funcs
 }

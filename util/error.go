@@ -1,21 +1,20 @@
-package store
+package util
 
 import (
 	"fmt"
 )
 
-// NonBlockingErrors represents a collection of errors that don't require to
-// stop current activities and can be reported later
-type NonBlockingErrors []error
+// MultiErrors represents a collection of errors
+type MultiErrors []error
 
 // Add adds a new error to the non-blocking error collection
-func (c *NonBlockingErrors) Add(err error) {
+func (c *MultiErrors) Add(err error) {
 	*c = append(*c, err)
 }
 
 // Error concatenates all errors in the collection. It allows to satisfy error
 // interface
-func (c *NonBlockingErrors) Error() (s string) {
+func (c *MultiErrors) Error() (s string) {
 	for i := range *c {
 		if i == 0 {
 			s = (*c)[i].Error()
@@ -27,9 +26,9 @@ func (c *NonBlockingErrors) Error() (s string) {
 	return s
 }
 
-// Err return nil if the non-blocking errors collection is empty or nil, it
+// Err returns nil if the non-blocking errors collection is empty or nil, it
 // returns itself otherwise
-func (c *NonBlockingErrors) Err() error {
+func (c *MultiErrors) Err() error {
 	if c == nil {
 		return nil
 	}

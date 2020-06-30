@@ -1,9 +1,10 @@
 package cli
 
 import (
-	"bytes"
 	"encoding/json"
 	"text/template"
+
+	"github.com/pirmd/gostore/util"
 
 	"github.com/pirmd/style"
 	"github.com/pirmd/text"
@@ -15,10 +16,6 @@ func (ui *CLI) funcmap() template.FuncMap {
 		"get":    getMetadata,
 		"bycol":  tableCol,
 		"byrow":  tableRow,
-
-		"tmpl":     tmplName(ui.printers),
-		"tmplExec": tmplExec,
-		"tmplFile": tmplFile,
 
 		"extend": func(m map[string]interface{}, key, val string) string {
 			m[key] = val
@@ -41,41 +38,15 @@ func (ui *CLI) funcmap() template.FuncMap {
 		},
 	}
 
+	for stName, stFunc := range util.FuncMap(ui.printers) {
+		funcs[stName] = stFunc
+	}
+
 	for stName, stFunc := range style.FuncMap(ui.style) {
 		funcs[stName] = styleTable(stFunc.(func(string) string))
 	}
 
 	return funcs
-}
-
-func tmplName(t *template.Template) func(string, interface{}) (string, error) {
-	return func(name string, v interface{}) (string, error) {
-		buf := &bytes.Buffer{}
-		err := t.ExecuteTemplate(buf, name, v)
-		return buf.String(), err
-	}
-}
-
-func tmplExec(src string, v interface{}) (string, error) {
-	t, err := template.New("temp").Parse(src)
-	if err != nil {
-		return "", err
-	}
-
-	buf := &bytes.Buffer{}
-	err = t.Execute(buf, v)
-	return buf.String(), err
-}
-
-func tmplFile(name string, v interface{}) (string, error) {
-	t, err := template.ParseFiles(name)
-	if err != nil {
-		return "", err
-	}
-
-	buf := &bytes.Buffer{}
-	err = t.Execute(buf, v)
-	return buf.String(), err
 }
 
 func getAllMetadata(maps []map[string]interface{}, fields ...string) [][]string {

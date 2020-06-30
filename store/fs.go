@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/pirmd/gostore/store/vfs"
+	"github.com/pirmd/gostore/util"
 )
 
 type storefs struct {
@@ -86,7 +87,7 @@ func (s *storefs) Delete(path string) error {
 // that happen during walkFn execution will not stop the execution of Walk but
 // are captured and will be returned once Walk is over
 func (s *storefs) Walk(walkFn func(string) error) error {
-	errWalk := new(NonBlockingErrors)
+	errWalk := new(util.MultiErrors)
 
 	if errw := s.fs.Walk("", func(path string, info os.FileInfo, err error) error {
 		if err == os.ErrPermission {

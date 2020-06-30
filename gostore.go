@@ -14,6 +14,7 @@ import (
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui"
 	"github.com/pirmd/gostore/ui/cli"
+	"github.com/pirmd/gostore/util"
 )
 
 // Config represents the configuration for gostore
@@ -176,7 +177,7 @@ func (gs *Gostore) Close() error {
 // Import inserts new media into the collection
 func (gs *Gostore) Import(mediaFiles []string) error {
 	var newRecords store.Records
-	var importErr store.NonBlockingErrors // TODO: should be in store or in an util package? multierr
+	var importErr util.MultiErrors
 
 	for _, path := range mediaFiles {
 		gs.log.Printf("Importing '%s'", path)
@@ -279,7 +280,7 @@ func (gs *Gostore) Edit(key string) error {
 
 // Delete removes a record from the collection.
 func (gs *Gostore) Delete(keys []string) error {
-	var delErr store.NonBlockingErrors
+	var delErr util.MultiErrors
 
 	for _, key := range keys {
 		gs.log.Printf("Deleting '%s'", key)
@@ -331,7 +332,7 @@ func (gs *Gostore) Export(key, dstFolder string) (err error) {
 // Behaviour in case of inconsistencies depends on gostore's DeleteGhosts,
 // DeleteOrphans or ImportOrphans flags.
 func (gs *Gostore) CheckAndRepair() error {
-	var errCheck store.NonBlockingErrors // TODO: should be in store or in an util package?
+	var errCheck util.MultiErrors
 
 	ghosts, err := gs.store.CheckGhosts()
 	if err != nil {

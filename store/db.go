@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/pirmd/gostore/util"
+
 	bolt "go.etcd.io/bbolt"
 )
 
@@ -110,7 +112,7 @@ func (s *storedb) Exists(key string) (bool, error) {
 // Walk does not stop if an error is reported by walkFn, such errors will
 // be captured and reported back once Walk is over
 func (s *storedb) Walk(walkFn func(string) error) error {
-	errWalk := new(NonBlockingErrors)
+	errWalk := new(util.MultiErrors)
 
 	// boltdb does not support modifying the database during
 	// iteration, so we first get the all keys, then we act on

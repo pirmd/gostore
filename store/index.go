@@ -3,6 +3,8 @@ package store
 import (
 	"os"
 
+	"github.com/pirmd/gostore/util"
+
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/mapping"
 )
@@ -93,7 +95,7 @@ func (s *storeidx) Search(query string) (keys []string, err error) {
 // Walk does not stop if an error is reported by walkFn, such errors will
 // be captured and reported back once Walk is over
 func (s *storeidx) Walk(walkFn func(string) error) error {
-	errWalk := new(NonBlockingErrors)
+	errWalk := new(util.MultiErrors)
 
 	//bleve does not support modifying the database during
 	//iteration, so we first get all keys, then we act upon
