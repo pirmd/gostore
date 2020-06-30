@@ -297,34 +297,19 @@ func (gs *Gostore) Delete(keys []string) error {
 }
 
 // Export copies a record's media file from the collection to the given destination.
-func (gs *Gostore) Export(key, dstFolder string) (err error) {
-	dstPath := filepath.Join(key, dstFolder)
+func (gs *Gostore) Export(keys []string, dstFolder string) error {
+	var exportErr util.MultiErrors
 
-	f, err := gs.store.OpenRecord(key)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+	for _, key := range keys {
+		gs.log.Printf("Exporting '%s'", key)
 
-	if err := os.MkdirAll(filepath.Dir(dstPath), 0777); err != nil {
-		return err
-	}
-
-	var w *os.File
-	w, err = os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		cerr := w.Close()
-		if err == nil {
-			err = cerr
+		if err := gs.export(key, dstFolder); err != nil {
+			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", key, err))
+			continue
 		}
-	}()
+	}
 
-	_, err = io.Copy(w, f)
-	return
+	return exportErr.Err()
 }
 
 // CheckAndRepair verifies collection's consistency and repairs or reports
@@ -404,4 +389,34 @@ func (gs *Gostore) insert(path string) (*store.Record, error) {
 	}
 
 	return r, nil
+}
+
+func (gs *Gostore) export(key, dstFolder string) (err error) {
+	dstPath := filepath.Join(dstFolder, key)
+
+	f, err := gs.store.OpenRecord(key)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err := os.MkdirAll(filepath.Dir(dstPath), 0777); err != nil {
+		return err
+	}
+
+	var w *os.File
+	w, err = os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		cerr := w.Close()
+		if err == nil {
+			err = cerr
+		}
+	}()
+
+	_, err = io.Copy(w, f)
+	return
 }

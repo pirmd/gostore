@@ -213,7 +213,7 @@ func newApp(cfg *Config) *clapp.Command {
 			{
 				Name:  "name",
 				Usage: "Name of the record to export.",
-				Var:   &recordID,
+				Var:   &recordIDs,
 			},
 			{
 				Name:     "dst",
@@ -230,7 +230,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Export(recordID, dstFolder); err != nil {
+			if err := gs.Export(recordIDs, dstFolder); err != nil {
 				return err
 			}
 			return nil
