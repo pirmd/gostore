@@ -1,4 +1,4 @@
-//go:generate go run manpage_generate.go cmd.go gostore.go
+//go:generate go run manpage_generate.go cmd.go gostore.go config.go
 package main
 
 import (
