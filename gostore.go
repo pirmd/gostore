@@ -127,34 +127,26 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 	return importErr.Err()
 }
 
-// Info retrieves information about any collection's record.
-// If fromFile flag is set, Info also displays difference with actual metadata
-// stored in the media file.
-func (gs *Gostore) Info(key string, fromFile bool) error {
-	//TODO: fromFile to be a gostore attribute like pretend (?)
-	r, err := gs.store.Read(key)
-	if err != nil {
-		return err
-	}
+// List retrieves information about a collection's record.
+func (gs *Gostore) List(keys []string) error {
+	var records store.Records
+	var listErr util.MultiErrors
 
-	if fromFile {
-		f, err := gs.store.OpenRecord(key)
+	for _, key := range keys {
+		r, err := gs.store.Read(key)
 		if err != nil {
-			return err
-		}
-		defer f.Close()
-
-		mdata, err := media.GetMetadata(f)
-		if err != nil {
-			return err
+			listErr.Add(fmt.Errorf("listing '%s' failed: %s", key, err))
+			continue
 		}
 
-		gs.ui.PrettyDiff(r.Flatted(), mdata)
-		return nil
+		records = append(records, r)
 	}
 
-	gs.ui.PrettyPrint(r.Flatted())
-	return nil
+	if len(records) != 0 {
+		gs.ui.PrettyPrint(records.Flatted()...)
+	}
+
+	return listErr.Err()
 }
 
 // ListAll lists all collection's records

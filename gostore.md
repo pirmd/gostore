@@ -11,15 +11,15 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __import__ *media* ...
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __info__ [--__from-file__] *name*
+[--__style__=*STYLE*] __list__ [*name* ...]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __list__ [*pattern*]
+[--__style__=*STYLE*] __search__ *query*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __edit__ *name*
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __delete__ *name* ...
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __export__ *name* [*dst*]
+[--__style__=*STYLE*] __export__ *name* ... [*dst*]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __check__ [--__delete-ghosts__] [--__delete-orphans__] 
 [--__import-orphans__]
@@ -59,12 +59,12 @@ __version__
 __import__ *media* ...
 :Import a new media into the collection.
 
-__info__ [<flags>] *name*
-:Retrieve information about any collection's record.
+__list__ [*name* ...]
+:List and retrieve information about collection's records. If no pattern is 
+provided, list all records of the collection.
 
-__list__ [*pattern*]
-:Lists the collection's records matching the given pattern. If no pattern is 
-provied, list all records of the collection.
+__search__ *query*
+:Search the collection's records matching the given query.
 
 __edit__ *name*
 :Edit an existing record from the collection using user defined's editor. If 
@@ -73,7 +73,7 @@ flag '--auto' is used, edition is skipped and nothing happens.
 __delete__ *name* ...
 :Delete an existing record from the collection.
 
-__export__ *name* [*dst*]
+__export__ *name* ... [*dst*]
 :Copy a record's media file from the collection to the given destination.
 
 __check__ [<flags>]

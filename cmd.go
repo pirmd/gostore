@@ -80,52 +80,17 @@ func newApp(cfg *Config) *clapp.Command {
 	})
 
 	var recordID string
-	var readInfoFromMediaFile bool
-	cmd.SubCommands.Add(&clapp.Command{
-		Name:  "info",
-		Usage: "Retrieve information about any collection's record.",
 
-		Flags: clapp.Flags{
-			{
-				Name:  "from-file",
-				Usage: "Highlight difference between information stored in the collection and information from media file",
-				Var:   &readInfoFromMediaFile,
-			},
-		},
+	var recordIDs []string
+	cmd.SubCommands.Add(&clapp.Command{
+		Name:  "list",
+		Usage: "List and retrieve information about collection's records. If no pattern is provided, list all records of the collection.",
 
 		Args: clapp.Args{
 			{
-				Name:  "name",
-				Usage: "Name of the record to get information about.",
-				Var:   &recordID,
-			},
-		},
-
-		Execute: func() error {
-			gs, err := openGostore(cfg)
-			if err != nil {
-				return err
-			}
-			defer gs.Close()
-
-			if err := gs.Info(recordID, readInfoFromMediaFile); err != nil {
-				return err
-			}
-			return nil
-		},
-	})
-
-	searchPattern := "*"
-	cmd.SubCommands.Add(&clapp.Command{
-		Name: "list",
-
-		Usage: "Lists the collection's records matching the given pattern. If no pattern is provied, list all records of the collection.",
-
-		Args: clapp.Args{
-			{
-				Name:     "pattern",
-				Usage:    "Pattern to match records against. Pattern follows blevesearch query language (https://blevesearch.com/docs/Query-String-Query/).",
-				Var:      &searchPattern,
+				Name:     "name",
+				Usage:    "Name of the record to get information about.",
+				Var:      &recordIDs,
 				Optional: true,
 			},
 		},
@@ -137,14 +102,42 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if searchPattern == "*" {
+			if len(recordIDs) == 0 {
 				if err := gs.ListAll(); err != nil {
 					return err
 				}
 				return nil
 			}
 
-			if err := gs.Search(searchPattern); err != nil {
+			if err := gs.List(recordIDs); err != nil {
+				return err
+			}
+			return nil
+		},
+	})
+
+	var query string
+	cmd.SubCommands.Add(&clapp.Command{
+		Name: "search",
+
+		Usage: "Search the collection's records matching the given query.",
+
+		Args: clapp.Args{
+			{
+				Name:  "query",
+				Usage: "Query to match records against. Query pattern follows blevesearch query language (https://blevesearch.com/docs/Query-String-Query/).",
+				Var:   &query,
+			},
+		},
+
+		Execute: func() error {
+			gs, err := openGostore(cfg)
+			if err != nil {
+				return err
+			}
+			defer gs.Close()
+
+			if err := gs.Search(query); err != nil {
 				return err
 			}
 			return nil
@@ -177,7 +170,6 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
-	var recordIDs []string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "delete",
 		Usage: "Delete an existing record from the collection.",

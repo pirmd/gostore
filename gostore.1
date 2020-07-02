@@ -1,4 +1,4 @@
-.TH GOSTORE 1 2020-06-30
+.TH GOSTORE 1 2020-07-02
 
 .SH Name
 .PP
@@ -9,11 +9,11 @@ gostore - A command-line minimalist media collection manager.
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBhelp\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBversion\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBimport\fP \fImedia\fP ...
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBinfo\fP [--\fBfrom-file\fP] \fIname\fP
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBlist\fP [\fIpattern\fP]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBlist\fP [\fIname\fP ...]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBsearch\fP \fIquery\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBedit\fP \fIname\fP
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBdelete\fP \fIname\fP ...
-\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP [\fIdst\fP]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP ... [\fIdst\fP]
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP [--\fBdelete-ghosts\fP] [--\fBdelete-orphans\fP] [--\fBimport-orphans\fP]
 
 .SH Description
@@ -48,11 +48,11 @@ Show version information.
 \fB\fBimport\fP \fImedia\fP ...\fP
 Import a new media into the collection.
 .TP
-\fB\fBinfo\fP [<flags>] \fIname\fP\fP
-Retrieve information about any collection's record.
+\fB\fBlist\fP [\fIname\fP ...]\fP
+List and retrieve information about collection's records. If no pattern is provided, list all records of the collection.
 .TP
-\fB\fBlist\fP [\fIpattern\fP]\fP
-Lists the collection's records matching the given pattern. If no pattern is provied, list all records of the collection.
+\fB\fBsearch\fP \fIquery\fP\fP
+Search the collection's records matching the given query.
 .TP
 \fB\fBedit\fP \fIname\fP\fP
 Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.
@@ -60,7 +60,7 @@ Edit an existing record from the collection using user defined's editor. If flag
 \fB\fBdelete\fP \fIname\fP ...\fP
 Delete an existing record from the collection.
 .TP
-\fB\fBexport\fP \fIname\fP [\fIdst\fP]\fP
+\fB\fBexport\fP \fIname\fP ... [\fIdst\fP]\fP
 Copy a record's media file from the collection to the given destination.
 .TP
 \fB\fBcheck\fP [<flags>]\fP

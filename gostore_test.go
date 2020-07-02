@@ -63,7 +63,7 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 			defer gs.Close()
 
 			testImport(t, gs)
-			testInfo(t, gs)
+			testList(t, gs)
 			testListAll(t, gs)
 			testSearch(t, gs)
 			testDelete(t, gs)
@@ -95,7 +95,7 @@ func TestGostoreWithConfigExample(t *testing.T) {
 			defer gs.Close()
 
 			testImport(t, gs)
-			testInfo(t, gs)
+			testList(t, gs)
 			testListAll(t, gs)
 			testSearch(t, gs)
 			testDelete(t, gs)
@@ -162,61 +162,41 @@ func testImport(t *testing.T, gs *testGostore) {
 	})
 }
 
-func testInfo(t *testing.T, gs *testGostore) {
+func testList(t *testing.T, gs *testGostore) {
 	allepubs, err := gs.ListWithExt(".epub")
 	if err != nil {
 		t.Fatalf("Fail to list epub: %v", err)
 	}
 
-	t.Run("InfoEpubs", func(t *testing.T) {
+	t.Run("ListEpubs", func(t *testing.T) {
 		stdout, err := verify.StartMockStdout()
 		if err != nil {
 			t.Fatalf("Fail to mock stdout: %v", err)
 		}
 		defer stdout.Stop()
 
-		for _, epub := range allepubs {
-			if err := gs.Info(epub, false); err != nil {
-				t.Errorf("Getting Info failed: %v", err)
-			}
+		if err := gs.Gostore.List(allepubs); err != nil {
+			t.Errorf("List failed: %v", err)
 		}
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
-			t.Errorf("Info output is not as expected:\n%v", failure)
+			t.Errorf("List output is not as expected:\n%v", failure)
 		}
 	})
 
-	t.Run("InfoEpubsWithDiff", func(t *testing.T) {
+	t.Run("ListNonExisting", func(t *testing.T) {
 		stdout, err := verify.StartMockStdout()
 		if err != nil {
 			t.Fatalf("Fail to mock stdout: %v", err)
 		}
 		defer stdout.Stop()
 
-		for _, epub := range allepubs {
-			if err := gs.Info(epub, true); err != nil {
-				t.Errorf("Getting Info failed: %v", err)
-			}
-		}
-
-		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
-			t.Errorf("Info output is not as expected:\n%v", failure)
-		}
-	})
-
-	t.Run("InfoNonExisting", func(t *testing.T) {
-		stdout, err := verify.StartMockStdout()
-		if err != nil {
-			t.Fatalf("Fail to mock stdout: %v", err)
-		}
-		defer stdout.Stop()
-
-		if err := gs.Info("non existing record", false); err == nil {
+		if err := gs.Gostore.List([]string{"non existing record"}); err == nil {
 			t.Errorf("Getting info for non existing record does no fail")
 		}
 
 		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
-			t.Errorf("Info output is not as expected:\n%v", failure)
+			t.Errorf("List output is not as expected:\n%v", failure)
 		}
 	})
 }
