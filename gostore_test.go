@@ -175,7 +175,7 @@ func testList(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Gostore.List(allepubs); err != nil {
+		if err := gs.Gostore.List(allepubs...); err != nil {
 			t.Errorf("List failed: %v", err)
 		}
 
@@ -191,8 +191,8 @@ func testList(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Gostore.List([]string{"non existing record"}); err == nil {
-			t.Errorf("Getting info for non existing record does no fail")
+		if err := gs.Gostore.List("non existing record"); err == nil {
+			t.Errorf("List of non existing record should have failed")
 		}
 
 		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
@@ -262,7 +262,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 	}
 
 	t.Run("DeleteEpubs", func(t *testing.T) {
-		if err := gs.Delete([]string{allepubs[0]}); err != nil {
+		if err := gs.Delete(allepubs[0]); err != nil {
 			t.Fatalf("Delete failed: %v", err)
 		}
 
@@ -282,7 +282,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 	})
 
 	t.Run("DeleteNonExisting", func(t *testing.T) {
-		if err := gs.Delete([]string{"non_existing.epub"}); err == nil {
+		if err := gs.Delete("non_existing.epub"); err == nil {
 			t.Errorf("deleting non existing record does no fail")
 		}
 	})

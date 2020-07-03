@@ -117,7 +117,6 @@ func (s *Store) Close() error {
 func (s *Store) Create(r *Record, file io.Reader) error {
 	s.log.Printf("Adding new record to store '%s'", r)
 
-	//XXX
 	exists, err := s.Exists(r.key)
 	if err != nil {
 		return err
@@ -194,6 +193,27 @@ func (s *Store) ReadAll() (list Records, err error) {
 	})
 
 	return
+}
+
+// ReadGlob returns the list of records corresponding to the given search pattern.
+// Under the hood the pattern matching follows the same behaviour than
+// filepath.Match.
+func (s *Store) ReadGlob(pattern string) (Records, error) {
+	keys, err := s.SearchKeys(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	var result Records
+	for _, key := range keys {
+		r, err := s.db.Get(key)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, r)
+	}
+
+	return result, nil
 }
 
 // OpenRecord opens the record corresponding to the given key for reading.
@@ -306,6 +326,21 @@ func (s *Store) Search(query string) (Records, error) {
 	}
 
 	return result, nil
+}
+
+// SearchKeys returns the list of keys corresponding to the given search pattern.
+// Under the hood the pattern matching follows the same behaviour than
+// filepath.Match.
+func (s *Store) SearchKeys(pattern string) ([]string, error) {
+	s.log.Printf("Search records for ID='%s'", pattern)
+
+	keys, err := s.fs.Search(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	s.log.Printf("Found records for ID='%s': %+v", pattern, keys)
+	return keys, nil
 }
 
 // RebuildIndex deletes then rebuild the index from scratch based on the

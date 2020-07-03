@@ -79,9 +79,8 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
-	var recordID string
-
 	var recordIDs []string
+
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "list",
 		Usage: "List and retrieve information about collection's records. If no pattern is provided, list all records of the collection.",
@@ -89,7 +88,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Args: clapp.Args{
 			{
 				Name:     "name",
-				Usage:    "Name of the record to get information about.",
+				Usage:    "Name of the record to get information about. Name can be specified using a glob pattern.",
 				Var:      &recordIDs,
 				Optional: true,
 			},
@@ -109,7 +108,7 @@ func newApp(cfg *Config) *clapp.Command {
 				return nil
 			}
 
-			if err := gs.List(recordIDs); err != nil {
+			if err := gs.List(recordIDs...); err != nil {
 				return err
 			}
 			return nil
@@ -144,6 +143,7 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
+	var recordID string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "edit",
 		Usage: "Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.",
@@ -177,7 +177,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Args: clapp.Args{
 			{
 				Name:  "name",
-				Usage: "Name of the record to delete.",
+				Usage: "Name of the record to delete. Name can be specified using a glob pattern.",
 				Var:   &recordIDs,
 			},
 		},
@@ -189,7 +189,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Delete(recordIDs); err != nil {
+			if err := gs.Delete(recordIDs...); err != nil {
 				return err
 			}
 			return nil
@@ -204,7 +204,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Args: clapp.Args{
 			{
 				Name:  "name",
-				Usage: "Name of the record to export.",
+				Usage: "Name of the record to export. Name can be specified using a glob pattern.",
 				Var:   &recordIDs,
 			},
 			{
@@ -222,7 +222,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Export(recordIDs, dstFolder); err != nil {
+			if err := gs.Export(dstFolder, recordIDs...); err != nil {
 				return err
 			}
 			return nil

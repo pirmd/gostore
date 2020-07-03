@@ -68,6 +68,28 @@ func TestFSWalk(t *testing.T) {
 	}
 }
 
+func TestFSSearch(t *testing.T) {
+	tstDir, err := verify.NewTestFolder(t.Name())
+	if err != nil {
+		t.Fatalf("Fail to create test folder: %v", err)
+	}
+	defer tstDir.Clean()
+
+	fs := newFS(tstDir.Root, validFn)
+	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available
+
+	tstDir.Populate(tstCases)
+
+	out, err := fs.Search("file*.txt")
+	if err != nil {
+		t.Fatalf("Walking through fs failed: %v", err)
+	}
+
+	if failure := verify.EqualSliceWithoutOrder(out, tstCases); failure != nil {
+		t.Errorf("Search through fs does not work:\n%v", failure)
+	}
+}
+
 func TestFSDelete(t *testing.T) {
 	tstDir, err := verify.NewTestFolder(t.Name())
 	if err != nil {

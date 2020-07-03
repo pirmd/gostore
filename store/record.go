@@ -144,6 +144,14 @@ func (r Records) Value() (v []map[string]interface{}) {
 	return
 }
 
+// UserValue returns the Value() for each record in the collection.
+func (r Records) UserValue() (v []map[string]interface{}) {
+	for _, i := range r {
+		v = append(v, i.UserValue())
+	}
+	return
+}
+
 // Flatted returns the Flatted() form for each record in the collection.
 func (r Records) Flatted() (v []map[string]interface{}) {
 	for _, i := range r {

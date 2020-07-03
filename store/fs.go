@@ -83,7 +83,7 @@ func (s *storefs) Delete(path string) error {
 	return nil
 }
 
-// Walk iterates over all storedb items and call walkFn for each item. Errors
+// Walk iterates over all storefs items and call walkFn for each item. Errors
 // that happen during walkFn execution will not stop the execution of Walk but
 // are captured and will be returned once Walk is over
 func (s *storefs) Walk(walkFn func(string) error) error {
@@ -108,4 +108,20 @@ func (s *storefs) Walk(walkFn func(string) error) error {
 	}
 
 	return errWalk.Err()
+}
+
+// Search looks for the records from storefs whose path matches the given pattern.
+// Under the hood the pattern matching follows the same behaviour than filepath.Match.
+func (s *storefs) Search(pattern string) (matches []string, err error) {
+	err = s.Walk(func(path string) error {
+		matched, err := filepath.Match(pattern, path)
+		if err != nil {
+			return err
+		}
+		if matched {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+	return
 }

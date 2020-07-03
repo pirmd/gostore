@@ -128,18 +128,23 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 }
 
 // List retrieves information about a collection's record.
-func (gs *Gostore) List(keys []string) error {
+func (gs *Gostore) List(pattern ...string) error {
 	var records store.Records
 	var listErr util.MultiErrors
 
-	for _, key := range keys {
-		r, err := gs.store.Read(key)
+	for _, p := range pattern {
+		r, err := gs.store.ReadGlob(p)
 		if err != nil {
-			listErr.Add(fmt.Errorf("listing '%s' failed: %s", key, err))
+			listErr.Add(fmt.Errorf("listing '%s' failed: %s", p, err))
 			continue
 		}
 
-		records = append(records, r)
+		if len(r) == 0 {
+			listErr.Add(fmt.Errorf("listing '%s' failed: no such record", p))
+			continue
+		}
+
+		records = append(records, r...)
 	}
 
 	if len(records) != 0 {
@@ -200,8 +205,24 @@ func (gs *Gostore) Edit(key string) error {
 }
 
 // Delete removes a record from the collection.
-func (gs *Gostore) Delete(keys []string) error {
+func (gs *Gostore) Delete(pattern ...string) error {
+	var keys []string
 	var delErr util.MultiErrors
+
+	for _, p := range pattern {
+		k, err := gs.store.SearchKeys(p)
+		if err != nil {
+			delErr.Add(fmt.Errorf("deleting '%s' failed: %s", p, err))
+			continue
+		}
+
+		if len(k) == 0 {
+			delErr.Add(fmt.Errorf("deleting '%s' failed: no such record", p))
+			continue
+		}
+
+		keys = append(keys, k...)
+	}
 
 	for _, key := range keys {
 		gs.log.Printf("Deleting '%s'", key)
@@ -218,8 +239,24 @@ func (gs *Gostore) Delete(keys []string) error {
 }
 
 // Export copies a record's media file from the collection to the given destination.
-func (gs *Gostore) Export(keys []string, dstFolder string) error {
+func (gs *Gostore) Export(dstFolder string, pattern ...string) error {
+	var keys []string
 	var exportErr util.MultiErrors
+
+	for _, p := range pattern {
+		k, err := gs.store.SearchKeys(p)
+		if err != nil {
+			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", p, err))
+			continue
+		}
+
+		if len(k) == 0 {
+			exportErr.Add(fmt.Errorf("exporting '%s' failed: no such record", p))
+			continue
+		}
+
+		keys = append(keys, k...)
+	}
 
 	for _, key := range keys {
 		gs.log.Printf("Exporting '%s'", key)
@@ -247,7 +284,7 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(ghosts) > 0 {
 		switch {
 		case gs.deleteGhosts:
-			if err := gs.Delete(ghosts); err != nil {
+			if err := gs.Delete(ghosts...); err != nil {
 				errCheck.Add(err)
 			}
 
@@ -263,7 +300,7 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(orphans) > 0 {
 		switch {
 		case gs.deleteOrphans:
-			if err := gs.Delete(orphans); err != nil {
+			if err := gs.Delete(orphans...); err != nil {
 				errCheck.Add(err)
 			}
 

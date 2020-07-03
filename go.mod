@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/RoaringBitmap/roaring v0.4.23 // indirect
 	github.com/blevesearch/bleve v1.0.7
+	github.com/bmatcuk/doublestar v1.3.1
 	github.com/cznic/b v0.0.0-20181122101859-a26611c4d92d // indirect
 	github.com/cznic/mathutil v0.0.0-20181122101859-297441e03548 // indirect
 	github.com/cznic/strutil v0.0.0-20181122101858-275e90344537 // indirect

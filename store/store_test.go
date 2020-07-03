@@ -95,6 +95,26 @@ func TestCreateAndRead(t *testing.T) {
 
 }
 
+func TestReadGlob(t *testing.T) {
+	s, cleanFn := setupStore(t)
+	defer cleanFn()
+
+	_ = populateStore(t, s)
+
+	testPattern := "Luc*/*.tst"
+	var want []map[string]interface{}
+	for _, i := range []int{0, 1} {
+		want = append(want, testData[i])
+	}
+
+	got, err := s.ReadGlob(testPattern)
+	if err != nil {
+		t.Fatalf("Fail to retrieve '%s': %s", testPattern, err)
+	}
+
+	sameRecordsData(t, got, want, "Read pattern "+testPattern+" failed")
+}
+
 func TestDelete(t *testing.T) {
 	s, cleanFn := setupStore(t)
 	defer cleanFn()
@@ -108,7 +128,7 @@ func TestDelete(t *testing.T) {
 		}
 	}
 
-	for i := range testCases {
+	for i := range testData {
 		if isIntInList(i, testCases) {
 			shouldNotExistInStore(t, s, keys[i])
 		} else {
@@ -302,6 +322,32 @@ func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message 
 	}
 
 	if failure := verify.Equal(string(rInJSON), string(mInJSON)); failure != nil {
+		tb.Errorf("%s:\n%v", message, failure)
+	}
+}
+
+func sameRecordsData(tb testing.TB, rec Records, maps []map[string]interface{}, message string) {
+	tb.Helper()
+
+	rInJSON := []string{}
+	for _, r := range rec {
+		j, err := json.Marshal(r.UserValue())
+		if err != nil {
+			tb.Fatalf("Failed to marshall to JSON: %v", err)
+		}
+		rInJSON = append(rInJSON, string(j))
+	}
+
+	mInJSON := []string{}
+	for _, m := range maps {
+		j, err := json.Marshal(m)
+		if err != nil {
+			tb.Fatalf("Failed to marshal to JSON: %v", err)
+		}
+		mInJSON = append(mInJSON, string(j))
+	}
+
+	if failure := verify.EqualSliceWithoutOrder(rInJSON, mInJSON); failure != nil {
 		tb.Errorf("%s:\n%v", message, failure)
 	}
 }
