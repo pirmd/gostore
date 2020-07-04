@@ -24,9 +24,7 @@ var (
 
 )
 
-// CLI is a user interface built for the command line.
-// If cfg.Auto flag is on, the returned User Interface will avoid any interaction
-// with the user (like automatically merging metadata or skipping editing steps)
+// CLI is a user interface built for the command-line.
 type CLI struct {
 	editor []string
 	merger []string

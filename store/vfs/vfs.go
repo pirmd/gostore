@@ -35,7 +35,7 @@ type File interface {
 	Readdir(count int) ([]os.FileInfo, error)
 }
 
-// filesystem represents a file system
+// filesystem represents a filesystem
 type filesystem interface {
 	// Mkdir creates a directory in the filesystem
 	Mkdir(name string, perm os.FileMode) error

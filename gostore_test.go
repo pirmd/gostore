@@ -72,8 +72,6 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 }
 
 func TestGostoreWithConfigExample(t *testing.T) {
-	//TODO: Directly reuse cmd.go code to load configuration file (for instance
-	//if add ExpandEnv we need to do it twice and create mismatch)
 	cfg := newConfig()
 	appCfg := &clapp.Config{
 		Unmarshaller: yaml.Unmarshal,
@@ -252,7 +250,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 	})
 
-	//TODO(pirmd): add additional search pattern using date and serie number
+	//TODO(pirmd): add additional search pattern using date and book series number
 }
 
 func testDelete(t *testing.T, gs *testGostore) {
