@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/pirmd/gostore/media"
+	"github.com/pirmd/gostore/util"
 )
 
 const (
@@ -95,15 +96,15 @@ func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, erro
 
 func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	var query []string
-	if title, ok := mdata.Get("Title").(string); ok {
+	if title, ok := mdata["Title"].(string); ok {
 		query = append(query, "intitle:"+title)
 	}
 
-	if authors, ok := mdata.Get("Authors").([]string); ok {
+	if authors, ok := mdata["Authors"].([]string); ok {
 		query = append(query, "inauthor:"+strings.Join(authors, "+"))
 	}
 
-	if isbn, ok := mdata.Get("ISBN").(string); ok {
+	if isbn, ok := mdata["ISBN"].(string); ok {
 		query = append(query, "isbn:"+isbn)
 	}
 
@@ -124,22 +125,46 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 	mdata := make(media.Metadata)
 	title, subtitle, serie, seriePos := g.parseTitle(vi)
 
-	mdata.Set("Title", title)
-	mdata.Set("Authors", vi.Authors)
-	mdata.Set("Description", vi.Description)
-	mdata.Set("Subject", vi.Subject)
+	mdata["Title"] = title
+	mdata["Authors"] = vi.Authors
+	mdata["Description"] = vi.Description
 
-	mdata.SetIfNotZero("SubTitle", subtitle)
-	mdata.SetIfNotZero("Serie", serie)
-	mdata.SetIfNotZero("SeriePosition", seriePos)
-	mdata.SetIfNotZero("Publisher", vi.Publisher)
-	mdata.SetIfNotZero("PublishedDate", vi.PublishedDate)
-	mdata.SetIfNotZero("PageCount", vi.PageCount)
-	mdata.SetIfNotZero("Language", vi.Language)
+	if len(vi.Subject) > 0 {
+		mdata["Subject"] = vi.Subject
+	}
+
+	if len(subtitle) > 0 {
+		mdata["SubTitle"] = subtitle
+	}
+
+	if len(serie) > 0 {
+		mdata["Serie"] = serie
+		mdata["SeriePosition"] = seriePos
+	}
+
+	if len(vi.Publisher) > 0 {
+		mdata["Publisher"] = vi.Publisher
+	}
+
+	if len(vi.PublishedDate) > 0 {
+		if stamp, err := util.ParseTime(vi.PublishedDate); err != nil {
+			mdata["PublishedDate"] = vi.PublishedDate
+		} else {
+			mdata["PublishedDate"] = stamp
+		}
+	}
+
+	if vi.PageCount > 0 {
+		mdata["PageCount"] = vi.PageCount
+	}
+
+	if len(vi.Language) > 0 {
+		mdata["Language"] = vi.Language
+	}
 
 	for _, id := range vi.Identifier {
-		if id.Type == "ISBN_13" {
-			mdata.SetIfNotZero("ISBN", id.Identifier)
+		if id.Type == "ISBN_13" && len(id.Identifier) > 0 {
+			mdata["ISBN"] = id.Identifier
 		}
 	}
 

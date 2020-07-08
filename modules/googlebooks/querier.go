@@ -68,19 +68,19 @@ func (q *querier) ProcessRecord(r *store.Record) error {
 
 	//TODO(pirmd): do something cleverer than using the first result from
 	//googleBooks
-	bestMatch := r.UserValue()
+	bestMatch := r.Data()
 	for k, v := range matches[0] {
 		bestMatch[k] = v
 	}
 
 	q.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(matches), bestMatch)
-	mdata, err := q.ui.Merge(bestMatch, r.UserValue())
+	mdata, err := q.ui.Merge(bestMatch, r.Data())
 	if err != nil {
 		return err
 	}
 
 	q.log.Printf("Module '%s': record updated to: %v", moduleName, mdata)
-	r.SetValue(mdata)
+	r.SetData(mdata)
 
 	return nil
 }

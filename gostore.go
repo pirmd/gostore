@@ -184,11 +184,11 @@ func (gs *Gostore) Edit(key string) error {
 		return err
 	}
 
-	mdata, err := gs.ui.Edit(r.UserValue())
+	mdata, err := gs.ui.Edit(r.Data())
 	if err != nil {
 		return err
 	}
-	r.ReplaceValue(mdata)
+	r.SetData(mdata)
 
 	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
 		return err

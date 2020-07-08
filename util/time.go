@@ -1,4 +1,4 @@
-package store
+package util
 
 import (
 	"time"
@@ -15,8 +15,8 @@ var stampFormats = []string{
 	"2006-01-02",
 }
 
-// parseTime parses a time stamp, trying different time format.
-func parseTime(text string) (t time.Time, err error) {
+// ParseTime parses a time stamp, trying different time format.
+func ParseTime(text string) (t time.Time, err error) {
 	for _, fmt := range stampFormats {
 		if t, err = time.Parse(fmt, text); err == nil {
 			return

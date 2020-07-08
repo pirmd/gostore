@@ -311,7 +311,7 @@ func TestRebuildIndex(t *testing.T) {
 func sameRecordData(tb testing.TB, r *Record, m map[string]interface{}, message string) {
 	tb.Helper()
 
-	rInJSON, err := json.Marshal(r.UserValue())
+	rInJSON, err := json.Marshal(r.Data())
 	if err != nil {
 		tb.Fatalf("Failed to marshall to JSON: %v", err)
 	}
@@ -331,7 +331,7 @@ func sameRecordsData(tb testing.TB, rec Records, maps []map[string]interface{}, 
 
 	rInJSON := []string{}
 	for _, r := range rec {
-		j, err := json.Marshal(r.UserValue())
+		j, err := json.Marshal(r.Data())
 		if err != nil {
 			tb.Fatalf("Failed to marshall to JSON: %v", err)
 		}

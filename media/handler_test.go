@@ -21,7 +21,7 @@ func (mh *mockHandler) GetMetadata(f File) (Metadata, error) {
 }
 
 func (mh *mockHandler) FetchMetadata(mdata Metadata) (Metadata, error) {
-	mdata.Set("Fetcher", mh.typ)
+	mdata["Fetcher"] = mh.typ
 	return mdata, nil
 }
 

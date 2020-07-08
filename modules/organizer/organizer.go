@@ -89,7 +89,7 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 	//name should be relative to the collection's root
 	name = filepath.ToSlash(filepath.Clean("/" + name))[1:]
 
-	o.log.Printf("Module '%s': renaming '%s' to '%s'", moduleName, r, name)
+	o.log.Printf("Module '%s': renaming '%s' to '%s'", moduleName, r.Key(), name)
 	r.SetKey(name)
 	return nil
 }

@@ -140,6 +140,7 @@ func get(m map[string]interface{}, key string) string {
 		return ""
 	}
 
+	// TODO(pirmd): allow "XXXDate" key to be parsed even if not in time.Time type (using utile.ParseTime)
 	k := strings.TrimPrefix(key, "?")
 	if v, exists := m[k]; exists {
 		if t, ok := v.(time.Time); ok {

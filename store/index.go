@@ -59,7 +59,7 @@ func (s *storeidx) Empty() (err error) {
 
 // Put adds a new value to the new index
 func (s *storeidx) Put(r *Record) error {
-	return s.idx.Index(r.key, r.value)
+	return s.idx.Index(r.key, r.Value())
 }
 
 // Exists checks if an entry  exists for the given key

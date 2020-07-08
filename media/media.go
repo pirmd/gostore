@@ -4,8 +4,6 @@ import (
 	"errors"
 	"io"
 	"os"
-
-	"github.com/pirmd/gostore/store"
 )
 
 var (
@@ -15,7 +13,7 @@ var (
 
 // Metadata represents a set of media's metadata, it is essentially a set of (key,
 // value).
-type Metadata = store.Value
+type Metadata = map[string]interface{}
 
 // File represents a media file
 type File interface {
@@ -37,7 +35,7 @@ func GetMetadata(f File) (Metadata, error) {
 		return nil, err
 	}
 
-	mdata.Set(TypeField, mh.Type())
+	mdata[TypeField] = mh.Type()
 
 	return mdata, nil
 }

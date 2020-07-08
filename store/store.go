@@ -115,7 +115,7 @@ func (s *Store) Close() error {
 // records resulting from an inconsistent state of the Store (e.g. file exists
 // but entry in db does not)
 func (s *Store) Create(r *Record, file io.Reader) error {
-	s.log.Printf("Adding new record to store '%s'", r)
+	s.log.Printf("Adding new record to store '%s'", r.Key())
 
 	exists, err := s.Exists(r.key)
 	if err != nil {
@@ -225,7 +225,7 @@ func (s *Store) OpenRecord(key string) (vfs.File, error) {
 // Update replaces an existing Store's record. Update will fail if the new
 // record key is already existing (ErrRecordAlreadyExists).
 func (s *Store) Update(key string, r *Record) error {
-	s.log.Printf("Updating record '%s' to '%s'", key, r)
+	s.log.Printf("Updating record '%s' to '%s'", key, r.Key())
 
 	if r.key != key {
 		exists, err := s.Exists(r.key)

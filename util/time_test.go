@@ -1,4 +1,4 @@
-package store
+package util
 
 import (
 	"reflect"
@@ -17,7 +17,7 @@ func TestParseTime(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		got, err := parseTime(tc.in)
+		got, err := ParseTime(tc.in)
 		if err != nil {
 			t.Errorf("Fail to parse time for %s: %v", tc.in, err)
 		}
