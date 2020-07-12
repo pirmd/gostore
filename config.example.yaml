@@ -15,13 +15,13 @@
 # It can be set at runtime using '--delete-ghosts' flag
 #deleteGhosts: false
                     
-# DeleteOrphans is a flag that instructs gostore.Check to delete any
+# deleteOrphans is a flag that instructs gostore.Check to delete any
 # file of the store's filesystem that is not recorded in the store's
 # database.
 # It can be set at runtime using '--delete-orphans' flag
 #deleteOrphans: false
                                             
-# ImportOrphans is a flag that instructs gostore.Check to re-import a
+# importOrphans is a flag that instructs gostore.Check to re-import a
 # file of the store's filesystem that is not recorded in the store's
 # database.
 # It can be set at runtime using '--import-orphans' flag
@@ -117,9 +117,8 @@ ui:
 
 # import lists the different actions to operate on metadata during the import step.
 import:
-    # GoogleBookQuerier is a module that looks for information from Google
-    # Books API to compelete a record metadata.
-    - name: GoogleBooksQuerier
+    # fetcher a module that retrieves metadata from online databases.
+    - name: fetcher
       
     # dehtmlizer is a modules that removes any html tags from a media metadata.
     # It can optionally convert the html taging into another idioms (like

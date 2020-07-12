@@ -28,7 +28,23 @@ func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
 	if err != nil {
 		return nil, err
 	}
-	return epub2mdata(epubData), nil
+
+	mdata := epub2mdata(epubData)
+	mdata[media.TypeField] = mh.Type()
+	return mdata, nil
+}
+
+func (mh *epubHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
+	metadata, err := fetchMetadata(mdata)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, m := range metadata {
+		m[media.TypeField] = mh.Type()
+	}
+
+	return metadata, nil
 }
 
 func epub2mdata(epubData *epub.Metadata) media.Metadata {

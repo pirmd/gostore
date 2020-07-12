@@ -40,7 +40,7 @@ func GetMetadata(f File) (Metadata, error) {
 	return mdata, nil
 }
 
-// GetMetadataFromFile reads metadata from the provided filename
+// GetMetadataFromFile reads metadata from the provided filename.
 func GetMetadataFromFile(path string) (Metadata, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -49,4 +49,17 @@ func GetMetadataFromFile(path string) (Metadata, error) {
 	defer f.Close()
 
 	return GetMetadata(f)
+}
+
+// FetchMetadata retrieves the metadata from an external source (usually an
+// internet data base) that corresponds to the provided known data.
+func FetchMetadata(mdata Metadata) ([]Metadata, error) {
+	typ := TypeOf(mdata)
+
+	mh, err := handlers.ForType(typ)
+	if err != nil {
+		return nil, err
+	}
+
+	return mh.FetchMetadata(mdata)
 }

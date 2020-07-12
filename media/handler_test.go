@@ -20,9 +20,9 @@ func (mh *mockHandler) GetMetadata(f File) (Metadata, error) {
 	return map[string]interface{}{}, nil
 }
 
-func (mh *mockHandler) FetchMetadata(mdata Metadata) (Metadata, error) {
+func (mh *mockHandler) FetchMetadata(mdata Metadata) ([]Metadata, error) {
 	mdata["Fetcher"] = mh.typ
-	return mdata, nil
+	return []Metadata{mdata}, nil
 }
 
 func TestForType(t *testing.T) {

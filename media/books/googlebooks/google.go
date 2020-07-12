@@ -14,10 +14,11 @@ import (
 )
 
 const (
-	googleBooksURL = "https://www.googleapis.com/books/v1/volumes"
+	apiURL = "https://www.googleapis.com/books/v1/volumes"
 )
 
 // TODO(pirmd): check again Google book API to improve the query
+// TODO(pirmd): make it independent from gostore/media (move vol2mdata to gostore/media/books)
 
 var (
 	// reSerieGuesser is a collection of regexp to extract series information
@@ -31,37 +32,9 @@ var (
 	}
 )
 
-type googleVolumes struct {
-	Items []*googleVolume `json:"items"`
-}
-
-type googleVolume struct {
-	VolumeInfo *googleVolumeInfo `json:"volumeInfo"`
-}
-
-type googleVolumeInfo struct {
-	Title         string       `json:"title"`
-	SubTitle      string       `json:"subtitle"`
-	Language      string       `json:"language"`
-	Identifier    []identifier `json:"industryIdentifiers"`
-	Authors       []string     `json:"authors"`
-	Subject       []string     `json:"categories"`
-	Description   string       `json:"description"`
-	Publisher     string       `json:"publisher"`
-	PublishedDate string       `json:"publishedDate"`
-	PageCount     int64        `json:"pageCount"`
-}
-
-type identifier struct {
-	Type       string `json:"type"`
-	Identifier string `json:"identifier"`
-}
-
-// googleBooks wraps Google books API
-type googleBooks struct{}
-
-func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, error) {
-	queryURL, err := g.buildQueryURL(mdata)
+// Search queries googleapi for books that corresponds to the provided metadata.
+func Search(mdata media.Metadata) ([]media.Metadata, error) {
+	queryURL, err := buildQueryURL(mdata)
 	if err != nil {
 		return nil, err
 	}
@@ -81,20 +54,46 @@ func (g *googleBooks) LookForBooks(mdata media.Metadata) ([]media.Metadata, erro
 		return nil, err
 	}
 
-	var vol *googleVolumes
+	var vol *volumes
 	if err := json.Unmarshal(data, &vol); err != nil {
 		return nil, err
 	}
 
 	var metadata []media.Metadata
 	for _, v := range vol.Items {
-		metadata = append(metadata, g.vol2mdata(v.VolumeInfo))
+		metadata = append(metadata, vol2mdata(v.VolumeInfo))
 	}
 
 	return metadata, nil
 }
 
-func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
+type volumes struct {
+	Items []*volume `json:"items"`
+}
+
+type volume struct {
+	VolumeInfo *volumeInfo `json:"volumeInfo"`
+}
+
+type volumeInfo struct {
+	Title         string       `json:"title"`
+	SubTitle      string       `json:"subtitle"`
+	Language      string       `json:"language"`
+	Identifier    []identifier `json:"industryIdentifiers"`
+	Authors       []string     `json:"authors"`
+	Subject       []string     `json:"categories"`
+	Description   string       `json:"description"`
+	Publisher     string       `json:"publisher"`
+	PublishedDate string       `json:"publishedDate"`
+	PageCount     int64        `json:"pageCount"`
+}
+
+type identifier struct {
+	Type       string `json:"type"`
+	Identifier string `json:"identifier"`
+}
+
+func buildQueryURL(mdata media.Metadata) (string, error) {
 	var query []string
 	if title, ok := mdata["Title"].(string); ok {
 		query = append(query, "intitle:"+title)
@@ -118,12 +117,12 @@ func (g *googleBooks) buildQueryURL(mdata media.Metadata) (string, error) {
 	q.Set("printType", "books")
 	q.Set("maxResults", "5")
 
-	return googleBooksURL + "?" + q.Encode(), nil
+	return apiURL + "?" + q.Encode(), nil
 }
 
-func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
+func vol2mdata(vi *volumeInfo) media.Metadata {
 	mdata := make(media.Metadata)
-	title, subtitle, serie, seriePos := g.parseTitle(vi)
+	title, subtitle, serie, seriePos := parseTitle(vi)
 
 	mdata["Title"] = title
 	mdata["Authors"] = vi.Authors
@@ -173,7 +172,7 @@ func (g *googleBooks) vol2mdata(vi *googleVolumeInfo) media.Metadata {
 
 // parseTitle use a simple heuristic to decipher Google books information about
 // series hidden in title/subtitle volume information
-func (g *googleBooks) parseTitle(vi *googleVolumeInfo) (title string, subtitle string, serieName string, seriePos string) {
+func parseTitle(vi *volumeInfo) (title string, subtitle string, serieName string, seriePos string) {
 	for _, re := range reSerieGuesser {
 		if r := submatchMap(re, vi.Title); len(r) > 0 {
 			return r["title"], vi.SubTitle, r["serie"], r["seriePos"]
