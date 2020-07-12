@@ -140,7 +140,6 @@ func get(m map[string]interface{}, key string) string {
 		return ""
 	}
 
-	// TODO(pirmd): allow "XXXDate" key to be parsed even if not in time.Time type (using utile.ParseTime)
 	k := strings.TrimPrefix(key, "?")
 	if v, exists := m[k]; exists {
 		if t, ok := v.(time.Time); ok {
@@ -175,15 +174,6 @@ func hasValue(k string, maps ...map[string]interface{}) bool {
 	return false
 }
 
-func hasKey(k string, maps ...map[string]interface{}) bool {
-	for _, m := range maps {
-		if _, exists := m[k]; !exists {
-			return false
-		}
-	}
-	return true
-}
-
 func isInSlice(s string, slice []string) bool {
 	for _, item := range slice {
 		if s == item {
@@ -196,21 +186,4 @@ func isInSlice(s string, slice []string) bool {
 func isZero(v interface{}) bool {
 	val := reflect.ValueOf(v)
 	return !val.IsValid() || reflect.DeepEqual(val.Interface(), reflect.Zero(val.Type()).Interface())
-}
-
-//TODO: depreciate this function?
-func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
-	if len(maps) == 0 {
-		return
-	}
-
-	allKeys := getKeys([]map[string]interface{}{maps[0]}, fields...)
-
-	for _, k := range allKeys {
-		if hasKey(strings.TrimPrefix(k, "?"), maps[1:]...) {
-			keys = append(keys, k)
-		}
-	}
-
-	return
 }

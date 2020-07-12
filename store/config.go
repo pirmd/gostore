@@ -74,7 +74,6 @@ func UsingLogger(l *log.Logger) Option {
 // Available analyzer are any analyzer compatible with bleve-search.
 func UsingDefaultAnalyzer(analyzer string) Option {
 	return func(s *Store) error {
-		// TODO(pirmd): check what happen if analyzer is empty on bleve's side
 		if analyzer != "" {
 			s.idx.Mapping.DefaultAnalyzer = analyzer
 		}
@@ -91,7 +90,6 @@ func UsingDefaultAnalyzer(analyzer string) Option {
 // manually regenerate the index if you modify the mapping.
 func UsingIndexingScheme(idxMappings *mapping.IndexMappingImpl) Option {
 	return func(s *Store) error {
-		// TODO(pirmd): check what happen on bleve's side if mapping is nil
 		if idxMappings != nil {
 			s.idx.Mapping = idxMappings
 		}

@@ -20,9 +20,6 @@ const (
 	moduleName = "dehtmlizer"
 )
 
-//TODO(pirmd): Allow configuration of which field to clean (maybe depending
-//on Record's Type like module organizer)
-
 var (
 	_ modules.Module = (*dehtmlizer)(nil) // Makes sure that dehtmlizer implements modules.Module
 )
@@ -88,8 +85,6 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 		return nil
 	}
 
-	//TODO(pirmd): we are lead to make a lot of assumptions of the type of
-	//stored attribute, need to do something better than map[string]interface{}
 	html, ok := value.(string)
 	if !ok {
 		return fmt.Errorf("%s: cannot dehtmlize field '%s' that does not contain text", moduleName, field)

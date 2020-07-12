@@ -11,8 +11,6 @@ var (
 	_ media.Handler = (*epubHandler)(nil)
 )
 
-//TODO: rename ISBN to ISBN_13 (?)
-
 type epubHandler struct{}
 
 func (mh *epubHandler) Type() string {

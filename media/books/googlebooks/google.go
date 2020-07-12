@@ -17,8 +17,8 @@ const (
 	apiURL = "https://www.googleapis.com/books/v1/volumes"
 )
 
-// TODO(pirmd): check again Google book API to improve the query
-// TODO(pirmd): make it independent from gostore/media (move vol2mdata to gostore/media/books)
+// TODO(pirmd): make it independent from gostore/media (move vol2mdata to
+// gostore/media/books)
 
 var (
 	// reSerieGuesser is a collection of regexp to extract series information

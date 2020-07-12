@@ -96,7 +96,6 @@ func (s *storedb) Get(key string) (*Record, error) {
 func (s *storedb) Exists(key string) (bool, error) {
 	var buf []byte
 
-	//TODO: check if something better than Get can be used
 	if err := s.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName))
 		buf = b.Get([]byte(key))
