@@ -30,10 +30,10 @@ var (
 // Config defines the different configurations that can be used to customized
 // the behavior of a dehtmlizer module.
 type Config struct {
-	// Fields2Clean lists the record's fields that should be cleaned from any
-	// html tags.
-	// Non-existing fields are ignored.
-	Fields2Clean []string
+	// Fields lists the record's fields that should be cleaned from any html
+	// tags.
+	// Non-existing fields are silently ignored.
+	Fields []string
 
 	// OutputStyle is the name of the target style to use when converting html
 	// to text. Known styles are text and markdown.
@@ -47,15 +47,15 @@ func newConfig() *Config {
 type dehtmlizer struct {
 	log *log.Logger
 
-	fields2clean []string
-	outputStyle  style.Styler
+	fields      []string
+	outputStyle style.Styler
 }
 
 func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	d := &dehtmlizer{
-		log:          logger,
-		fields2clean: cfg.Fields2Clean,
-		outputStyle:  style.NewPlaintext(),
+		log:         logger,
+		fields:      cfg.Fields,
+		outputStyle: style.NewPlaintext(),
 	}
 
 	switch cfg.OutputStyle {
@@ -73,7 +73,7 @@ func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 
 // ProcessRecord transforms any text in HTML format into markdown,
 func (d *dehtmlizer) ProcessRecord(r *store.Record) error {
-	for _, field := range d.fields2clean {
+	for _, field := range d.fields {
 		d.log.Printf("Module '%s': clean field '%s'", moduleName, field)
 		if err := d.html2txt(r, field); err != nil {
 			return err

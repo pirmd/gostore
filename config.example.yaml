@@ -131,8 +131,8 @@ import:
     # markdown)
     - name: dehtmlizer
       config: &dehtmlizer
-          # fields2clean is the list of metadata fields to clean from html tags
-          fields2clean: [ Description ]
+          # fields is the list of metadata fields to clean from html tags
+          fields: [ Description ]
 
           # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
           outputstyle: markdown
