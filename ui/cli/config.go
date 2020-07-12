@@ -2,8 +2,6 @@ package cli
 
 import (
 	"fmt"
-
-	"github.com/kballard/go-shellquote"
 )
 
 // Config describes configuration for User Interface
@@ -66,15 +64,8 @@ func NewFromConfig(cfg *Config) (*CLI, error) {
 	}
 
 	if !cfg.Auto {
-		var err error
-
-		if ui.editor, err = shellquote.Split(cfg.EditorCmd); err != nil {
-			return nil, fmt.Errorf("CLI config: parsing EditorCmd failed: %v", err)
-		}
-
-		if ui.merger, err = shellquote.Split(cfg.MergerCmd); err != nil {
-			return nil, fmt.Errorf("CLI config: parsing MergerCmd failed: %v", err)
-		}
+		ui.editor = cfg.EditorCmd
+		ui.merger = cfg.MergerCmd
 	}
 
 	return ui, nil

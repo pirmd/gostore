@@ -2,14 +2,17 @@ package cli
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
+
+	"github.com/kballard/go-shellquote"
 )
 
 // edit spans an editor to modify the input text and feedbacks the result.
-func edit(data []byte, cmdEditor []string) ([]byte, error) {
+func edit(data []byte, cmdEditor string) ([]byte, error) {
 	if len(cmdEditor) == 0 {
 		return data, nil
 	}
@@ -19,7 +22,11 @@ func edit(data []byte, cmdEditor []string) ([]byte, error) {
 		return nil, err
 	}
 
-	cmdArgs := append(cmdEditor, tmpfile)
+	cmdArgs, err := parseCmd(cmdEditor, tmpfile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse editor command line '%s': %s", cmdEditor, err)
+	}
+
 	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	ed.Stdout = os.Stdout
 	ed.Stdin = os.Stdin
@@ -39,7 +46,7 @@ func edit(data []byte, cmdEditor []string) ([]byte, error) {
 
 // editAsJSON fires-up an editor to modify the provided interface using its JSON
 // form.
-func editAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
+func editAsJSON(v interface{}, cmdEditor string) (interface{}, error) {
 	j, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		return nil, err
@@ -66,7 +73,7 @@ func editAsJSON(v interface{}, cmdEditor []string) (interface{}, error) {
 }
 
 // merge spans an editor to merge the input texts and feedbacks the result.
-func merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
+func merge(left, right []byte, cmdMerger string) ([]byte, []byte, error) {
 	if len(cmdMerger) == 0 {
 		return left, right, nil
 	}
@@ -81,7 +88,11 @@ func merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
 		return nil, nil, err
 	}
 
-	cmdArgs := append(cmdMerger, tmpfileL, tmpfileR)
+	cmdArgs, err := parseCmd(cmdMerger, tmpfileL, tmpfileR)
+	if err != nil {
+		return nil, nil, fmt.Errorf("cannot parse merger command line '%s': %s", cmdMerger, err)
+	}
+
 	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	ed.Stdout = os.Stdout
 	ed.Stdin = os.Stdin
@@ -106,7 +117,7 @@ func merge(left, right []byte, cmdMerger []string) ([]byte, []byte, error) {
 
 // mergeAsJSON fires-up an editor to merge the provided interfaces using its
 // JSON form.
-func mergeAsJSON(left, right interface{}, cmdMerger []string) (interface{}, interface{}, error) {
+func mergeAsJSON(left, right interface{}, cmdMerger string) (interface{}, interface{}, error) {
 	l, err := json.MarshalIndent(left, "", "  ")
 	if err != nil {
 		return nil, nil, err
@@ -160,7 +171,8 @@ func data2file(data []byte) (string, error) {
 	return tmpfile.Name(), nil
 }
 
-// file2data reads back the content of a temp file and delete it whatever happen
+// file2data reads back the content of a temp file and deletes it whatever
+// happens. file2data strips comments line.
 func file2data(name string) ([]byte, error) {
 	defer func() { os.Remove(name) }()
 
@@ -170,4 +182,16 @@ func file2data(name string) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+// parseCmd parses a command-line
+func parseCmd(cmdline string, args ...interface{}) ([]string, error) {
+	c := fmt.Sprintf(cmdline, args...)
+
+	cmd, err := shellquote.Split(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return cmd, nil
 }

@@ -55,13 +55,17 @@ ui:
     
     # editorcmd contains the invocation stanza to fire-up a text editor
     # allowing the user to modify metadata.
-    # If editocmd is not set, metadata modification is skipped.
-    editorcmd: $EDITOR
+    # editorcmd accepts one argument which is the name of file to be edited.
+    # editorcmd can rely on environment variable.
+    # If editorcmd is not set, metadata manual modification is skipped.
+    editorcmd: $EDITOR "%s"
           
     # mergercmd contains the invocation stanza to fire-up a text editor
     # allowing the user to mergel two set of metadata.
-    # If mergercmd is not set, metadata modification is skipped.
-    mergercmd: vimdiff
+    # mergecmd accepts two argument which is the name of files to be merged.
+    # mergecmd can rely on environment variable.
+    # If mergercmd is not set, metadata manual modification is skipped.
+    mergercmd: vim "%[2]s" -c "vert diffsplit %[1]s"
 
     # outputformat points to the style to print-out metadata. It should be one
     # of the defined formatters.

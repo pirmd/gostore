@@ -26,8 +26,8 @@ var (
 
 // CLI is a user interface built for the command-line.
 type CLI struct {
-	editor []string
-	merger []string
+	editor string
+	merger string
 
 	style    style.Styler
 	printers *template.Template
