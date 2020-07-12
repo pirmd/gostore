@@ -197,3 +197,20 @@ func isZero(v interface{}) bool {
 	val := reflect.ValueOf(v)
 	return !val.IsValid() || reflect.DeepEqual(val.Interface(), reflect.Zero(val.Type()).Interface())
 }
+
+//TODO: depreciate this function?
+func getCommonKeys(maps []map[string]interface{}, fields ...string) (keys []string) {
+	if len(maps) == 0 {
+		return
+	}
+
+	allKeys := getKeys([]map[string]interface{}{maps[0]}, fields...)
+
+	for _, k := range allKeys {
+		if hasKey(strings.TrimPrefix(k, "?"), maps[1:]...) {
+			keys = append(keys, k)
+		}
+	}
+
+	return
+}

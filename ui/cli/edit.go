@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +12,55 @@ import (
 
 	"github.com/kballard/go-shellquote"
 )
+
+// editAsJSON fires-up an editor to modify the provided interface using its JSON
+// form.
+func editAsJSON(m map[string]interface{}, cmdEditor string) (map[string]interface{}, error) {
+	j, err := json.MarshalIndent(m, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	buf, err := edit(j, cmdEditor)
+	if err != nil {
+		return nil, err
+	}
+
+	var edited map[string]interface{}
+	err = json.Unmarshal(buf, &edited)
+	if err != nil {
+		return nil, err
+	}
+
+	return edited, nil
+}
+
+// mergeAsJSON fires-up an editor to merge the provided interfaces using its
+// JSON form.
+func mergeAsJSON(left, right map[string]interface{}, cmdMerger string) (map[string]interface{}, error) {
+	l, err := json.MarshalIndent(left, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	r, err := json.MarshalIndent(right, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	bufL, _, err := merge(l, r, cmdMerger)
+	if err != nil {
+		return nil, err
+	}
+
+	var merged map[string]interface{}
+	err = json.Unmarshal(bufL, &merged)
+	if err != nil {
+		return nil, err
+	}
+
+	return merged, nil
+}
 
 // edit spans an editor to modify the input text and feedbacks the result.
 func edit(data []byte, cmdEditor string) ([]byte, error) {
@@ -42,34 +93,6 @@ func edit(data []byte, cmdEditor string) ([]byte, error) {
 	}
 
 	return body, nil
-}
-
-// editAsJSON fires-up an editor to modify the provided interface using its JSON
-// form.
-func editAsJSON(v interface{}, cmdEditor string) (interface{}, error) {
-	j, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		return nil, err
-	}
-
-	buf, err := edit(j, cmdEditor)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(buf, &v)
-	if err != nil {
-		return nil, err
-	}
-
-	//I'm not that sure that v needs to be returned as for most of the cases the
-	//Unmarshal directive should have already propagated the mods. It happens
-	//that it is not working at least for map (that should nee to be
-	//reallocated), so result is also returned to the user.
-	//
-	//TODO(pirmd): it is probably not the right way to do, try harder to find a
-	//correct approach
-	return v, nil
 }
 
 // merge spans an editor to merge the input texts and feedbacks the result.
@@ -115,41 +138,7 @@ func merge(left, right []byte, cmdMerger string) ([]byte, []byte, error) {
 	return bodyL, bodyR, nil
 }
 
-// mergeAsJSON fires-up an editor to merge the provided interfaces using its
-// JSON form.
-func mergeAsJSON(left, right interface{}, cmdMerger string) (interface{}, interface{}, error) {
-	l, err := json.MarshalIndent(left, "", "  ")
-	if err != nil {
-		return nil, nil, err
-	}
-
-	r, err := json.MarshalIndent(right, "", "  ")
-	if err != nil {
-		return nil, nil, err
-	}
-
-	bufL, bufR, err := merge(l, r, cmdMerger)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	err = json.Unmarshal(bufL, &left)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	err = json.Unmarshal(bufR, &right)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	//TODO(pirmd): it is probably not the right way to do, try harder to find a
-	//correct approach
-	return left, right, nil
-}
-
-// data2file copy the content of data to a temporary text file, perfect for
-// editing purpose
+// data2file copy the content of data to a temporary text file
 func data2file(data []byte) (string, error) {
 	tmpfile, err := ioutil.TempFile("", "")
 	if err != nil {
@@ -176,12 +165,25 @@ func data2file(data []byte) (string, error) {
 func file2data(name string) ([]byte, error) {
 	defer func() { os.Remove(name) }()
 
-	body, err := ioutil.ReadFile(name)
+	f, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 
-	return body, nil
+	data := []byte{}
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Bytes()
+		if !bytes.HasPrefix(line, []byte{'#'}) {
+			data = append(data, line...)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 // parseCmd parses a command-line

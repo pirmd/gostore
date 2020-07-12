@@ -70,8 +70,7 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 // Edit fires-up a new editor to modify a map
 func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.editor) > 0 {
-		edited, err := editAsJSON(m, ui.editor)
-		return edited.(map[string]interface{}), err
+		return editAsJSON(m, ui.editor)
 	}
 
 	return m, nil
@@ -80,8 +79,7 @@ func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 // Merge fires-up a new editor to merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.merger) > 0 {
-		merged, _, err := mergeAsJSON(m, n, ui.merger)
-		return merged.(map[string]interface{}), err
+		return mergeAsJSON(m, n, ui.merger)
 	}
 
 	return mergeMaps(m, n)
