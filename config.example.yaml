@@ -120,6 +120,12 @@ import:
     # fetcher a module that retrieves metadata from online databases.
     - name: fetcher
       
+    # scrubber is a modules that removes any fields a media metadata.
+    - name: scrubber
+      config: &scrubber
+          # fields is the list of metadata fields to scrub
+          fields: [ Comment ]
+      
     # dehtmlizer is a modules that removes any html tags from a media metadata.
     # It can optionally convert the html taging into another idioms (like
     # markdown)
@@ -169,6 +175,10 @@ update:
     - name: organizer
       config:
         <<: *organizer
+
+    - name: scrubber
+      config:
+          <<: *scrubber
 
     - name: dehtmlizer
       config:

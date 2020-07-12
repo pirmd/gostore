@@ -63,9 +63,13 @@ func (r *Record) Get(k string) interface{} {
 }
 
 // Set adds/modifies a record's stored information.
-// Set ensures that fields supposed to host a time stamp or a date are of time type.
 func (r *Record) Set(k string, v interface{}) {
 	r.value.Set(k, v)
+}
+
+// Del removes a record's stored information.
+func (r *Record) Del(k string) {
+	r.value.Del(k)
 }
 
 // Records represents a collection of Record
@@ -157,4 +161,9 @@ func (val *value) Get(key string) interface{} {
 // Set adds a new (key, value).
 func (val *value) Set(k string, v interface{}) {
 	val.Data[k] = v
+}
+
+// Del removes a (key, value).
+func (val *value) Del(k string) {
+	delete(val.Data, k)
 }
