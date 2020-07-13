@@ -114,8 +114,8 @@ func TestJailfsRemove(t *testing.T) {
 			t.Errorf("Succeed to remove root folder")
 		}
 	})
-	//TODO(pirmd): introduce verify Empty()
-	if failure := tstDir.ShouldHaveContent(nil); failure != nil {
+
+	if failure := tstDir.ShouldBeEmpty(); failure != nil {
 		t.Errorf("Failed to remove folders:\n%v", failure)
 	}
 }
