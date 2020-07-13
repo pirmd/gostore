@@ -22,15 +22,15 @@ type File interface {
 	io.Seeker
 }
 
-// GetMetadata reads metadata from the provided File and setup the proper media
+// ReadMetadata reads metadata from the provided File and setup the proper media
 // Type if not done by the corresponding Handler.
-func GetMetadata(f File) (Metadata, error) {
+func ReadMetadata(f File) (Metadata, error) {
 	mh, err := handlers.ForReader(f)
 	if err != nil {
 		return nil, err
 	}
 
-	mdata, err := mh.GetMetadata(f)
+	mdata, err := mh.ReadMetadata(f)
 	if err != nil {
 		return nil, err
 	}
@@ -40,23 +40,21 @@ func GetMetadata(f File) (Metadata, error) {
 	return mdata, nil
 }
 
-// GetMetadataFromFile reads metadata from the provided file name.
-func GetMetadataFromFile(path string) (Metadata, error) {
+// ReadMetadataFromFile reads metadata from the provided file name.
+func ReadMetadataFromFile(path string) (Metadata, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return GetMetadata(f)
+	return ReadMetadata(f)
 }
 
 // FetchMetadata retrieves the metadata from an external source (usually an
 // internet data base) that corresponds to the provided known data.
 func FetchMetadata(mdata Metadata) ([]Metadata, error) {
-	typ := TypeOf(mdata)
-
-	mh, err := handlers.ForType(typ)
+	mh, err := handlers.ForMetadata(mdata)
 	if err != nil {
 		return nil, err
 	}
@@ -68,9 +66,7 @@ func FetchMetadata(mdata Metadata) ([]Metadata, error) {
 // scale (0: very bad, 100: perfect). If the provided metadata is of unknown
 // type, returns 0.
 func CheckMetadata(mdata Metadata) int {
-	typ := TypeOf(mdata)
-
-	mh, err := handlers.ForType(typ)
+	mh, err := handlers.ForMetadata(mdata)
 	if err != nil {
 		return 0
 	}

@@ -32,8 +32,8 @@ type Handler interface {
 	// Mimetype provides the mimetype that the handler can manage.
 	Mimetype() string
 
-	// GetMetadata retrieves the metadata from a given file.
-	GetMetadata(File) (Metadata, error)
+	// ReadMetadata retrieves the metadata from a given file.
+	ReadMetadata(File) (Metadata, error)
 
 	// FetchMetadata retrieves the metadata from an external source (usually an
 	// internet data base) that corresponds to the provided known data.
@@ -90,6 +90,15 @@ func (h Handlers) ForType(typ string) (Handler, error) {
 	}
 
 	return h.defaultHandler()
+}
+
+// ForMetadata retrieves the handler corresponding to the provided metadata.
+// Should no registered handler be found, the handler for DefaultType is
+// returned if it exists.
+//
+// ErrUnknownMediaType is returned if no handler is found.
+func (h Handlers) ForMetadata(mdata Metadata) (Handler, error) {
+	return h.ForType(TypeOf(mdata))
 }
 
 // defaultHandler is the handler that manages DefaultMimetype

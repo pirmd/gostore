@@ -16,7 +16,7 @@ func (mh *mockHandler) Mimetype() string {
 	return mh.mtyp
 }
 
-func (mh *mockHandler) GetMetadata(f File) (Metadata, error) {
+func (mh *mockHandler) ReadMetadata(f File) (Metadata, error) {
 	return map[string]interface{}{}, nil
 }
 

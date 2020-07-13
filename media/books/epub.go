@@ -21,7 +21,7 @@ func (mh *epubHandler) Mimetype() string {
 	return "application/epub+zip"
 }
 
-func (mh *epubHandler) GetMetadata(f media.File) (media.Metadata, error) {
+func (mh *epubHandler) ReadMetadata(f media.File) (media.Metadata, error) {
 	epubData, err := epub.GetMetadata(f)
 	if err != nil {
 		return nil, err

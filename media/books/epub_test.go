@@ -14,7 +14,7 @@ const (
 	testdataPath = "../../testdata" //Use test data of the main gostore package
 )
 
-func TestGetMetadata(t *testing.T) {
+func TestReadMetadata(t *testing.T) {
 	testCases, err := filepath.Glob(filepath.Join(testdataPath, "*.epub"))
 	if err != nil {
 		t.Fatalf("cannot read test data in %s:%v", testdataPath, err)
@@ -30,7 +30,7 @@ func TestGetMetadata(t *testing.T) {
 		}
 		defer f.Close()
 
-		m, err := epubH.GetMetadata(f)
+		m, err := epubH.ReadMetadata(f)
 		if err != nil {
 			t.Errorf("Fail to get metadata for %s: %v", tc, err)
 		}

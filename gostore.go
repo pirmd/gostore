@@ -330,7 +330,7 @@ func (gs *Gostore) insert(path string) (*store.Record, error) {
 	}
 	defer f.Close()
 
-	mdataFromFile, err := media.GetMetadata(f)
+	mdataFromFile, err := media.ReadMetadata(f)
 	if err != nil {
 		return nil, err
 	}
