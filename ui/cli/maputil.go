@@ -2,10 +2,11 @@ package cli
 
 import (
 	"fmt"
-	"reflect"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/pirmd/gostore/util"
 )
 
 const (
@@ -151,7 +152,7 @@ func get(m map[string]interface{}, key string) string {
 			return t.Format(timeStampFmt)
 		}
 
-		if !isZero(v) {
+		if !util.IsZero(v) {
 			return fmt.Sprintf("%v", v)
 		}
 	}
@@ -165,7 +166,7 @@ func get(m map[string]interface{}, key string) string {
 
 func hasValue(k string, maps ...map[string]interface{}) bool {
 	for _, m := range maps {
-		if isZero(m[k]) {
+		if util.IsZero(m[k]) {
 			continue
 		}
 		return true
@@ -181,9 +182,4 @@ func isInSlice(s string, slice []string) bool {
 		}
 	}
 	return false
-}
-
-func isZero(v interface{}) bool {
-	val := reflect.ValueOf(v)
-	return !val.IsValid() || reflect.DeepEqual(val.Interface(), reflect.Zero(val.Type()).Interface())
 }

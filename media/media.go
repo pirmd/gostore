@@ -11,8 +11,8 @@ var (
 	ErrNoMetadataFound = errors.New("media: no metadata found")
 )
 
-// Metadata represents a set of media's metadata, it is essentially a set of (key,
-// value).
+// Metadata represents a set of media's metadata, it is essentially a set of
+// (key, value).
 type Metadata = map[string]interface{}
 
 // File represents a media file
@@ -40,7 +40,7 @@ func GetMetadata(f File) (Metadata, error) {
 	return mdata, nil
 }
 
-// GetMetadataFromFile reads metadata from the provided filename.
+// GetMetadataFromFile reads metadata from the provided file name.
 func GetMetadataFromFile(path string) (Metadata, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -62,4 +62,18 @@ func FetchMetadata(mdata Metadata) ([]Metadata, error) {
 	}
 
 	return mh.FetchMetadata(mdata)
+}
+
+// CheckMetadata assesses the quality level of a set of metadata on a 0 to 100
+// scale (0: very bad, 100: perfect). If the provided metadata is of unknown
+// type, returns 0.
+func CheckMetadata(mdata Metadata) int {
+	typ := TypeOf(mdata)
+
+	mh, err := handlers.ForType(typ)
+	if err != nil {
+		return 0
+	}
+
+	return mh.CheckMetadata(mdata)
 }

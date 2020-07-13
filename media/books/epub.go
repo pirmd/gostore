@@ -45,6 +45,10 @@ func (mh *epubHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, er
 	return metadata, nil
 }
 
+func (mh *epubHandler) CheckMetadata(mdata media.Metadata) int {
+	return checkMetadata(mdata)
+}
+
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
 	mdata := make(media.Metadata)
 

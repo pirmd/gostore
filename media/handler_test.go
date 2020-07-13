@@ -25,6 +25,10 @@ func (mh *mockHandler) FetchMetadata(mdata Metadata) ([]Metadata, error) {
 	return []Metadata{mdata}, nil
 }
 
+func (mh *mockHandler) CheckMetadata(mdata Metadata) int {
+	return 100
+}
+
 func TestForType(t *testing.T) {
 	testHandlers := Handlers{
 		&mockHandler{"test1", "mock/test1"},

@@ -38,6 +38,11 @@ type Handler interface {
 	// FetchMetadata retrieves the metadata from an external source (usually an
 	// internet data base) that corresponds to the provided known data.
 	FetchMetadata(Metadata) ([]Metadata, error)
+
+	// CheckMetadata assesses the quality level of the Metadata (completeness,
+	// consistency...). Quality level is to be based on a 0 to 100 scale (0:
+	// worse, 100: perfect).
+	CheckMetadata(Metadata) int
 }
 
 // Handlers represent the list of known media handlers.

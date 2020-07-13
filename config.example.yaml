@@ -124,7 +124,7 @@ import:
     # fetcher a module that retrieves metadata from online databases.
     - name: fetcher
       
-    # scrubber is a modules that removes any fields a media metadata.
+    # scrubber is a module that removes any fields a media metadata.
     - name: scrubber
       config: &scrubber
           # fields is the list of metadata fields to scrub
@@ -138,7 +138,8 @@ import:
           # fields is the list of metadata fields to clean from html tags
           fields: [ Description ]
 
-          # outputstyle is the iodiom in which html tagging is converted to. Available formats are plain text (default) or markdown
+          # outputstyle is the iodiom in which html tagging is converted to.
+          # Available formats are plain text (default) or markdown
           outputstyle: markdown
 
     # organizer is a module that rationalizes the name of a media based on its
@@ -172,14 +173,22 @@ import:
                 {{ $a := (tmpl "author" .) -}}
                 {{ $s := (tmpl "serie" .)  -}}
                 {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name) | sanitizePath -}}
-            
+
+    # checker is a module that removes any fields a media metadata.
+    - name: checker
+      config: &checker
+          # fieldName is the name of the metadata's field to store the quality
+          # level assessment.
+          fieldName: QALevel
+
+          # minLevel is the minimum allowed level. Any level below this threshold
+          # will result in an error aborting operation. Default to 0 (all quality
+          # level is accepted)
+          minLevel: 30
+
 
 # update lists the different actions to operate on metadata during the update step.
 update:
-    - name: organizer
-      config:
-        <<: *organizer
-
     - name: scrubber
       config:
           <<: *scrubber
@@ -187,3 +196,11 @@ update:
     - name: dehtmlizer
       config:
         <<: *dehtmlizer
+
+    - name: organizer
+      config:
+          <<: *organizer
+
+    - name: checker
+      config:
+          <<: *checker

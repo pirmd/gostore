@@ -32,7 +32,7 @@ var (
 	}
 )
 
-// Search queries googleapi for books that corresponds to the provided metadata.
+// Search queries Google books API for books that corresponds to the provided metadata.
 func Search(mdata media.Metadata) ([]media.Metadata, error) {
 	queryURL, err := buildQueryURL(mdata)
 	if err != nil {
