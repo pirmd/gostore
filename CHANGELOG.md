@@ -1,10 +1,20 @@
 # Changelog
 
-## [Unreleased]
+## [0.4.0] - 2020-07-14
 ## Added
-- Add support to import multiple files at once.
+- Add support to import/delete/list/edit multiple files or records at once.
+- Add a metadata fetcher module that replaces and generalizes googlebooks
+  module.
+- Add a basic quality level checker that scores metadata regarding their
+  completeness.
+- Add a scrubber module that delete some non meaningful metadata fields.
+- Add --sort ability when searching the collection.
+- Add fine-grained control over collection check and repair actions.
+- Add function to rebuild index, for example when changing index mapping.
+- Add customization of index text analyzers.
+- Differentiate verbose message from debug messages.
 
-## [0.3.4] - 2020.05.17
+## [0.3.4] - 2020-05-17
 ## Modified
 - Google books is converted to module format for better flexibility and later
   extendability
@@ -12,7 +22,7 @@
   schemes. 
 - FIX various bugs, spelling errors and extend test coverage.
 
-## [0.3.2] - 2020.05.05
+## [0.3.2] - 2020-05-05
 ## Added
 - Add new template function to only display a metadata if non empty.
 ## Modified
@@ -24,7 +34,7 @@
 - refactor slightly the way the configuration is handled inside gostrore, store
   and UI structs and modules.
 
-## [0.3.1] - 2020.03.07
+## [0.3.1] - 2020-03-07
 ### Added
 - re-introduce ability to read metadata from files with new
   github.com/pirmd/text/diff hoping better user readability
@@ -35,7 +45,7 @@
 - switch from bolt to go.etcd.io/bbolt
 - refactor ui module
 
-## [0.3.0] - 2019.11.19
+## [0.3.0] - 2019-11-19
 ### Modified
 - refactor gostore cli commands definition, separate core functions from ui and
   cli application definition.
@@ -45,7 +55,7 @@
 - disable ability to read metadata from files rather than from the collection's
   database 'until the diff algorithm is fixed)
 
-## [0.2.0] - 2019.08.11
+## [0.2.0] - 2019-08-11
 ### Added
 - add basic support to fetch metadata from google books api.
 - add a processing module that cleans epub description from any html formatting
