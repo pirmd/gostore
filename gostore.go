@@ -396,6 +396,16 @@ func (gs *Gostore) CheckAndRepair() error {
 	return errCheck.Err()
 }
 
+// RebuildIndex deletes then rebuild the index from scratch based on the
+// database content. It can be used for example to implement a new mapping
+// strategy or if things are really going bad
+func (gs *Gostore) RebuildIndex() error {
+	if err := gs.store.RebuildIndex(); err != nil {
+		return fmt.Errorf("rebuilding index failed: %s", err)
+	}
+	return nil
+}
+
 func (gs *Gostore) insert(path string) (*store.Record, error) {
 	f, err := os.Open(path)
 	if err != nil {

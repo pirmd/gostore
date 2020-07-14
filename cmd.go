@@ -285,5 +285,23 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
+	cmd.SubCommands.Add(&clapp.Command{
+		Name:  "rebuild-index",
+		Usage: "Deletes then rebuild the collection's index from scratch. Useful for example to implement a new mapping strategy or if things are really going bad.",
+
+		Execute: func() error {
+			gs, err := openGostore(cfg)
+			if err != nil {
+				return err
+			}
+			defer gs.Close()
+
+			if err := gs.RebuildIndex(); err != nil {
+				return err
+			}
+			return nil
+		},
+	})
+
 	return cmd
 }

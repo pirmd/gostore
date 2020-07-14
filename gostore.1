@@ -15,6 +15,7 @@ gostore - A command-line minimalist media collection manager.
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBdelete\fP \fIname\fP ...
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP ... [\fIdst\fP]
 \fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP [--\fBdelete-ghosts\fP] [--\fBdelete-orphans\fP] [--\fBimport-orphans\fP]
+\fBgostore\fP [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBrebuild-index\fP
 
 .SH Description
 .PP
@@ -65,6 +66,9 @@ Copy a record's media file from the collection to the given destination.
 .TP
 \fB\fBcheck\fP [<flags>]\fP
 Verify collection's consistency and repairs or reports found inconsistencies.
+.TP
+\fB\fBrebuild-index\fP\fP
+Deletes then rebuild the collection's index from scratch. Useful for example to implement a new mapping strategy or if things are really going bad.
 
 .SH Files
 .TP

@@ -24,6 +24,8 @@ __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__]
 __gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
 [--__style__=*STYLE*] __check__ [--__delete-ghosts__] [--__delete-orphans__] 
 [--__import-orphans__]
+__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
+[--__style__=*STYLE*] __rebuild-index__
 
 # DESCRIPTION
 
@@ -79,6 +81,10 @@ __export__ *name* ... [*dst*]
 
 __check__ [<flags>]
 :Verify collection's consistency and repairs or reports found inconsistencies.
+
+__rebuild-index__
+:Deletes then rebuild the collection's index from scratch. Useful for example to
+implement a new mapping strategy or if things are really going bad.
 
 # FILES
 
