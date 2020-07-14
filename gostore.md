@@ -36,6 +36,9 @@ additional information the user wants to record.
 
 # OPTIONS
 
+--__verbose__
+:Show verbose information.
+
 --__debug__
 :Show debug information.
 

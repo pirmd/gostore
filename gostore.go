@@ -20,6 +20,7 @@ import (
 // Gostore represents the main collection manager.
 type Gostore struct {
 	log           *log.Logger
+	debug         *log.Logger
 	pretend       bool
 	deleteGhosts  bool
 	deleteOrphans bool
@@ -34,16 +35,22 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	cfg.expandEnv()
 
 	gs := &Gostore{
-		log:           log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		log:   log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+		debug: log.New(ioutil.Discard, "", log.Ltime|log.Lshortfile),
+
 		pretend:       cfg.ReadOnly,
 		deleteGhosts:  cfg.DeleteGhosts,
 		deleteOrphans: cfg.DeleteOrphans,
 		importOrphans: cfg.ImportOrphans,
 	}
 
-	if cfg.ShowLog {
+	if cfg.Verbose || cfg.Debug {
 		gs.log.SetOutput(os.Stderr)
-		cfg.Store.Logger = gs.log
+	}
+
+	if cfg.Debug {
+		gs.debug.SetOutput(os.Stderr)
+		cfg.Store.Logger = gs.debug
 	}
 
 	var err error

@@ -25,9 +25,15 @@ func newApp(cfg *Config) *clapp.Command {
 
 	cmd.Flags = clapp.Flags{
 		{
+			Name:  "verbose",
+			Usage: "Show verbose information.",
+			Var:   &cfg.Verbose,
+		},
+
+		{
 			Name:  "debug",
 			Usage: "Show debug information.",
-			Var:   &cfg.ShowLog,
+			Var:   &cfg.Debug,
 		},
 
 		{

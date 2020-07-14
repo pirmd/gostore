@@ -1,7 +1,12 @@
-# showlog is a boolean flag that governs whether detailed log information are
+# verbose is a boolean flag that governs whether detailed log information are
 # to be displayed
 # It can be set at runtime using the '--debug' flag
-#showlog: false
+#verbose: false
+#
+# debug is a boolean flag that governs whether debug information are
+# to be displayed
+# It can be set at runtime using the '--debug' flag
+#debug: false
 
 # readonly is a boolean flag that governs whether gostore is allowed to
 # alter the content of the collection. It is typically useful to dry-run

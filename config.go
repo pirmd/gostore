@@ -9,8 +9,11 @@ import (
 
 // Config represents the configuration for gostore
 type Config struct {
-	// ShowLog is a flag that governs if log information are to be shown
-	ShowLog bool
+	// Verbose is a flag that governs if log information are to be shown
+	Verbose bool
+
+	// Debug is a flag that governs if debug information are to be shown
+	Debug bool
 
 	// ReadOnly is the flag to switch the store into read only operation mode
 	ReadOnly bool
