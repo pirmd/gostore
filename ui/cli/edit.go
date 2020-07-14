@@ -21,7 +21,7 @@ func editAsJSON(m map[string]interface{}, cmdEditor string) (map[string]interfac
 		return nil, err
 	}
 
-	buf, err := edit(j, cmdEditor)
+	buf, err := edit(j, cmdEditor, ".json")
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func multiEditAsJSON(m []map[string]interface{}, cmdEditor string) ([]map[string
 		return nil, err
 	}
 
-	buf, err := edit(j, cmdEditor)
+	buf, err := edit(j, cmdEditor, ".json")
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func mergeAsJSON(left, right map[string]interface{}, cmdMerger string) (map[stri
 		return nil, err
 	}
 
-	bufL, _, err := merge(l, r, cmdMerger)
+	bufL, _, err := merge(l, r, cmdMerger, ".json")
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +85,12 @@ func mergeAsJSON(left, right map[string]interface{}, cmdMerger string) (map[stri
 }
 
 // edit spans an editor to modify the input text and feedbacks the result.
-func edit(data []byte, cmdEditor string) ([]byte, error) {
+func edit(data []byte, cmdEditor string, filetype string) ([]byte, error) {
 	if len(cmdEditor) == 0 {
 		return data, nil
 	}
 
-	tmpfile, err := data2file(data)
+	tmpfile, err := data2file(data, filetype)
 	if err != nil {
 		return nil, err
 	}
@@ -117,18 +117,18 @@ func edit(data []byte, cmdEditor string) ([]byte, error) {
 	return body, nil
 }
 
-// merge spans an editor to merge the input texts and feedbacks the result.
-func merge(left, right []byte, cmdMerger string) ([]byte, []byte, error) {
+// merge spans an editor to merge the input text and feedbacks the result.
+func merge(left, right []byte, cmdMerger string, filetype string) ([]byte, []byte, error) {
 	if len(cmdMerger) == 0 {
 		return left, right, nil
 	}
 
-	tmpfileL, err := data2file(left)
+	tmpfileL, err := data2file(left, filetype)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	tmpfileR, err := data2file(right)
+	tmpfileR, err := data2file(right, filetype)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -161,8 +161,8 @@ func merge(left, right []byte, cmdMerger string) ([]byte, []byte, error) {
 }
 
 // data2file copy the content of data to a temporary text file
-func data2file(data []byte) (string, error) {
-	tmpfile, err := ioutil.TempFile("", "")
+func data2file(data []byte, filetype string) (string, error) {
+	tmpfile, err := ioutil.TempFile("", "*"+filetype)
 	if err != nil {
 		return "", err
 	}
