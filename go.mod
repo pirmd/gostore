@@ -17,7 +17,7 @@ require (
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/pirmd/clapp v0.4.0
+	github.com/pirmd/clapp v0.5.0
 	github.com/pirmd/epub v0.1.0
 	github.com/pirmd/style v0.4.0
 	github.com/pirmd/text v0.5.4

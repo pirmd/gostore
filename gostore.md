@@ -4,28 +4,29 @@ gostore - A command-line minimalist media collection manager.
 
 # SYNOPSIS
 
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __help__
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __version__
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __import__ *media* ...
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __list__ [*name* ...]
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __search__ *query*
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __edit__ [--__multi-edit__] [--__import-orphans__] *name* 
-...
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __delete__ *name* ...
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __export__ *name* ... [*dst*]
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __check__ [--__delete-ghosts__] [--__delete-orphans__] 
-[--__import-orphans__]
-__gostore__ [--__debug__] [--__root__=*ROOT*] [--__pretend__] [--__auto__] 
-[--__style__=*STYLE*] __rebuild-index__
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __help__
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __version__
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __import__ *media* ...
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __list__ [*name* ...]
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __search__ [--__sort__=*SORT*,...,*SORT*] 
+*query*
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __edit__ [--__multi-edit__] 
+[--__import-orphans__] *name* ...
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __delete__ *name* ...
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __export__ *name* ... [*dst*]
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __check__ [--__delete-ghosts__] 
+[--__delete-orphans__] [--__import-orphans__]
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __rebuild-index__
 
 # DESCRIPTION
 
@@ -66,7 +67,7 @@ __list__ [*name* ...]
 :List and retrieve information about collection's records. If no pattern is 
 provided, list all records of the collection.
 
-__search__ *query*
+__search__ [<flags>] *query*
 :Search the collection's records matching the given query.
 
 __edit__ [<flags>] *name* ...

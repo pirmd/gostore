@@ -117,6 +117,7 @@ func newApp(cfg *Config) *clapp.Command {
 	})
 
 	var query string
+	var sortOrder []string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "search",
 		Usage: "Search the collection's records matching the given query.",
@@ -129,6 +130,14 @@ func newApp(cfg *Config) *clapp.Command {
 			},
 		},
 
+		Flags: clapp.Flags{
+			{
+				Name:  "sort",
+				Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
+				Var:   &sortOrder,
+			},
+		},
+
 		Execute: func() error {
 			gs, err := openGostore(cfg)
 			if err != nil {
@@ -136,7 +145,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Search(query); err != nil {
+			if err := gs.Search(query, sortOrder...); err != nil {
 				return err
 			}
 			return nil

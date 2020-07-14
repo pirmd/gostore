@@ -165,10 +165,10 @@ func (gs *Gostore) ListAll() error {
 	return nil
 }
 
-// Search the collection for records matching given query. Query follows
-// blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
-func (gs *Gostore) Search(query string) error {
-	r, err := gs.store.Search(query)
+// Search the collection for records matching given query. Query and sort order
+// follow blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
+func (gs *Gostore) Search(query string, sortOrder ...string) error {
+	r, err := gs.store.Search(query, sortOrder...)
 	if err != nil {
 		return err
 	}

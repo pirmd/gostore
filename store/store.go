@@ -307,11 +307,11 @@ func (s *Store) Delete(key string) error {
 }
 
 // Search returns the list of keys corresponding to the given search query. The
-// query should follow the bleve search engine syntax.
-func (s *Store) Search(query string) (Records, error) {
-	s.log.Printf("Search records for '%s'", query)
+// query and sort order should follow the bleve search engine syntax.
+func (s *Store) Search(query string, sortOrder ...string) (Records, error) {
+	s.log.Printf("Search records for '%s' with sort order '%v'", query, sortOrder)
 
-	keys, err := s.idx.Search(query)
+	keys, err := s.idx.Search(query, sortOrder...)
 	if err != nil {
 		return nil, err
 	}

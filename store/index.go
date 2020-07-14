@@ -78,9 +78,15 @@ func (s *storeidx) Delete(key string) error {
 
 // Search looks for known Records' Id registered in the Index.
 // The query should follow bleve's query style.
-func (s *storeidx) Search(query string) (keys []string, err error) {
+func (s *storeidx) Search(query string, sortOrder ...string) (keys []string, err error) {
 	q := bleve.NewQueryStringQuery(query)
-	results, err := s.idx.Search(bleve.NewSearchRequest(q))
+
+	searchRequest := bleve.NewSearchRequest(q)
+	if len(sortOrder) > 0 {
+		searchRequest.SortBy(sortOrder)
+	}
+
+	results, err := s.idx.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}

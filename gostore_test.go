@@ -250,6 +250,22 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 	})
 
+	t.Run("SearchSort", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
+		if err := gs.Search("*", "PublishedDate"); err != nil {
+			t.Fatalf("Fail to search the collection: %v", err)
+		}
+
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("Search output is not as expected:\n%v", failure)
+		}
+	})
+
 	//TODO(pirmd): add additional search pattern using date and book series number
 }
 
