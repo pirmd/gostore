@@ -14,6 +14,9 @@ type UserInterfacer interface {
 	// Edit spawns an editor dialog to modified provided map
 	Edit(map[string]interface{}) (map[string]interface{}, error)
 
+	// MultiEdit spawns an editor dialog to modified provided map
+	MultiEdit([]map[string]interface{}) ([]map[string]interface{}, error)
+
 	// Merge spawns a dialog to merge two maps into one
 	Merge(map[string]interface{}, map[string]interface{}) (map[string]interface{}, error)
 }

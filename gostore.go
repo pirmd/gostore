@@ -178,30 +178,103 @@ func (gs *Gostore) Search(query string) error {
 }
 
 // Edit updates an existing record from the collection
-func (gs *Gostore) Edit(key string) error {
-	r, err := gs.store.Read(key)
-	if err != nil {
-		return err
+func (gs *Gostore) Edit(pattern ...string) error {
+	var keys []string
+	var records store.Records
+	var editErr util.MultiErrors
+
+	for _, p := range pattern {
+		k, err := gs.store.SearchKeys(p)
+		if err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
+			continue
+		}
+
+		if len(k) == 0 {
+			editErr.Add(fmt.Errorf("editing '%s' failed: no such record", p))
+			continue
+		}
+
+		keys = append(keys, k...)
 	}
 
-	mdata, err := gs.ui.Edit(r.Data())
-	if err != nil {
-		return err
-	}
-	r.SetData(mdata)
+	for _, key := range keys {
+		gs.log.Printf("Editing '%s'", key)
 
-	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
-		return err
+		r, err := gs.store.Read(key)
+		if err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
+			continue
+		}
+
+		mdata, err := gs.ui.Edit(r.Data())
+		if err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
+			continue
+		}
+
+		if err := gs.update(r, mdata); err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
+			continue
+		}
+
+		records = append(records, r)
 	}
 
-	if !gs.pretend {
-		if err := gs.store.Update(key, r); err != nil {
-			return err
+	if len(records) != 0 {
+		gs.ui.PrettyPrint(records.Flatted()...)
+	}
+
+	return editErr.Err()
+}
+
+// MultiEdit updates a set of records at once.
+func (gs *Gostore) MultiEdit(pattern ...string) error {
+	var records store.Records
+	var editErr util.MultiErrors
+
+	for _, p := range pattern {
+		key, err := gs.store.SearchKeys(p)
+		if err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
+			continue
+		}
+
+		for _, k := range key {
+			r, err := gs.store.Read(k)
+			if err != nil {
+				editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
+				continue
+			}
+			records = append(records, r)
 		}
 	}
 
-	gs.ui.PrettyPrint(r.Flatted())
-	return nil
+	if len(records) == 0 {
+		return nil
+	}
+
+	mdata, err := gs.ui.MultiEdit(records.Data())
+	if err != nil {
+		editErr.Add(fmt.Errorf("editing '%s' failed: %s", pattern, err))
+		return editErr.Err()
+	}
+
+	if len(mdata) != len(records) {
+		editErr.Add(fmt.Errorf("editing '%s' failed: number of records after multi-edition is inconsistent", pattern))
+		return editErr.Err()
+	}
+
+	for i := range mdata {
+		if err := gs.update(records[i], mdata[i]); err != nil {
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", records[i].Key(), err))
+			continue
+		}
+	}
+
+	gs.ui.PrettyPrint(records.Flatted()...)
+
+	return editErr.Err()
 }
 
 // Delete removes a record from the collection.
@@ -347,6 +420,24 @@ func (gs *Gostore) insert(path string) (*store.Record, error) {
 	}
 
 	return r, nil
+}
+
+func (gs *Gostore) update(r *store.Record, mdata map[string]interface{}) error {
+	key := r.Key()
+
+	r.SetData(mdata)
+
+	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
+		return err
+	}
+
+	if !gs.pretend {
+		if err := gs.store.Update(key, r); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (gs *Gostore) export(key, dstFolder string) (err error) {

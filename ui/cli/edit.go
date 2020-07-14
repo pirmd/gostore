@@ -13,7 +13,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// editAsJSON fires-up an editor to modify the provided interface using its JSON
+// editAsJSON fires-up an editor to modify the provided map using its JSON
 // form.
 func editAsJSON(m map[string]interface{}, cmdEditor string) (map[string]interface{}, error) {
 	j, err := json.MarshalIndent(m, "", "  ")
@@ -35,8 +35,30 @@ func editAsJSON(m map[string]interface{}, cmdEditor string) (map[string]interfac
 	return edited, nil
 }
 
-// mergeAsJSON fires-up an editor to merge the provided interfaces using its
+// multiEditAsJSON fires-up an editor to modify the provided maps using their
 // JSON form.
+func multiEditAsJSON(m []map[string]interface{}, cmdEditor string) ([]map[string]interface{}, error) {
+	j, err := json.MarshalIndent(m, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	buf, err := edit(j, cmdEditor)
+	if err != nil {
+		return nil, err
+	}
+
+	var edited []map[string]interface{}
+	err = json.Unmarshal(buf, &edited)
+	if err != nil {
+		return nil, err
+	}
+
+	return edited, nil
+}
+
+// mergeAsJSON fires-up an editor to merge the provided maps using their JSON
+// form.
 func mergeAsJSON(left, right map[string]interface{}, cmdMerger string) (map[string]interface{}, error) {
 	l, err := json.MarshalIndent(left, "", "  ")
 	if err != nil {

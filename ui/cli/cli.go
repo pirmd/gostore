@@ -76,6 +76,15 @@ func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
 	return m, nil
 }
 
+// MultiEdit fires-up a new editor to modify a set of maps
+func (ui *CLI) MultiEdit(m []map[string]interface{}) ([]map[string]interface{}, error) {
+	if len(ui.editor) > 0 {
+		return multiEditAsJSON(m, ui.editor)
+	}
+
+	return m, nil
+}
+
 // Merge fires-up a new editor to merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
 	if len(ui.merger) > 0 {
