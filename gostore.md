@@ -27,6 +27,10 @@ __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__]
 [--__delete-orphans__] [--__import-orphans__]
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
 [--__auto__] [--__style__=*STYLE*] __rebuild-index__
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __fields__
+__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
+[--__auto__] [--__style__=*STYLE*] __config__
 
 # DESCRIPTION
 
@@ -89,6 +93,14 @@ __check__ [<flags>]
 __rebuild-index__
 :Deletes then rebuild the collection's index from scratch. Useful for example to
 implement a new mapping strategy or if things are really going bad.
+
+__fields__
+:Lists fields names that are available for search or for templates. Some fields 
+might only be available for a given media Type.
+
+__config__
+:Lists known modules, analyzers or styles that can be used for gostore 
+configuration or invocation.
 
 # FILES
 

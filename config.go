@@ -3,11 +3,12 @@ package main
 import (
 	"os"
 
+	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui/cli"
 )
 
-// Config represents the configuration for gostore
+// Config represents the configuration for gostore.
 type Config struct {
 	// Verbose is a flag that governs if log information are to be shown
 	Verbose bool
@@ -44,6 +45,21 @@ type Config struct {
 
 	// Update list of actions to apply when importing a record
 	Update []*moduleConfig
+}
+
+// Modules lists available modules.
+func (cfg *Config) Modules() []string {
+	return modules.List()
+}
+
+// Analyzers lists available analyzers for indexing records.
+func (cfg *Config) Analyzers() []string {
+	return cfg.Store.Analyzers()
+}
+
+// Styles lists available styles for printing records.
+func (cfg *Config) Styles() []string {
+	return cfg.UI.Styles()
 }
 
 func (cfg *Config) expandEnv() {

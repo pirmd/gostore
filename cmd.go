@@ -2,6 +2,9 @@
 package main
 
 import (
+	"fmt"
+	"strings"
+
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/pirmd/clapp"
@@ -314,6 +317,42 @@ func newApp(cfg *Config) *clapp.Command {
 			if err := gs.RebuildIndex(); err != nil {
 				return err
 			}
+			return nil
+		},
+	})
+
+	cmd.SubCommands.Add(&clapp.Command{
+		Name:  "fields",
+		Usage: "Lists fields names that are available for search or for templates. Some fields might only be available for a given media Type.",
+
+		Execute: func() error {
+			gs, err := openGostore(cfg)
+			if err != nil {
+				return err
+			}
+			defer gs.Close()
+
+			if err := gs.Fields(); err != nil {
+				return err
+			}
+			return nil
+		},
+	})
+
+	cmd.SubCommands.Add(&clapp.Command{
+		Name:  "config",
+		Usage: "Lists known modules, analyzers or styles that can be used for gostore configuration or invocation.",
+
+		Execute: func() error {
+			gs, err := openGostore(cfg)
+			if err != nil {
+				return err
+			}
+			defer gs.Close()
+
+			fmt.Printf("Known Modules:\n%s\n", strings.Join(cfg.Modules(), "\n"))
+			fmt.Printf("\nKnown Analyzers:\n%s\n", strings.Join(cfg.Analyzers(), "\n"))
+			fmt.Printf("\nKnown Styles:\n%s\n", strings.Join(cfg.Styles(), "\n"))
 			return nil
 		},
 	})

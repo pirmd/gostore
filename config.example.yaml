@@ -44,9 +44,7 @@ store:
     # indexingAnalyzer identify the analyzer used to index the media metadata when
     # searching your collection.
     # To take benefit of a new analyzer you usually have to rebuild an existing index.
-    # Available analyzers are:
-    # - "en" (English), "stemmer_en_snowball" (English using Snowball stemmer)
-    # - "fr" (French), "stemmer_fr_snowball" (Fench using Snowball stemmer)
+    # Available analyzers can be listed using `gostore config`.
     indexingAnalyzer: fr
 
 
@@ -83,8 +81,10 @@ ui:
     # each style, customized template can be proposed for a given media type.
     # Default template can be defined using the "media" keyword.
     #
-    # Templates follow golang text/template specification. Extensions are
-    # made available to simplify common operation:
+    # Templates follow golang text/template specification.
+    # Stored metadata can be retrieved using their field name. List of known
+    # fields can be obtained using `gostore fields`.
+    # Extensions are  made available to simplify common operations:
     # - tmpl: execute a sub-template by name
     # - tmplExec: execute a template text
     # - tmplFile: execute a template stored in a file
@@ -124,7 +124,9 @@ ui:
         #   media:
         #       {{ tmplFile "html.tmpl" . }}
 
-# import lists the different actions to operate on metadata during the import step.
+# import lists the different modules to operate on metadata during the import step.
+# Modules are run in the provided order.
+# List of modules is available using `gostore config`.
 import:
     # fetcher a module that retrieves metadata from online databases.
     - name: fetcher
@@ -158,7 +160,10 @@ import:
         # Fall-back templates or generic template can be defined using the
         # "media" keyword.
         # 
-        # Templates follow golang text/template specification. Extensions are
+        # Templates follow golang text/template specification.
+        # Stored metadata can be retrieved using their field name. List of known
+        # fields can be obtained using `gostore fields`.
+        # Extensions are  made available to simplify common operations:
         # made available to simplify common operation:
         # - tmpl: execute a sub-template by name
         # - tmplExec: execute a template text
@@ -192,7 +197,9 @@ import:
           minLevel: 30
 
 
-# update lists the different actions to operate on metadata during the update step.
+# update lists the different modules to operate on metadata during the update
+# step. Modules are run in the provided order.
+# List of modules is available using `gostore config`.
 update:
     - name: scrubber
       config:

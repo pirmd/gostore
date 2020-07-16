@@ -55,7 +55,7 @@ func TestGostoreWithDefaultConfig(t *testing.T) {
 	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
-	for _, style := range cfg.UI.ListStyles() {
+	for _, style := range cfg.UI.Styles() {
 		t.Run(style+"Fmt", func(t *testing.T) {
 			cfg.UI.OutputFormat = style
 
@@ -85,7 +85,7 @@ func TestGostoreWithConfigExample(t *testing.T) {
 	httpmock := verify.StartMockHTTPResponse()
 	defer httpmock.Stop()
 
-	for _, style := range cfg.UI.ListStyles() {
+	for _, style := range cfg.UI.Styles() {
 		t.Run(style+"Fmt", func(t *testing.T) {
 			cfg.UI.OutputFormat = style
 

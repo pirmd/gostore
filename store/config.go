@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/blevesearch/bleve/mapping"
+	"github.com/blevesearch/bleve/registry"
 )
 
 // Config describes a configuration set for a Store
@@ -48,6 +49,13 @@ func NewFromConfig(cfg *Config) (*Store, error) {
 		UsingIndexingScheme(cfg.IndexingScheme),
 		UsingTypeField(cfg.TypeField),
 	)
+}
+
+// Analyzers lists the available analyzers that can be used to configure the
+// collection's indexer.
+func (c *Config) Analyzers() []string {
+	_, analyzers := registry.AnalyzerTypesAndInstances()
+	return analyzers
 }
 
 // Options are using a set of variadic functional options. Idea is coming from

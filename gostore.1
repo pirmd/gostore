@@ -1,4 +1,4 @@
-.TH GOSTORE 1 2020-07-14
+.TH GOSTORE 1 2020-07-16
 
 .SH Name
 .PP
@@ -16,6 +16,8 @@ gostore - A command-line minimalist media collection manager.
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP \fIname\fP ... [\fIdst\fP]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP [--\fBdelete-ghosts\fP] [--\fBdelete-orphans\fP] [--\fBimport-orphans\fP]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBrebuild-index\fP
+\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBfields\fP
+\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBconfig\fP
 
 .SH Description
 .PP
@@ -72,6 +74,12 @@ Verify collection's consistency and repairs or reports found inconsistencies.
 .TP
 \fB\fBrebuild-index\fP\fP
 Deletes then rebuild the collection's index from scratch. Useful for example to implement a new mapping strategy or if things are really going bad.
+.TP
+\fB\fBfields\fP\fP
+Lists fields names that are available for search or for templates. Some fields might only be available for a given media Type.
+.TP
+\fB\fBconfig\fP\fP
+Lists known modules, analyzers or styles that can be used for gostore configuration or invocation.
 
 .SH Files
 .TP

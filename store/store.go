@@ -522,6 +522,11 @@ func (s *Store) IsDirty() bool {
 	return false
 }
 
+// Fields list the fields that can be used when searching the collection.
+func (s *Store) Fields() ([]string, error) {
+	return s.idx.Fields()
+}
+
 func (s *Store) isValidKey(key string) bool {
 	cleanKey := filepath.ToSlash(filepath.Clean("/" + key))[1:]
 

@@ -9,6 +9,38 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/document"
 	"github.com/blevesearch/bleve/mapping"
+
+	// languages (list from github.com/blevesearch/bleve/blob/master/config/config.go)
+	_ "github.com/blevesearch/bleve/analysis/lang/ar"
+	_ "github.com/blevesearch/bleve/analysis/lang/bg"
+	_ "github.com/blevesearch/bleve/analysis/lang/ca"
+	_ "github.com/blevesearch/bleve/analysis/lang/cjk"
+	_ "github.com/blevesearch/bleve/analysis/lang/ckb"
+	_ "github.com/blevesearch/bleve/analysis/lang/cs"
+	_ "github.com/blevesearch/bleve/analysis/lang/da"
+	_ "github.com/blevesearch/bleve/analysis/lang/de"
+	_ "github.com/blevesearch/bleve/analysis/lang/el"
+	_ "github.com/blevesearch/bleve/analysis/lang/en"
+	_ "github.com/blevesearch/bleve/analysis/lang/es"
+	_ "github.com/blevesearch/bleve/analysis/lang/eu"
+	_ "github.com/blevesearch/bleve/analysis/lang/fa"
+	_ "github.com/blevesearch/bleve/analysis/lang/fi"
+	_ "github.com/blevesearch/bleve/analysis/lang/fr"
+	_ "github.com/blevesearch/bleve/analysis/lang/ga"
+	_ "github.com/blevesearch/bleve/analysis/lang/gl"
+	_ "github.com/blevesearch/bleve/analysis/lang/hi"
+	_ "github.com/blevesearch/bleve/analysis/lang/hu"
+	_ "github.com/blevesearch/bleve/analysis/lang/hy"
+	_ "github.com/blevesearch/bleve/analysis/lang/id"
+	_ "github.com/blevesearch/bleve/analysis/lang/in"
+	_ "github.com/blevesearch/bleve/analysis/lang/it"
+	_ "github.com/blevesearch/bleve/analysis/lang/nl"
+	_ "github.com/blevesearch/bleve/analysis/lang/no"
+	_ "github.com/blevesearch/bleve/analysis/lang/pt"
+	_ "github.com/blevesearch/bleve/analysis/lang/ro"
+	_ "github.com/blevesearch/bleve/analysis/lang/ru"
+	_ "github.com/blevesearch/bleve/analysis/lang/sv"
+	_ "github.com/blevesearch/bleve/analysis/lang/tr"
 )
 
 type storeidx struct {
@@ -125,11 +157,6 @@ func (s *storeidx) Delete(key string) error {
 	return s.idx.Delete(key)
 }
 
-// Fields lists the indexed fields.
-func (s *storeidx) Fields() ([]string, error) {
-	return s.idx.Fields()
-}
-
 // Search looks for known Records' Id registered in the Index.
 // The query should follow bleve's query style.
 func (s *storeidx) Search(query string, sortOrder ...string) (keys []string, err error) {
@@ -172,6 +199,11 @@ func (s *storeidx) Walk(walkFn func(string) error) error {
 	}
 
 	return errWalk.Err()
+}
+
+// Fields lists the indexed fields.
+func (s *storeidx) Fields() ([]string, error) {
+	return s.idx.Fields()
 }
 
 // matchAll retrieves all known records.

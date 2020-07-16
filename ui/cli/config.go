@@ -40,8 +40,8 @@ func NewConfig() *Config {
 	}
 }
 
-// ListStyles lists all available styles for printing records' details.
-func (cfg *Config) ListStyles() (styles []string) {
+// Styles lists available styles for printing records.
+func (cfg *Config) Styles() (styles []string) {
 	for k := range cfg.Formatters {
 		styles = append(styles, k)
 	}

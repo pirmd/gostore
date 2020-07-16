@@ -413,6 +413,17 @@ func (gs *Gostore) RebuildIndex() error {
 	return nil
 }
 
+// Fields lists fields names that are available for search or for templates.
+// Some fields might only be available for a given media Type.
+func (gs *Gostore) Fields() error {
+	fields, err := gs.store.Fields()
+	if err != nil {
+		return fmt.Errorf("listing collection's known fields failed: %s", err)
+	}
+	gs.ui.Printf("%s\n", strings.Join(fields, "\n"))
+	return nil
+}
+
 func (gs *Gostore) insert(path string) (*store.Record, error) {
 	f, err := os.Open(path)
 	if err != nil {
