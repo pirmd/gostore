@@ -8,6 +8,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/pirmd/gostore/store/vfs"
 	"github.com/pirmd/gostore/util"
@@ -176,7 +177,28 @@ func (s *Store) Exists(key string) (exists bool, err error) {
 // Read returns the stored Record corresponding to the given key
 func (s *Store) Read(key string) (*Record, error) {
 	s.log.Printf("Get record '%s' from storage", key)
-	return s.db.Get(key)
+	r, err := s.db.Get(key)
+	if err != nil {
+		return nil, err
+	}
+
+	// Retrieving data from store's database relies on JSON unmarshalling to a
+	// map[string]interface{} type. It will miss detecting properly time and
+	// numeric values. At this point using information stored in the store's
+	// index can help at this kind of information is found there.
+	ridx, err := s.idx.Get(key)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range ridx.Data() {
+		switch v := v.(type) {
+		case time.Time, float64:
+			r.SetIfExists(k, v)
+		}
+	}
+
+	return r, nil
 }
 
 // ReadAll returns all store's records
@@ -184,7 +206,7 @@ func (s *Store) ReadAll() (list Records, err error) {
 	s.log.Printf("Get all records from store")
 
 	err = s.db.Walk(func(key string) error {
-		r, err := s.db.Get(key)
+		r, err := s.Read(key)
 		if err != nil {
 			return err
 		}
@@ -206,7 +228,7 @@ func (s *Store) ReadGlob(pattern string) (Records, error) {
 
 	var result Records
 	for _, key := range keys {
-		r, err := s.db.Get(key)
+		r, err := s.Read(key)
 		if err != nil {
 			return nil, err
 		}
@@ -318,7 +340,7 @@ func (s *Store) Search(query string, sortOrder ...string) (Records, error) {
 
 	var result Records
 	for _, key := range keys {
-		r, err := s.db.Get(key)
+		r, err := s.Read(key)
 		if err != nil {
 			return nil, err
 		}

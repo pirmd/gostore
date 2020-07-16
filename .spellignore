@@ -30,3 +30,6 @@ fmt
 filepath
 filterfs
 jailfs
+github
+unmarshalling
+doc_get

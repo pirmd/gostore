@@ -67,6 +67,11 @@ func (r *Record) Set(k string, v interface{}) {
 	r.value.Set(k, v)
 }
 
+// SetIfExists updates a record's stored information if already exists.
+func (r *Record) SetIfExists(k string, v interface{}) {
+	r.value.SetIfExists(k, v)
+}
+
 // Del removes a record's stored information.
 func (r *Record) Del(k string) {
 	r.value.Del(k)
@@ -161,6 +166,13 @@ func (val *value) Get(key string) interface{} {
 // Set adds a new (key, value).
 func (val *value) Set(k string, v interface{}) {
 	val.Data[k] = v
+}
+
+// SetIfExists updates a value if already exists.
+func (val *value) SetIfExists(k string, v interface{}) {
+	if _, exists := val.Data[k]; exists {
+		val.Data[k] = v
+	}
 }
 
 // Del removes a (key, value).
