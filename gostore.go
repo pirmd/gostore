@@ -62,8 +62,9 @@ func newGostore(cfg *Config) (*Gostore, error) {
 		return nil, err
 	}
 
+	env := &modules.Environment{Logger: gs.log, UI: gs.ui, Store: gs.store}
 	for _, module := range cfg.Import {
-		m, err := modules.New(module.Name, module.Config, gs.log, gs.ui)
+		m, err := modules.New(module.Name, module.Config, env)
 		if err != nil {
 			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
 		}
@@ -72,7 +73,7 @@ func newGostore(cfg *Config) (*Gostore, error) {
 	}
 
 	for _, module := range cfg.Update {
-		m, err := modules.New(module.Name, module.Config, gs.log, gs.ui)
+		m, err := modules.New(module.Name, module.Config, env)
 		if err != nil {
 			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
 		}

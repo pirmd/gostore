@@ -11,7 +11,6 @@ import (
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
-	"github.com/pirmd/gostore/ui"
 )
 
 const (
@@ -19,13 +18,13 @@ const (
 )
 
 var (
-	_ modules.Module = (*organizer)(nil) // Makes sure that organizer implements modules.Module
+	_ modules.Module = (*organizer)(nil) // Makes sure that we implement modules.Module interface.
 
-	// DefaultNamingScheme is the name of the default NamingSchemes
+	// DefaultNamingScheme is the name of the default NamingSchemes.
 	DefaultNamingScheme = media.DefaultType
 
 	// ErrNoNamingScheme is raised when no naming scheme is found, even
-	// DefaultNamingScheme
+	// DefaultNamingScheme.
 	ErrNoNamingScheme = errors.New(moduleName + ": no naming scheme found")
 
 	// ErrEmptyName error is raised when the generated name is empty, main
@@ -35,8 +34,7 @@ var (
 	ErrEmptyName = errors.New(moduleName + ": generated name is empty")
 )
 
-// Config defines the different configurations that can be used to customize
-// the behavior of an organizer module.
+// Config defines the different module's options.
 type Config struct {
 	// NamingSchemes defines, for each record's type, the templates to rename a
 	// record according to its attribute.  You can define a default naming
@@ -125,18 +123,18 @@ func (o *organizer) namerFor(m map[string]interface{}) *template.Template {
 	return o.namers.Lookup(DefaultNamingScheme)
 }
 
-// New creates a new organizer module
-func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+// NewFromRawConfig creates a new module from a raw configuration.
+func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (modules.Module, error) {
+	env.Logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newOrganizer(cfg, logger)
+	return newOrganizer(cfg, env.Logger)
 }
 
 func init() {
-	modules.Register(moduleName, New)
+	modules.Register(moduleName, NewFromRawConfig)
 }

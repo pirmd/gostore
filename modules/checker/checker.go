@@ -6,11 +6,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
-	"github.com/pirmd/gostore/ui"
-
-	"github.com/pirmd/gostore/media"
 )
 
 const (
@@ -18,23 +16,24 @@ const (
 )
 
 var (
-	_ modules.Module = (*checker)(nil) // Makes sure that checker implements modules.Module
+	_ modules.Module = (*checker)(nil) // Makes sure that we implement modules.Module interface.
 )
 
-// Config defines the different configurations that can be used to customized
-// the behavior of a checker module.
+// Config defines the different module's options.
 type Config struct {
 	// FieldName is the name of the metadata field where to store checker
-	// outcome. Default to: QALevel
+	// outcome. Default to: QALevel.
 	FieldName string
 	// MinLevel is the minimum allowed level. Any level below this threshold
 	// will result in an error aborting operation. Default to 0 (all quality
-	// level is accepted)
+	// level is accepted).
 	MinLevel int
 }
 
 func newConfig() *Config {
-	return &Config{FieldName: "QALevel"}
+	return &Config{
+		FieldName: "QALevel",
+	}
 }
 
 type checker struct {
@@ -52,7 +51,7 @@ func newChecker(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	}, nil
 }
 
-// ProcessRecord complete record with a quality level
+// ProcessRecord completes a record's metadata with a quality level.
 func (c *checker) ProcessRecord(r *store.Record) error {
 	c.log.Printf("Module '%s': assess quality level", moduleName)
 	lvl := media.CheckMetadata(r.Data())
@@ -65,18 +64,18 @@ func (c *checker) ProcessRecord(r *store.Record) error {
 	return nil
 }
 
-// New creates a new checker module whose configuration information
-func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+// NewFromRawConfig creates a new module from a raw configuration.
+func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (modules.Module, error) {
+	env.Logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newChecker(cfg, logger)
+	return newChecker(cfg, env.Logger)
 }
 
 func init() {
-	modules.Register(moduleName, New)
+	modules.Register(moduleName, NewFromRawConfig)
 }

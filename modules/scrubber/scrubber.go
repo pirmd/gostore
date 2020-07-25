@@ -7,7 +7,6 @@ import (
 
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
-	"github.com/pirmd/gostore/ui"
 )
 
 const (
@@ -15,11 +14,10 @@ const (
 )
 
 var (
-	_ modules.Module = (*scrubber)(nil) // Makes sure that scrubber implements modules.Module
+	_ modules.Module = (*scrubber)(nil) // Makes sure that we implement modules.Module interface.
 )
 
-// Config defines the different configurations that can be used to customized
-// the behavior of a scrubber module.
+// Config defines the different module's options.
 type Config struct {
 	// Fields lists the record's fields that should be scrubbed.
 	Fields []string
@@ -51,18 +49,18 @@ func (s *scrubber) ProcessRecord(r *store.Record) error {
 	return nil
 }
 
-// New creates a new scrubber module whose configuration information
-func New(rawcfg modules.ConfigUnmarshaler, logger *log.Logger, UI ui.UserInterfacer) (modules.Module, error) {
-	logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
+// NewFromRawConfig creates a new module from a raw configuration.
+func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (modules.Module, error) {
+	env.Logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
 	cfg := newConfig()
 
 	if err := rawcfg.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newScrubber(cfg, logger)
+	return newScrubber(cfg, env.Logger)
 }
 
 func init() {
-	modules.Register(moduleName, New)
+	modules.Register(moduleName, NewFromRawConfig)
 }
