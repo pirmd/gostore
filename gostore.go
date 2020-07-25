@@ -137,29 +137,16 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 
 // List retrieves information about a collection's record.
 func (gs *Gostore) List(pattern ...string) error {
-	var records store.Records
-	var listErr util.MultiErrors
-
-	for _, p := range pattern {
-		r, err := gs.store.ReadGlob(p)
-		if err != nil {
-			listErr.Add(fmt.Errorf("listing '%s' failed: %s", p, err))
-			continue
-		}
-
-		if len(r) == 0 {
-			listErr.Add(fmt.Errorf("listing '%s' failed: no such record", p))
-			continue
-		}
-
-		records = append(records, r...)
+	records, err := gs.glob(pattern...)
+	if err != nil {
+		return fmt.Errorf("listing '%s' failed: %s", pattern, err)
 	}
 
 	if len(records) != 0 {
 		gs.ui.PrettyPrint(records.Flatted()...)
 	}
 
-	return listErr.Err()
+	return nil
 }
 
 // ListAll lists all collection's records
@@ -176,7 +163,7 @@ func (gs *Gostore) ListAll() error {
 // Search the collection for records matching given query. Query and sort order
 // follow blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
 func (gs *Gostore) Search(query string, sortOrder ...string) error {
-	r, err := gs.store.Search(query, sortOrder...)
+	r, err := gs.store.ReadQuery(query, sortOrder...)
 	if err != nil {
 		return err
 	}
@@ -187,42 +174,23 @@ func (gs *Gostore) Search(query string, sortOrder ...string) error {
 
 // Edit updates an existing record from the collection
 func (gs *Gostore) Edit(pattern ...string) error {
-	var keys []string
-	var records store.Records
-	var editErr util.MultiErrors
-
-	for _, p := range pattern {
-		k, err := gs.store.SearchKeys(p)
-		if err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
-			continue
-		}
-
-		if len(k) == 0 {
-			editErr.Add(fmt.Errorf("editing '%s' failed: no such record", p))
-			continue
-		}
-
-		keys = append(keys, k...)
+	records, err := gs.glob(pattern...)
+	if err != nil {
+		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}
 
-	for _, key := range keys {
-		gs.log.Printf("Editing '%s'", key)
-
-		r, err := gs.store.Read(key)
-		if err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
-			continue
-		}
+	var editErr util.MultiErrors
+	for _, r := range records {
+		gs.log.Printf("Editing '%s'", r.Key())
 
 		mdata, err := gs.ui.Edit(r.Data())
 		if err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", r.Key(), err))
 			continue
 		}
 
 		if err := gs.update(r, mdata); err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", key, err))
+			editErr.Add(fmt.Errorf("editing '%s' failed: %s", r.Key(), err))
 			continue
 		}
 
@@ -238,24 +206,9 @@ func (gs *Gostore) Edit(pattern ...string) error {
 
 // MultiEdit updates a set of records at once.
 func (gs *Gostore) MultiEdit(pattern ...string) error {
-	var records store.Records
-	var editErr util.MultiErrors
-
-	for _, p := range pattern {
-		key, err := gs.store.SearchKeys(p)
-		if err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
-			continue
-		}
-
-		for _, k := range key {
-			r, err := gs.store.Read(k)
-			if err != nil {
-				editErr.Add(fmt.Errorf("editing '%s' failed: %s", p, err))
-				continue
-			}
-			records = append(records, r)
-		}
+	records, err := gs.glob(pattern...)
+	if err != nil {
+		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}
 
 	if len(records) == 0 {
@@ -264,15 +217,14 @@ func (gs *Gostore) MultiEdit(pattern ...string) error {
 
 	mdata, err := gs.ui.MultiEdit(records.Data())
 	if err != nil {
-		editErr.Add(fmt.Errorf("editing '%s' failed: %s", pattern, err))
-		return editErr.Err()
+		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}
 
 	if len(mdata) != len(records) {
-		editErr.Add(fmt.Errorf("editing '%s' failed: number of records after multi-edition is inconsistent", pattern))
-		return editErr.Err()
+		return fmt.Errorf("editing '%s' failed: number of records after multi-edition is inconsistent", pattern)
 	}
 
+	var editErr util.MultiErrors
 	for i := range mdata {
 		if err := gs.update(records[i], mdata[i]); err != nil {
 			editErr.Add(fmt.Errorf("editing '%s' failed: %s", records[i].Key(), err))
@@ -287,30 +239,18 @@ func (gs *Gostore) MultiEdit(pattern ...string) error {
 
 // Delete removes a record from the collection.
 func (gs *Gostore) Delete(pattern ...string) error {
-	var keys []string
-	var delErr util.MultiErrors
-
-	for _, p := range pattern {
-		k, err := gs.store.SearchKeys(p)
-		if err != nil {
-			delErr.Add(fmt.Errorf("deleting '%s' failed: %s", p, err))
-			continue
-		}
-
-		if len(k) == 0 {
-			delErr.Add(fmt.Errorf("deleting '%s' failed: no such record", p))
-			continue
-		}
-
-		keys = append(keys, k...)
+	records, err := gs.glob(pattern...)
+	if err != nil {
+		return fmt.Errorf("deleting '%s' failed: %s", pattern, err)
 	}
 
-	for _, key := range keys {
-		gs.log.Printf("Deleting '%s'", key)
+	var delErr util.MultiErrors
+	for _, r := range records {
+		gs.log.Printf("Deleting '%s'", r.Key())
 
 		if !gs.pretend {
-			if err := gs.store.Delete(key); err != nil {
-				delErr.Add(fmt.Errorf("deleting '%s' failed: %s", key, err))
+			if err := gs.store.Delete(r.Key()); err != nil {
+				delErr.Add(fmt.Errorf("deleting '%s' failed: %s", r.Key(), err))
 				continue
 			}
 		}
@@ -321,29 +261,17 @@ func (gs *Gostore) Delete(pattern ...string) error {
 
 // Export copies a record's media file from the collection to the given destination.
 func (gs *Gostore) Export(dstFolder string, pattern ...string) error {
-	var keys []string
-	var exportErr util.MultiErrors
-
-	for _, p := range pattern {
-		k, err := gs.store.SearchKeys(p)
-		if err != nil {
-			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", p, err))
-			continue
-		}
-
-		if len(k) == 0 {
-			exportErr.Add(fmt.Errorf("exporting '%s' failed: no such record", p))
-			continue
-		}
-
-		keys = append(keys, k...)
+	records, err := gs.glob(pattern...)
+	if err != nil {
+		return fmt.Errorf("exporting '%s' failed: %s", pattern, err)
 	}
 
-	for _, key := range keys {
-		gs.log.Printf("Exporting '%s'", key)
+	var exportErr util.MultiErrors
+	for _, r := range records {
+		gs.log.Printf("Exporting '%s'", r.Key())
 
-		if err := gs.export(key, dstFolder); err != nil {
-			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", key, err))
+		if err := gs.export(r.Key(), dstFolder); err != nil {
+			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", r.Key(), err))
 			continue
 		}
 	}
@@ -423,6 +351,21 @@ func (gs *Gostore) Fields() error {
 	}
 	gs.ui.Printf("%s\n", strings.Join(fields, "\n"))
 	return nil
+}
+
+func (gs *Gostore) glob(pattern ...string) (store.Records, error) {
+	var rec store.Records
+
+	for _, p := range pattern {
+		r, err := gs.store.ReadGlob(p)
+		if err != nil {
+			return nil, fmt.Errorf("looking for '%s' failed: %s", p, err)
+		}
+
+		rec = append(rec, r...)
+	}
+
+	return rec, nil
 }
 
 func (gs *Gostore) insert(path string) (*store.Record, error) {

@@ -221,7 +221,31 @@ func (s *Store) ReadAll() (list Records, err error) {
 // Under the hood the pattern matching follows the same behaviour than
 // filepath.Match.
 func (s *Store) ReadGlob(pattern string) (Records, error) {
-	keys, err := s.SearchKeys(pattern)
+	s.log.Printf("Get all records that match glob '%s' from store", pattern)
+
+	keys, err := s.fs.Search(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	var result Records
+	for _, key := range keys {
+		r, err := s.Read(key)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, r)
+	}
+
+	return result, nil
+}
+
+// ReadQuery returns the Records that match the given search query. The query and
+// sort order should follow the bleve search engine syntax.
+func (s *Store) ReadQuery(query string, sortOrder ...string) (Records, error) {
+	s.log.Printf("Rearch records that match query '%s' with sort order '%v'", query, sortOrder)
+
+	keys, err := s.idx.Search(query, sortOrder...)
 	if err != nil {
 		return nil, err
 	}
@@ -326,43 +350,6 @@ func (s *Store) Delete(key string) error {
 	}
 
 	return errDel.Err()
-}
-
-// Search returns the Records that match the given search query. The query and
-// sort order should follow the bleve search engine syntax.
-func (s *Store) Search(query string, sortOrder ...string) (Records, error) {
-	s.log.Printf("Search records for '%s' with sort order '%v'", query, sortOrder)
-
-	keys, err := s.idx.Search(query, sortOrder...)
-	if err != nil {
-		return nil, err
-	}
-
-	var result Records
-	for _, key := range keys {
-		r, err := s.Read(key)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, r)
-	}
-
-	return result, nil
-}
-
-// SearchKeys returns the list of keys corresponding to the given search pattern.
-// Under the hood the pattern matching follows the same behaviour than
-// filepath.Match.
-func (s *Store) SearchKeys(pattern string) ([]string, error) {
-	s.log.Printf("Search records for ID='%s'", pattern)
-
-	keys, err := s.fs.Search(pattern)
-	if err != nil {
-		return nil, err
-	}
-
-	s.log.Printf("Found records for ID='%s': %+v", pattern, keys)
-	return keys, nil
 }
 
 // RebuildIndex deletes then rebuild the index from scratch based on the

@@ -142,22 +142,6 @@ func testImport(t *testing.T, gs *testGostore) {
 			t.Errorf("Importing an existing record should not print anything:\n%v", failure)
 		}
 	})
-
-	t.Run("ImportNonExistingEpub", func(t *testing.T) {
-		stdout, err := verify.StartMockStdout()
-		if err != nil {
-			t.Fatalf("Fail to mock stdout: %v", err)
-		}
-		defer stdout.Stop()
-
-		if err := gs.Import([]string{"non_existing.epub"}); err == nil {
-			t.Errorf("Importing non existing epub worked but should not")
-		}
-
-		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
-			t.Errorf("Importing non existing epub should not print anything:\n%v", failure)
-		}
-	})
 }
 
 func testList(t *testing.T, gs *testGostore) {
@@ -178,22 +162,6 @@ func testList(t *testing.T, gs *testGostore) {
 		}
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
-			t.Errorf("List output is not as expected:\n%v", failure)
-		}
-	})
-
-	t.Run("ListNonExisting", func(t *testing.T) {
-		stdout, err := verify.StartMockStdout()
-		if err != nil {
-			t.Fatalf("Fail to mock stdout: %v", err)
-		}
-		defer stdout.Stop()
-
-		if err := gs.Gostore.List("non existing record"); err == nil {
-			t.Errorf("List of non existing record should have failed")
-		}
-
-		if failure := verify.EqualStdoutString(stdout, ""); failure != nil {
 			t.Errorf("List output is not as expected:\n%v", failure)
 		}
 	})
@@ -292,12 +260,6 @@ func testDelete(t *testing.T, gs *testGostore) {
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
 			t.Errorf("Delete output is not as expected:\n%v", failure)
-		}
-	})
-
-	t.Run("DeleteNonExisting", func(t *testing.T) {
-		if err := gs.Delete("non_existing.epub"); err == nil {
-			t.Errorf("deleting non existing record does no fail")
 		}
 	})
 }

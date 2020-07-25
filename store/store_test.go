@@ -188,7 +188,7 @@ func TestUpdate(t *testing.T) {
 	})
 }
 
-func TestSearch(t *testing.T) {
+func TestQuery(t *testing.T) {
 	s, cleanFn := setupStore(t)
 	defer cleanFn()
 
@@ -210,7 +210,7 @@ func TestSearch(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		out, err := s.Search(tc.in)
+		out, err := s.ReadQuery(tc.in)
 		if err != nil {
 			t.Errorf("Search for %s failed: %s", tc.in, err)
 		}
