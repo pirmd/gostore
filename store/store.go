@@ -182,7 +182,7 @@ func (s *Store) Read(key string) (*Record, error) {
 		return nil, err
 	}
 
-	// Retrieving data from store's database relies on JSON unmarshalling to a
+	// Retrieving data from store's database relies on JSON unmarshaling to a
 	// map[string]interface{} type. It will miss detecting properly time and
 	// numeric values. At this point using information stored in the store's
 	// index can help at this kind of information is found there.
@@ -328,8 +328,8 @@ func (s *Store) Delete(key string) error {
 	return errDel.Err()
 }
 
-// Search returns the list of keys corresponding to the given search query. The
-// query and sort order should follow the bleve search engine syntax.
+// Search returns the Records that match the given search query. The query and
+// sort order should follow the bleve search engine syntax.
 func (s *Store) Search(query string, sortOrder ...string) (Records, error) {
 	s.log.Printf("Search records for '%s' with sort order '%v'", query, sortOrder)
 
