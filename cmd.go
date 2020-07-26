@@ -90,27 +90,30 @@ func newApp(cfg *Config) *clapp.Command {
 	})
 
 	var recordIDs []string
+	var recordIDsArg = &clapp.Arg{
+		Name:     "name",
+		Usage:    "Record's name. Name can be specified using a glob pattern.",
+		Var:      &recordIDs,
+		Optional: true,
+	}
+
 	var sortBy []string
+	var sortByFlag = &clapp.Flag{
+		Name:  "sort",
+		Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
+		Var:   &sortBy,
+	}
 
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "list",
 		Usage: "List and retrieve information about collection's records. If no pattern is provided, list all records of the collection.",
 
 		Args: clapp.Args{
-			{
-				Name:     "name",
-				Usage:    "Name of the record to get information about. Name can be specified using a glob pattern.",
-				Var:      &recordIDs,
-				Optional: true,
-			},
+			recordIDsArg,
 		},
 
 		Flags: clapp.Flags{
-			{
-				Name:  "sort",
-				Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
-				Var:   &sortBy,
-			},
+			sortByFlag,
 		},
 
 		Execute: func() error {
@@ -148,11 +151,7 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Flags: clapp.Flags{
-			{
-				Name:  "sort",
-				Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
-				Var:   &sortBy,
-			},
+			sortByFlag,
 		},
 
 		Execute: func() error {
@@ -188,11 +187,7 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 
 		Args: clapp.Args{
-			{
-				Name:  "name",
-				Usage: "Name of the record to edit. Name can be specified using a glob pattern.",
-				Var:   &recordIDs,
-			},
+			recordIDsArg,
 		},
 
 		Execute: func() error {
@@ -221,11 +216,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Usage: "Delete an existing record from the collection.",
 
 		Args: clapp.Args{
-			{
-				Name:  "name",
-				Usage: "Name of the record to delete. Name can be specified using a glob pattern.",
-				Var:   &recordIDs,
-			},
+			recordIDsArg,
 		},
 
 		Execute: func() error {
@@ -248,11 +239,7 @@ func newApp(cfg *Config) *clapp.Command {
 		Usage: "Copy a record's media file from the collection to the given destination.",
 
 		Args: clapp.Args{
-			{
-				Name:  "name",
-				Usage: "Name of the record to export. Name can be specified using a glob pattern.",
-				Var:   &recordIDs,
-			},
+			recordIDsArg,
 			{
 				Name:     "dst",
 				Usage:    "Destination folder where the record needs to be exported to. Default to current working directory.",
