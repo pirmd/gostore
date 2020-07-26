@@ -90,6 +90,7 @@ func newApp(cfg *Config) *clapp.Command {
 	})
 
 	var recordIDs []string
+	var sortBy []string
 
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "list",
@@ -104,6 +105,14 @@ func newApp(cfg *Config) *clapp.Command {
 			},
 		},
 
+		Flags: clapp.Flags{
+			{
+				Name:  "sort",
+				Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
+				Var:   &sortBy,
+			},
+		},
+
 		Execute: func() error {
 			gs, err := openGostore(cfg)
 			if err != nil {
@@ -112,13 +121,13 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if len(recordIDs) == 0 {
-				if err := gs.ListAll(); err != nil {
+				if err := gs.ListAll(sortBy); err != nil {
 					return err
 				}
 				return nil
 			}
 
-			if err := gs.List(recordIDs...); err != nil {
+			if err := gs.ListGlob(recordIDs, sortBy); err != nil {
 				return err
 			}
 			return nil
@@ -126,7 +135,6 @@ func newApp(cfg *Config) *clapp.Command {
 	})
 
 	var query string
-	var sortOrder []string
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "search",
 		Usage: "Search the collection's records matching the given query.",
@@ -143,7 +151,7 @@ func newApp(cfg *Config) *clapp.Command {
 			{
 				Name:  "sort",
 				Usage: "Sort the search results. Record will first be sorted by the first field. Any items with the same value for that field, are then also sorted by the next field, and so on. The names of fields can be prefixed with the - character, which will cause that field to be reversed (descending order). Special fields are provided '_id' (record's name) and '_score' (search relevance score).",
-				Var:   &sortOrder,
+				Var:   &sortBy,
 			},
 		},
 
@@ -154,7 +162,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Search(query, sortOrder...); err != nil {
+			if err := gs.ListQuery(query, sortBy); err != nil {
 				return err
 			}
 			return nil
@@ -195,13 +203,13 @@ func newApp(cfg *Config) *clapp.Command {
 			defer gs.Close()
 
 			if multiEdit {
-				if err := gs.MultiEdit(recordIDs...); err != nil {
+				if err := gs.MultiEdit(recordIDs); err != nil {
 					return err
 				}
 				return nil
 			}
 
-			if err := gs.Edit(recordIDs...); err != nil {
+			if err := gs.Edit(recordIDs); err != nil {
 				return err
 			}
 			return nil
@@ -227,7 +235,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Delete(recordIDs...); err != nil {
+			if err := gs.Delete(recordIDs); err != nil {
 				return err
 			}
 			return nil
@@ -260,7 +268,7 @@ func newApp(cfg *Config) *clapp.Command {
 			}
 			defer gs.Close()
 
-			if err := gs.Export(dstFolder, recordIDs...); err != nil {
+			if err := gs.Export(dstFolder, recordIDs); err != nil {
 				return err
 			}
 			return nil

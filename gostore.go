@@ -135,46 +135,46 @@ func (gs *Gostore) Import(mediaFiles []string) error {
 	return importErr.Err()
 }
 
-// List retrieves information about a collection's record.
-func (gs *Gostore) List(pattern ...string) error {
-	records, err := gs.glob(pattern...)
-	if err != nil {
-		return fmt.Errorf("listing '%s' failed: %s", pattern, err)
-	}
-
-	if len(records) != 0 {
-		gs.ui.PrettyPrint(records.Flatted()...)
-	}
-
-	return nil
-}
-
-// ListAll lists all collection's records
-func (gs *Gostore) ListAll() error {
+// ListAll lists all collection's records.
+func (gs *Gostore) ListAll(sortBy []string) error {
 	r, err := gs.store.ReadAll()
 	if err != nil {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Flatted()...)
+	gs.ui.PrettyPrint(util.Sort(r.Flatted(), sortBy)...)
 	return nil
 }
 
-// Search the collection for records matching given query. Query and sort order
-// follow blevesearch syntax (https://blevesearch.com/docs/Query-String-Query/).
-func (gs *Gostore) Search(query string, sortOrder ...string) error {
-	r, err := gs.store.ReadQuery(query, sortOrder...)
+// ListGlob retrieves information about a collection's record.
+func (gs *Gostore) ListGlob(pattern []string, sortBy []string) error {
+	r, err := gs.glob(pattern)
+	if err != nil {
+		return fmt.Errorf("listing '%s' failed: %s", pattern, err)
+	}
+
+	if len(r) != 0 {
+		gs.ui.PrettyPrint(util.Sort(r.Flatted(), sortBy)...)
+	}
+
+	return nil
+}
+
+// ListQuery searches the collection for records matching given query. Query
+// follows bleve's search syntax (https://blevesearch.com/docs/Query-String-Query/).
+func (gs *Gostore) ListQuery(query string, sortBy []string) error {
+	r, err := gs.store.ReadQuery(query)
 	if err != nil {
 		return err
 	}
 
-	gs.ui.PrettyPrint(r.Flatted()...)
+	gs.ui.PrettyPrint(util.Sort(r.Flatted(), sortBy)...)
 	return nil
 }
 
 // Edit updates an existing record from the collection
-func (gs *Gostore) Edit(pattern ...string) error {
-	records, err := gs.glob(pattern...)
+func (gs *Gostore) Edit(pattern []string) error {
+	records, err := gs.glob(pattern)
 	if err != nil {
 		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}
@@ -205,8 +205,8 @@ func (gs *Gostore) Edit(pattern ...string) error {
 }
 
 // MultiEdit updates a set of records at once.
-func (gs *Gostore) MultiEdit(pattern ...string) error {
-	records, err := gs.glob(pattern...)
+func (gs *Gostore) MultiEdit(pattern []string) error {
+	records, err := gs.glob(pattern)
 	if err != nil {
 		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}
@@ -238,8 +238,8 @@ func (gs *Gostore) MultiEdit(pattern ...string) error {
 }
 
 // Delete removes a record from the collection.
-func (gs *Gostore) Delete(pattern ...string) error {
-	records, err := gs.glob(pattern...)
+func (gs *Gostore) Delete(pattern []string) error {
+	records, err := gs.glob(pattern)
 	if err != nil {
 		return fmt.Errorf("deleting '%s' failed: %s", pattern, err)
 	}
@@ -260,8 +260,8 @@ func (gs *Gostore) Delete(pattern ...string) error {
 }
 
 // Export copies a record's media file from the collection to the given destination.
-func (gs *Gostore) Export(dstFolder string, pattern ...string) error {
-	records, err := gs.glob(pattern...)
+func (gs *Gostore) Export(dstFolder string, pattern []string) error {
+	records, err := gs.glob(pattern)
 	if err != nil {
 		return fmt.Errorf("exporting '%s' failed: %s", pattern, err)
 	}
@@ -293,7 +293,7 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(ghosts) > 0 {
 		switch {
 		case gs.deleteGhosts:
-			if err := gs.Delete(ghosts...); err != nil {
+			if err := gs.Delete(ghosts); err != nil {
 				errCheck.Add(err)
 			}
 
@@ -309,15 +309,13 @@ func (gs *Gostore) CheckAndRepair() error {
 	if len(orphans) > 0 {
 		switch {
 		case gs.deleteOrphans:
-			if err := gs.Delete(orphans...); err != nil {
+			if err := gs.Delete(orphans); err != nil {
 				errCheck.Add(err)
 			}
 
 		case gs.importOrphans:
-			for _, o := range orphans {
-				if err := gs.Edit(o); err != nil {
-					errCheck.Add(err)
-				}
+			if err := gs.Edit(orphans); err != nil {
+				errCheck.Add(err)
 			}
 
 		default:
@@ -353,7 +351,7 @@ func (gs *Gostore) Fields() error {
 	return nil
 }
 
-func (gs *Gostore) glob(pattern ...string) (store.Records, error) {
+func (gs *Gostore) glob(pattern []string) (store.Records, error) {
 	var rec store.Records
 
 	for _, p := range pattern {

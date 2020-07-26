@@ -157,12 +157,28 @@ func testList(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Gostore.List(allepubs...); err != nil {
+		if err := gs.Gostore.ListGlob(allepubs, []string{}); err != nil {
 			t.Errorf("List failed: %v", err)
 		}
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
 			t.Errorf("List output is not as expected:\n%v", failure)
+		}
+	})
+
+	t.Run("ListEpubsSorted", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
+		if err := gs.ListGlob([]string{"*.epub"}, []string{"PublishedDate"}); err != nil {
+			t.Fatalf("ListAll: fail to list epubs from collection: %v", err)
+		}
+
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("ListAll output is not as expected:\n%v", failure)
 		}
 	})
 }
@@ -175,7 +191,23 @@ func testListAll(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.ListAll(); err != nil {
+		if err := gs.ListAll([]string{}); err != nil {
+			t.Fatalf("ListAll: fail to list epubs from collection: %v", err)
+		}
+
+		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
+			t.Errorf("ListAll output is not as expected:\n%v", failure)
+		}
+	})
+
+	t.Run("ListAllSorted", func(t *testing.T) {
+		stdout, err := verify.StartMockStdout()
+		if err != nil {
+			t.Fatalf("Fail to mock stdout: %v", err)
+		}
+		defer stdout.Stop()
+
+		if err := gs.ListAll([]string{"PublishedDate"}); err != nil {
 			t.Fatalf("ListAll: fail to list epubs from collection: %v", err)
 		}
 
@@ -193,7 +225,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Search("*"); err != nil {
+		if err := gs.ListQuery("*", []string{}); err != nil {
 			t.Fatalf("SearchAll: fail to list epubs from collection: %v", err)
 		}
 
@@ -209,7 +241,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Search("Adventures"); err != nil {
+		if err := gs.ListQuery("Adventures", []string{}); err != nil {
 			t.Fatalf("Fail to search the collection: %v", err)
 		}
 
@@ -225,7 +257,7 @@ func testSearch(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.Search("*", "PublishedDate"); err != nil {
+		if err := gs.ListQuery("*", []string{"PublishedDate"}); err != nil {
 			t.Fatalf("Fail to search the collection: %v", err)
 		}
 
@@ -244,7 +276,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 	}
 
 	t.Run("DeleteEpubs", func(t *testing.T) {
-		if err := gs.Delete(allepubs[0]); err != nil {
+		if err := gs.Delete(allepubs[0:1]); err != nil {
 			t.Fatalf("Delete failed: %v", err)
 		}
 
@@ -254,7 +286,7 @@ func testDelete(t *testing.T, gs *testGostore) {
 		}
 		defer stdout.Stop()
 
-		if err := gs.ListAll(); err != nil {
+		if err := gs.ListAll([]string{}); err != nil {
 			t.Fatalf("ListAll after delete failed: cannot list epubs from collection: %v", err)
 		}
 

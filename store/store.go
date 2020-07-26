@@ -240,12 +240,12 @@ func (s *Store) ReadGlob(pattern string) (Records, error) {
 	return result, nil
 }
 
-// ReadQuery returns the Records that match the given search query. The query and
-// sort order should follow the bleve search engine syntax.
-func (s *Store) ReadQuery(query string, sortOrder ...string) (Records, error) {
-	s.log.Printf("Rearch records that match query '%s' with sort order '%v'", query, sortOrder)
+// ReadQuery returns the Records that match the given search query. The query
+// follows the bleve search engine syntax (http://blevesearch.com/docs/Query-String-Query/).
+func (s *Store) ReadQuery(query string) (Records, error) {
+	s.log.Printf("Rearch records that match query '%s'", query)
 
-	keys, err := s.idx.Search(query, sortOrder...)
+	keys, err := s.idx.Search(query)
 	if err != nil {
 		return nil, err
 	}
