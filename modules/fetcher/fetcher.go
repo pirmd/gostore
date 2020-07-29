@@ -47,7 +47,7 @@ func (f *fetcher) ProcessRecord(r *store.Record) error {
 	f.log.Printf("Module '%s': fetch metadata for '%v'", moduleName, r.Data())
 	matches, err := media.FetchMetadata(r.Data())
 	if err != nil {
-		return err
+		return fmt.Errorf("module '%s': fail to fetch metadata: %v", moduleName, err)
 	}
 
 	if len(matches) == 0 {
@@ -63,7 +63,7 @@ func (f *fetcher) ProcessRecord(r *store.Record) error {
 	f.log.Printf("Module '%s': found %d match(es), use the first one: %v", moduleName, len(matches), bestMatch)
 	mdata, err := f.ui.Merge(bestMatch, r.Data())
 	if err != nil {
-		return err
+		return fmt.Errorf("module '%s': fail to merge fetched metadata: %v", moduleName, err)
 	}
 
 	f.log.Printf("Module '%s': record updated to: %v", moduleName, mdata)
