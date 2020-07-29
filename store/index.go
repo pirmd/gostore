@@ -9,6 +9,7 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/document"
 	"github.com/blevesearch/bleve/mapping"
+	"github.com/blevesearch/bleve/search/query"
 
 	// languages (list from github.com/blevesearch/bleve/blob/master/config/config.go)
 	_ "github.com/blevesearch/bleve/analysis/lang/ar"
@@ -157,9 +158,9 @@ func (s *storeidx) Delete(key string) error {
 	return s.idx.Delete(key)
 }
 
-// Search looks for known Records' Id registered in the Index. The query
-// follows bleve's query syntax (http://blevesearch.com/docs/Query-String-Query/)
-func (s *storeidx) Search(query string) (keys []string, err error) {
+// Search looks for Records' keys registered in the Index that match the query.
+// The query follows bleve's query syntax (http://blevesearch.com/docs/Query-String-Query/)
+func (s *storeidx) Search(query string) ([]string, error) {
 	q := bleve.NewQueryStringQuery(query)
 	searchRequest := bleve.NewSearchRequest(q)
 
@@ -168,6 +169,36 @@ func (s *storeidx) Search(query string) (keys []string, err error) {
 		return nil, err
 	}
 
+	var keys []string
+	for _, r := range results.Hits {
+		keys = append(keys, r.ID)
+	}
+	return keys, nil
+}
+
+// SearchFields looks for Records' keys registered in the Index that match the
+// provided fields value.  Level of accepted fuzziness can be specified.
+func (s *storeidx) SearchFields(fields map[string]interface{}, fuzziness int) ([]string, error) {
+	var queries []query.Query
+	for field, match := range fields {
+		if match != nil {
+			q := bleve.NewMatchQuery(match.(string))
+			q.SetField(field)
+			q.SetFuzziness(fuzziness)
+			queries = append(queries, q)
+		}
+	}
+
+	q := bleve.NewConjunctionQuery(queries...)
+
+	searchRequest := bleve.NewSearchRequest(q)
+
+	results, err := s.idx.Search(searchRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	var keys []string
 	for _, r := range results.Hits {
 		keys = append(keys, r.ID)
 	}

@@ -223,7 +223,7 @@ func (s *Store) ReadAll() (list Records, err error) {
 func (s *Store) ReadGlob(pattern string) (Records, error) {
 	s.log.Printf("Get all records that match glob '%s' from store", pattern)
 
-	keys, err := s.fs.Search(pattern)
+	keys, err := s.SearchGlob(pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +245,7 @@ func (s *Store) ReadGlob(pattern string) (Records, error) {
 func (s *Store) ReadQuery(query string) (Records, error) {
 	s.log.Printf("Rearch records that match query '%s'", query)
 
-	keys, err := s.idx.Search(query)
+	keys, err := s.SearchQuery(query)
 	if err != nil {
 		return nil, err
 	}
@@ -266,6 +266,49 @@ func (s *Store) ReadQuery(query string) (Records, error) {
 func (s *Store) OpenRecord(key string) (vfs.File, error) {
 	s.log.Printf("Open record '%s' from storage", key)
 	return s.fs.Get(key)
+}
+
+// SearchQuery returns the Records' keys that match the given search query. The
+// query and sort order should follow the bleve search engine syntax.
+func (s *Store) SearchQuery(query string) ([]string, error) {
+	s.log.Printf("Search records for '%s'", query)
+
+	keys, err := s.idx.Search(query)
+	if err != nil {
+		return nil, err
+	}
+
+	s.log.Printf("Found records: %+v", keys)
+	return keys, nil
+}
+
+// SearchGlob returns the Records' keys that match the given glob pattern.
+// Under the hood the pattern matching follows the same behaviour than
+// filepath.Match.
+func (s *Store) SearchGlob(pattern string) ([]string, error) {
+	s.log.Printf("Search records for ID='%s'", pattern)
+
+	keys, err := s.fs.Search(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	s.log.Printf("Found records: %+v", keys)
+	return keys, nil
+}
+
+// SearchFields returns the Records' keys that match the provided fields value.
+// Level of accepted fuzziness can be specified.
+func (s *Store) SearchFields(fields map[string]interface{}, fuzziness int) ([]string, error) {
+	s.log.Printf("Search records for FIELDS='%#v' with FUZZY=%d", fields, fuzziness)
+
+	keys, err := s.idx.SearchFields(fields, fuzziness)
+	if err != nil {
+		return nil, err
+	}
+
+	s.log.Printf("Found records: %+v", keys)
+	return keys, nil
 }
 
 // Update replaces an existing Store's record. Update will fail if the new
