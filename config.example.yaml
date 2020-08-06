@@ -149,6 +149,13 @@ import:
           # Available formats are plain text (default) or markdown
           outputstyle: markdown
           
+    # dupfinder is a module that checks whether a record is already in the
+    # collection before importing it.
+    - name: dupfinder
+      config:
+      # similarityLevel is the similarity level use to detect dupplicate.
+      # similarityLevel: 1
+          
     # checker is a module that verifies that a metadata set has a good quality
     # level.
     - name: checker

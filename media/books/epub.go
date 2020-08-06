@@ -49,6 +49,10 @@ func (mh *epubHandler) CheckMetadata(mdata media.Metadata) int {
 	return checkMetadata(mdata)
 }
 
+func (mh *epubHandler) IDCard(mdata media.Metadata) (exact [][2]string, similar [][2]string) {
+	return identity(mdata)
+}
+
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
 	mdata := make(media.Metadata)
 

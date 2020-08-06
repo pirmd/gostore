@@ -298,8 +298,10 @@ func (s *Store) SearchGlob(pattern string) ([]string, error) {
 }
 
 // SearchFields returns the Records' keys that match the provided fields value.
-// Level of accepted fuzziness can be specified.
-func (s *Store) SearchFields(fields map[string]interface{}, fuzziness int) ([]string, error) {
+// Fields values are given as a slice whose first item is the field name and
+// second is the field matching value.  Queries are executed with the given
+// level of fuzziness.
+func (s *Store) SearchFields(fields [][2]string, fuzziness int) ([]string, error) {
 	s.log.Printf("Search records for FIELDS='%#v' with FUZZY=%d", fields, fuzziness)
 
 	keys, err := s.idx.SearchFields(fields, fuzziness)

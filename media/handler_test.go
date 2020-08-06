@@ -29,6 +29,10 @@ func (mh *mockHandler) CheckMetadata(mdata Metadata) int {
 	return 100
 }
 
+func (mh *mockHandler) IDCard(mdata Metadata) (exact [][2]string, similar [][2]string) {
+	return
+}
+
 func TestForType(t *testing.T) {
 	testHandlers := Handlers{
 		&mockHandler{"test1", "mock/test1"},

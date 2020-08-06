@@ -73,3 +73,16 @@ func CheckMetadata(mdata Metadata) int {
 
 	return mh.CheckMetadata(mdata)
 }
+
+// IDCard returns an identity card  of a given media, notably to support
+// query operation looking after this media. An identity is made of two
+// parts, one that capture metadata that shall be unique, one that captures
+// metadata that can be similar but pointing to the same media.
+func IDCard(mdata Metadata) (exact [][2]string, similar [][2]string) {
+	mh, err := handlers.ForMetadata(mdata)
+	if err != nil {
+		return
+	}
+
+	return mh.IDCard(mdata)
+}

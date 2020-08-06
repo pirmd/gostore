@@ -177,16 +177,17 @@ func (s *storeidx) Search(query string) ([]string, error) {
 }
 
 // SearchFields looks for Records' keys registered in the Index that match the
-// provided fields value.  Level of accepted fuzziness can be specified.
-func (s *storeidx) SearchFields(fields map[string]interface{}, fuzziness int) ([]string, error) {
+// provided fields value. Fields values are given as a slice whose first item
+// is the field name and second is the field matching value.
+// Queries are executed with the given level of fuzziness.
+func (s *storeidx) SearchFields(fields [][2]string, fuzziness int) ([]string, error) {
 	var queries []query.Query
-	for field, match := range fields {
-		if match != nil {
-			q := bleve.NewMatchQuery(match.(string))
-			q.SetField(field)
-			q.SetFuzziness(fuzziness)
-			queries = append(queries, q)
-		}
+	for _, fieldval := range fields {
+		field, match := fieldval[0], fieldval[1]
+		q := bleve.NewMatchQuery(match)
+		q.SetField(field)
+		q.SetFuzziness(fuzziness)
+		queries = append(queries, q)
 	}
 
 	q := bleve.NewConjunctionQuery(queries...)
