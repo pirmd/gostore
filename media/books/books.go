@@ -9,7 +9,9 @@ import (
 	"github.com/pirmd/gostore/util"
 )
 
-func fetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
+type bookHandler struct{}
+
+func (bh *bookHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
 	found, err := googlebooks.Search(mdata)
 	if err != nil {
 		return nil, err
@@ -18,7 +20,7 @@ func fetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
 	return found, nil
 }
 
-func checkMetadata(mdata media.Metadata) int {
+func (bh *bookHandler) CheckMetadata(mdata media.Metadata) int {
 	lvl := 100
 
 	if util.IsZero(mdata["Title"]) {
@@ -44,7 +46,7 @@ func checkMetadata(mdata media.Metadata) int {
 	return lvl
 }
 
-func identity(mdata media.Metadata) (exact [][2]string, similar [][2]string) {
+func (bh *bookHandler) IDCard(mdata media.Metadata) (exact [][2]string, similar [][2]string) {
 	if isbn, ok := mdata["ISBN"].(string); ok {
 		exact = append(exact, [2]string{"ISBN", isbn})
 	}

@@ -11,7 +11,9 @@ var (
 	_ media.Handler = (*epubHandler)(nil)
 )
 
-type epubHandler struct{}
+type epubHandler struct {
+	*bookHandler
+}
 
 func (mh *epubHandler) Type() string {
 	return "book/epub"
@@ -30,27 +32,6 @@ func (mh *epubHandler) ReadMetadata(f media.File) (media.Metadata, error) {
 	mdata := epub2mdata(epubData)
 	mdata[media.TypeField] = mh.Type()
 	return mdata, nil
-}
-
-func (mh *epubHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
-	metadata, err := fetchMetadata(mdata)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, m := range metadata {
-		m[media.TypeField] = mh.Type()
-	}
-
-	return metadata, nil
-}
-
-func (mh *epubHandler) CheckMetadata(mdata media.Metadata) int {
-	return checkMetadata(mdata)
-}
-
-func (mh *epubHandler) IDCard(mdata media.Metadata) (exact [][2]string, similar [][2]string) {
-	return identity(mdata)
 }
 
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
