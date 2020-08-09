@@ -1,6 +1,9 @@
 package store
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 const (
 	// KeyField contains the name of the record's value field containing the
@@ -133,6 +136,10 @@ func newValue(data map[string]interface{}) *value {
 
 // SetData replaces user-supplied value.
 func (val *value) SetData(data map[string]interface{}) {
+	if fmt.Sprint(val.Data) == fmt.Sprint(data) {
+		return
+	}
+
 	val.Data = make(map[string]interface{})
 	for k, v := range data {
 		val.Set(k, v)
