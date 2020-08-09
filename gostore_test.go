@@ -275,6 +275,10 @@ func testDelete(t *testing.T, gs *testGostore) {
 		t.Fatalf("Fail to list epub: %v", err)
 	}
 
+	if len(allepubs) < 1 {
+		t.Fatalf("Delete failed: found no epubs to delete")
+	}
+
 	t.Run("DeleteEpubs", func(t *testing.T) {
 		if err := gs.Delete(allepubs[0:1]); err != nil {
 			t.Fatalf("Delete failed: %v", err)

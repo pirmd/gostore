@@ -6,37 +6,42 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"regexp"
+	"strconv"
 	"strings"
-
-	"github.com/pirmd/gostore/media"
-	"github.com/pirmd/gostore/util"
 )
+
+// API is documented in:
+// .https://developers.google.com/books/docs/v1/reference/volumes
+// .https://developers.google.com/books/docs/v1/using
 
 const (
-	apiURL = "https://www.googleapis.com/books/v1/volumes"
+	// URL is the GoogleBooks API base URL used by this module.
+	URL = "https://www.googleapis.com/books/v1/volumes"
 )
-
-// TODO(pirmd): make it independent from gostore/media (move vol2mdata to
-// gostore/media/books)
 
 var (
-	// reSerieGuesser is a collection of regexp to extract series information
-	// from title/subtitles.
-	// It should be made of 3 named capturing groups (title, serie, serie number).
-	reSerieGuesser = []*regexp.Regexp{
-		regexp.MustCompile(`^(?P<title>.+)\s\((?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)\)$`),
-		regexp.MustCompile(`^(?P<title>.+)\s-\s(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),
-		regexp.MustCompile(`^(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),
-		regexp.MustCompile(`^Book\s(?P<seriePos>\d+)\sof\s(?P<serie>.+)$`),
-	}
+	// defaultAPI is the default  GoogleBooks API
+	defaultAPI = &API{}
 )
 
-// Search queries Google books API for books that corresponds to the provided metadata.
-func Search(mdata media.Metadata) ([]media.Metadata, error) {
-	queryURL, err := buildQueryURL(mdata)
-	if err != nil {
-		return nil, err
+// API represents a GoogleBooks api.
+type API struct {
+	// OrderBy defines the query result sorting order. Accept:
+	// . relevance - Returns results in order of the relevance of search terms
+	// (default).
+	// . newest - Returns results in order of most recently to least recently published.
+	OrderBy string
+	// MaxResults defines the maximum number of results to return. The default
+	// is 10, and the maximum allowable value is 40.
+	MaxResults int
+}
+
+// SearchVolume queries GoogleBooks API for books that corresponds to the
+// provided VolumeInfo.
+func (api *API) SearchVolume(vi *VolumeInfo) ([]*VolumeInfo, error) {
+	queryURL := api.buildQueryURL(vi)
+	if len(queryURL) == 0 {
+		return nil, nil
 	}
 
 	resp, err := http.Get(queryURL)
@@ -46,7 +51,7 @@ func Search(mdata media.Metadata) ([]media.Metadata, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, media.ErrNoMetadataFound
+		return nil, fmt.Errorf("googlebooks: query failed with status code %d", resp.StatusCode)
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
@@ -59,12 +64,39 @@ func Search(mdata media.Metadata) ([]media.Metadata, error) {
 		return nil, err
 	}
 
-	var metadata []media.Metadata
+	var res []*VolumeInfo
 	for _, v := range vol.Items {
-		metadata = append(metadata, vol2mdata(v.VolumeInfo))
+		res = append(res, v.VolumeInfo)
 	}
 
-	return metadata, nil
+	return res, nil
+}
+
+func (api *API) buildQueryURL(vi *VolumeInfo) string {
+	query := vi.toQuery()
+	if len(query) == 0 {
+		return ""
+	}
+
+	q := url.Values{}
+	q.Set("q", strings.Join(query, "+"))
+
+	q.Set("printType", "books")
+
+	if len(api.OrderBy) > 0 {
+		q.Set("orderBy", "relevance")
+	}
+
+	if api.MaxResults > 0 {
+		q.Set("maxResults", strconv.Itoa(api.MaxResults))
+	}
+
+	return URL + "?" + q.Encode()
+}
+
+// SearchVolume queries GoogleBooks API with some default parameters.
+func SearchVolume(vi *VolumeInfo) ([]*VolumeInfo, error) {
+	return defaultAPI.SearchVolume(vi)
 }
 
 type volumes struct {
@@ -72,130 +104,72 @@ type volumes struct {
 }
 
 type volume struct {
-	VolumeInfo *volumeInfo `json:"volumeInfo"`
+	VolumeInfo *VolumeInfo `json:"volumeInfo"`
 }
 
-type volumeInfo struct {
-	Title         string       `json:"title"`
-	SubTitle      string       `json:"subtitle"`
-	Language      string       `json:"language"`
-	Identifier    []identifier `json:"industryIdentifiers"`
-	Authors       []string     `json:"authors"`
-	Subject       []string     `json:"categories"`
-	Description   string       `json:"description"`
-	Publisher     string       `json:"publisher"`
-	PublishedDate string       `json:"publishedDate"`
-	PageCount     int64        `json:"pageCount"`
-}
-
-type identifier struct {
-	Type       string `json:"type"`
+// Identifier represents an industry standard identifier.
+type Identifier struct {
+	// Type is the identifier type such as ISBN, ISBN_10, ISBN_13.
+	Type string `json:"type"`
+	// Identifier is the identifier value.
 	Identifier string `json:"identifier"`
 }
 
-func buildQueryURL(mdata media.Metadata) (string, error) {
-	var query []string
-	if title, ok := mdata["Title"].(string); ok {
-		query = append(query, "intitle:"+title)
-	}
+// VolumeInfo gathers information obtained from GoogleBooks API
+type VolumeInfo struct {
+	// Title is the volume's title.
+	Title string `json:"title"`
 
-	if authors, ok := mdata["Authors"].([]string); ok {
-		query = append(query, "inauthor:"+strings.Join(authors, "+"))
-	}
+	// SubTitle is the volume's sub-title.
+	SubTitle string `json:"subtitle"`
 
-	if isbn, ok := mdata["ISBN"].(string); ok {
-		query = append(query, "isbn:"+isbn)
-	}
+	// Language is the volume's language. It is the two-letter ISO 639-1 code
+	// such as 'fr', 'en'.
+	Language string `json:"language"`
 
-	if len(query) == 0 {
-		return "", fmt.Errorf("empty query")
-	}
+	// Identifier is the industry standard identifiers for this volume such as
+	// ISBN_10, ISBN_13.
+	Identifier []Identifier `json:"industryIdentifiers"`
 
-	q := url.Values{}
-	q.Set("q", strings.Join(query, "+"))
-	q.Set("orderBy", "relevance")
-	q.Set("printType", "books")
-	q.Set("maxResults", "5")
+	// Authors is the list names of the authors and/or editors for this volume.
+	Authors []string `json:"authors"`
 
-	return apiURL + "?" + q.Encode(), nil
+	// Subject is the list of subject categories, such as "Fiction",
+	// "Suspense".
+	Subject []string `json:"categories"`
+
+	// Description is the synopsis of the volume. The text of the description
+	// is formatted in HTML and includes simple formatting elements.
+	Description string `json:"description"`
+
+	// Publisher is the publisher of this volume.
+	Publisher string `json:"publisher"`
+
+	// PublishedDate is date of publication of this volume.
+	PublishedDate string `json:"publishedDate"`
+
+	// PageCount is total number of pages of this volume.
+	PageCount int64 `json:"pageCount"`
 }
 
-func vol2mdata(vi *volumeInfo) media.Metadata {
-	mdata := make(media.Metadata)
-	title, subtitle, serie, seriePos := parseTitle(vi)
-
-	mdata["Title"] = title
-	mdata["Authors"] = vi.Authors
-	mdata["Description"] = vi.Description
-
-	if len(vi.Subject) > 0 {
-		mdata["Subject"] = vi.Subject
+func (vi *VolumeInfo) toQuery() (query []string) {
+	if len(vi.Title) > 0 {
+		query = append(query, "intitle:"+vi.Title)
 	}
 
-	if len(subtitle) > 0 {
-		mdata["SubTitle"] = subtitle
-	}
-
-	if len(serie) > 0 {
-		mdata["Serie"] = serie
-		mdata["SeriePosition"] = seriePos
+	if len(vi.Authors) > 0 {
+		query = append(query, "inauthor:"+strings.Join(vi.Authors, "+"))
 	}
 
 	if len(vi.Publisher) > 0 {
-		mdata["Publisher"] = vi.Publisher
-	}
-
-	if len(vi.PublishedDate) > 0 {
-		if stamp, err := util.ParseTime(vi.PublishedDate); err != nil {
-			mdata["PublishedDate"] = vi.PublishedDate
-		} else {
-			mdata["PublishedDate"] = stamp
-		}
-	}
-
-	if vi.PageCount > 0 {
-		mdata["PageCount"] = vi.PageCount
-	}
-
-	if len(vi.Language) > 0 {
-		mdata["Language"] = vi.Language
+		query = append(query, "intitle:"+vi.Title)
 	}
 
 	for _, id := range vi.Identifier {
-		if id.Type == "ISBN_13" && len(id.Identifier) > 0 {
-			mdata["ISBN"] = id.Identifier
+		if strings.HasPrefix(id.Type, "ISBN") {
+			query = append(query, "isbn:"+id.Identifier)
 		}
 	}
 
-	return mdata
-}
-
-// parseTitle use a simple heuristic to decipher Google books information about
-// series hidden in title/subtitle volume information
-func parseTitle(vi *volumeInfo) (title string, subtitle string, serieName string, seriePos string) {
-	for _, re := range reSerieGuesser {
-		if r := submatchMap(re, vi.Title); len(r) > 0 {
-			return r["title"], vi.SubTitle, r["serie"], r["seriePos"]
-		}
-
-		if r := submatchMap(re, vi.SubTitle); len(r) > 0 {
-			return vi.Title, r["title"], r["serie"], r["seriePos"]
-		}
-	}
-
-	return vi.Title, vi.SubTitle, "", ""
-}
-
-func submatchMap(re *regexp.Regexp, s string) map[string]string {
-	names := re.SubexpNames()
-	matches := re.FindStringSubmatch(s)
-
-	r := make(map[string]string)
-	for i := range matches {
-		if i > 0 {
-			r[names[i]] = matches[i]
-		}
-	}
-
-	return r
+	return
 }

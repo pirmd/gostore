@@ -1,0 +1,253 @@
+HTTP/2.0 200 OK
+Alt-Svc: h3-29=":443"; ma=2592000,h3-27=":443"; ma=2592000,h3-T050=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+Cache-Control: private
+Content-Type: application/json; charset=UTF-8
+Date: Sat, 15 Aug 2020 08:21:13 GMT
+Server: ESF
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Xss-Protection: 0
+
+{
+  "kind": "books#volumes",
+  "totalItems": 3,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "l43uDwAAQBAJ",
+      "etag": "9VejvNX5e+s",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/l43uDwAAQBAJ",
+      "volumeInfo": {
+        "title": "Aventures de Baron de Münchausen",
+        "authors": [
+          "Gottfried August Bürger",
+          "Rudolf Erich Raspe"
+        ],
+        "publisher": "Good Press",
+        "publishedDate": "2020-06-17",
+        "description": "\"Aventures de Baron de Münchausen\", de Gottfried August Bürger, Rudolf Erich Raspe, traduit par Théophile Gautier. Publié par Good Press. Good Press publie un large éventail d'ouvrages, où sont inclus tous les genres littéraires. Les choix éditoriaux des éditions Good Press ne se limitent pas aux grands classiques, à la fiction et à la non-fiction littéraire. Ils englobent également les trésors, oubliés ou à découvrir, de la littérature mondiale. Nous publions les livres qu'il faut avoir lu. Chaque ouvrage publié par Good Press a été édité et mis en forme avec soin, afin d'optimiser le confort de lecture, sur liseuse ou tablette. Notre mission est d'élaborer des e-books faciles à utiliser, accessibles au plus grand nombre, dans un format numérique de qualité supérieure.",
+        "industryIdentifiers": [
+          {
+            "type": "OTHER",
+            "identifier": "EAN:4064066079017"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": true
+        },
+        "pageCount": 11275,
+        "printType": "BOOK",
+        "categories": [
+          "Fiction"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "1.2.2.0.preview.3",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=l43uDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=l43uDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "fr",
+        "previewLink": "http://books.google.fr/books?id=l43uDwAAQBAJ&printsec=frontcover&dq=intitle:Aventures+de+Baron+de+M%C3%BCnchausen%2Binauthor:Gottfried+August+B%C3%BCrger%2BRudolf+Erich+Raspe&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+        "infoLink": "https://play.google.com/store/books/details?id=l43uDwAAQBAJ&source=gbs_api",
+        "canonicalVolumeLink": "https://play.google.com/store/books/details?id=l43uDwAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "FOR_SALE",
+        "isEbook": true,
+        "listPrice": {
+          "amount": 0.99,
+          "currencyCode": "EUR"
+        },
+        "retailPrice": {
+          "amount": 0.99,
+          "currencyCode": "EUR"
+        },
+        "buyLink": "https://play.google.com/store/books/details?id=l43uDwAAQBAJ&rdid=book-l43uDwAAQBAJ&rdot=1&source=gbs_api",
+        "offers": [
+          {
+            "finskyOfferType": 1,
+            "listPrice": {
+              "amountInMicros": 990000,
+              "currencyCode": "EUR"
+            },
+            "retailPrice": {
+              "amountInMicros": 990000,
+              "currencyCode": "EUR"
+            },
+            "giftable": true
+          }
+        ]
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.fr/books/download/Aventures_de_Baron_de_M%C3%BCnchausen-sample-epub.acsm?id=l43uDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.fr/books/download/Aventures_de_Baron_de_M%C3%BCnchausen-sample-pdf.acsm?id=l43uDwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=l43uDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "&quot;Aventures de Baron de Münchausen&quot;, de Gottfried August Bürger, Rudolf Erich Raspe, traduit par Théophile Gautier."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "x3rJswEACAAJ",
+      "etag": "0LuVDHXaACQ",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/x3rJswEACAAJ",
+      "volumeInfo": {
+        "title": "Aventures de Baron de Munchausen",
+        "subtitle": "Large Print",
+        "authors": [
+          "Gottfried Bürger",
+          "Rudolf Raspe"
+        ],
+        "publisher": "Createspace Independent Publishing Platform",
+        "publishedDate": "2018-02-08",
+        "description": "Baron Munchausen is a fictional German nobleman created by the German writer Rudolf Erich Raspe in his 1785 book Baron Munchausen's Narrative of his Marvellous Travels and Campaigns in Russia. The character is loosely based on a real baron, Hieronymus Karl Friedrich, Freiherr von M�nchhausenBorn in Bodenwerder, Electorate of Brunswick-L�neburg, the real-life M�nchhausen fought for the Russian Empire in the Russo-Turkish War of 1735-1739. Upon retiring in 1760, he became a minor celebrity within German aristocratic circles for telling outrageous tall tales based on his military career. After hearing some of M�nchhausen's stories, Raspe adapted them anonymously into literary form, first in German as ephemeral magazine pieces and then in English as the 1785 book, which was first published in Oxford by a bookseller named Smith. The book was soon translated into other European languages, including a German version expanded by the poet Gottfried August B�rger. The real-life M�nchhausen was deeply upset at the development of a fictional character bearing his name, and threatened legal proceedings against the book's publisher. Perhaps fearing a libel suit, Raspe never acknowledged his authorship of the work, which was only established posthumously.The fictional Baron's exploits, narrated in the first person, focus on his impossible achievements as a sportsman, soldier, and traveller, for instance riding on a cannonball, fighting a forty-foot crocodile, and travelling to the Moon. Intentionally comedic, the stories play on the absurdity and inconsistency of Munchausen's claims, and contain an undercurrent of social satire. The earliest illustrations of the character, perhaps created by Raspe himself, depict Munchausen as slim and youthful, although later illustrators have depicted him as an older man, and have added the sharply beaked nose and twirled moustache that have become part of the character's definitive visual representation. Raspe's book was a major international success, becoming the core text for numerous English, continental European, and American editions that were expanded and rewritten by other writers. The book in its various revised forms remained widely read throughout the 19th century, especially in editions for young readers.Versions of the fictional Baron have appeared on stage, screen, radio, and television, as well as in other literary works. Though the Baron Munchausen stories are no longer well-known in many English-speaking countries, they are still popular in continental Europe. The character has inspired numerous memorials and museums, and several medical conditions and other concepts are named after him, including Munchausen syndrome, the M�nchhausen trilemma, and Munchausen numbers.We are delighted to publish this classic book as part of our extensive Classic Library collection. Many of the books in our collection have been out of print for decades, and therefore have not been accessible to the general public. The aim of our publishing program is to facilitate rapid access to this vast reservoir of literature, and our view is that this is a significant literary work, which deserves to be brought back into print after many decades. The contents of the vast majority of titles in the Classic Library have been scanned from the original works. To ensure a high quality product, each title has been meticulously hand curated by our staff. Our philosophy has been guided by a desire to provide the reader with a book that is as close as possible to ownership of the original work. We hope that you will enjoy this wonderful classic work, and that for you it becomes an enriching experience.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "1985097125"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9781985097124"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 252,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=x3rJswEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=x3rJswEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.fr/books?id=x3rJswEACAAJ&dq=intitle:Aventures+de+Baron+de+M%C3%BCnchausen%2Binauthor:Gottfried+August+B%C3%BCrger%2BRudolf+Erich+Raspe&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=x3rJswEACAAJ&dq=intitle:Aventures+de+Baron+de+M%C3%BCnchausen%2Binauthor:Gottfried+August+B%C3%BCrger%2BRudolf+Erich+Raspe&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Aventures_de_Baron_de_Munchausen.html?hl=&id=x3rJswEACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=x3rJswEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "The aim of our publishing program is to facilitate rapid access to this vast reservoir of literature, and our view is that this is a significant literary work, which deserves to be brought back into print after many decades."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "EfFwwgEACAAJ",
+      "etag": "MFSfhkn2Rfc",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/EfFwwgEACAAJ",
+      "volumeInfo": {
+        "title": "Aventures du baron de Münchhausen",
+        "authors": [
+          "Gottfried August Bürger",
+          "André Tissier"
+        ],
+        "publisher": "José Corti Editions",
+        "publishedDate": "1998",
+        "description": "La hache s'éleva en l'air si haut, si haut, qu'elle s'en alla tomber dans la lune. Comment la ravoir ? Où trouver une échelle pour aller la chercher ? je me rappelai alors que le pois de Turquie croit très rapidement et à une hauteur extraordinaire. J'en plantai immédiatement un, qui se mit à pousser et alla lui-même contourner sa pointe autour d'une des cornes de la lune. Je grimpai lestement vers l'astre, où j'arrivai sans encombre.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "271430656X"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9782714306562"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 210,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "language": "fr",
+        "previewLink": "http://books.google.fr/books?id=EfFwwgEACAAJ&dq=intitle:Aventures+de+Baron+de+M%C3%BCnchausen%2Binauthor:Gottfried+August+B%C3%BCrger%2BRudolf+Erich+Raspe&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=EfFwwgEACAAJ&dq=intitle:Aventures+de+Baron+de+M%C3%BCnchausen%2Binauthor:Gottfried+August+B%C3%BCrger%2BRudolf+Erich+Raspe&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Aventures_du_baron_de_M%C3%BCnchhausen.html?hl=&id=EfFwwgEACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=EfFwwgEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "La hache s&#39;éleva en l&#39;air si haut, si haut, qu&#39;elle s&#39;en alla tomber dans la lune."
+      }
+    }
+  ]
+}

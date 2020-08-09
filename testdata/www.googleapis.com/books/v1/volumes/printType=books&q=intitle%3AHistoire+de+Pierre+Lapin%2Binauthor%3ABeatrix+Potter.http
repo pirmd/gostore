@@ -1,0 +1,383 @@
+HTTP/2.0 200 OK
+Alt-Svc: h3-29=":443"; ma=2592000,h3-27=":443"; ma=2592000,h3-T050=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+Cache-Control: private
+Content-Type: application/json; charset=UTF-8
+Date: Sat, 15 Aug 2020 08:21:12 GMT
+Server: ESF
+Vary: Origin
+Vary: X-Origin
+Vary: Referer
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Xss-Protection: 0
+
+{
+  "kind": "books#volumes",
+  "totalItems": 5,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "cRlSDwAAQBAJ",
+      "etag": "OwVKMRRtHQg",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/cRlSDwAAQBAJ",
+      "volumeInfo": {
+        "title": "Histoire de Pierre Lapin",
+        "authors": [
+          "Beatrix Potter"
+        ],
+        "publisher": "BoD – Books on Demand",
+        "publishedDate": "2018-03-20",
+        "description": "Histoire de Pierre Lapin: \"IL y avait une fois quatre petits lapins qui s'appelaient - Flopsaut, Trotsaut, Oueue-de-Coton, et Pierre. ...\"",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9783746091761"
+          },
+          {
+            "type": "ISBN_10",
+            "identifier": "3746091764"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": true
+        },
+        "pageCount": 11,
+        "printType": "BOOK",
+        "categories": [
+          "Juvenile Fiction"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": true,
+        "contentVersion": "1.2.3.0.preview.3",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=cRlSDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=cRlSDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "language": "fr",
+        "previewLink": "http://books.google.fr/books?id=cRlSDwAAQBAJ&printsec=frontcover&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=1&source=gbs_api",
+        "infoLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ&source=gbs_api",
+        "canonicalVolumeLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "FOR_SALE",
+        "isEbook": true,
+        "listPrice": {
+          "amount": 0.99,
+          "currencyCode": "EUR"
+        },
+        "retailPrice": {
+          "amount": 0.99,
+          "currencyCode": "EUR"
+        },
+        "buyLink": "https://play.google.com/store/books/details?id=cRlSDwAAQBAJ&rdid=book-cRlSDwAAQBAJ&rdot=1&source=gbs_api",
+        "offers": [
+          {
+            "finskyOfferType": 1,
+            "listPrice": {
+              "amountInMicros": 990000,
+              "currencyCode": "EUR"
+            },
+            "retailPrice": {
+              "amountInMicros": 990000,
+              "currencyCode": "EUR"
+            },
+            "giftable": true
+          }
+        ]
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.fr/books/download/Histoire_de_Pierre_Lapin-sample-epub.acsm?id=cRlSDwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "pdf": {
+          "isAvailable": true,
+          "acsTokenLink": "http://books.google.fr/books/download/Histoire_de_Pierre_Lapin-sample-pdf.acsm?id=cRlSDwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=cRlSDwAAQBAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Histoire de Pierre Lapin: &quot;IL y avait une fois quatre petits lapins qui s&#39;appelaient - Flopsaut, Trotsaut, Oueue-de-Coton, et Pierre. ...&quot;"
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "5VJ6zQEACAAJ",
+      "etag": "UsYHANSiSeA",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/5VJ6zQEACAAJ",
+      "volumeInfo": {
+        "title": "L'histoire de Pierre Lapin",
+        "authors": [
+          "Beatrix Potter"
+        ],
+        "publishedDate": "2020",
+        "description": "L'histoire de Pierre Lapin et de ses mésaventures a fait sourire et rêver des millions de personnes, des plus petits aux plus grands.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "8833466027"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9788833466026"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 42,
+        "printType": "BOOK",
+        "categories": [
+          "Juvenile Fiction"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=5VJ6zQEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=5VJ6zQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "fr",
+        "previewLink": "http://books.google.fr/books?id=5VJ6zQEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=2&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=5VJ6zQEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/L_histoire_de_Pierre_Lapin.html?hl=&id=5VJ6zQEACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=5VJ6zQEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "L&#39;histoire de Pierre Lapin et de ses mésaventures a fait sourire et rêver des millions de personnes, des plus petits aux plus grands."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "Bc3TNQAACAAJ",
+      "etag": "FutzK0ioGqY",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/Bc3TNQAACAAJ",
+      "volumeInfo": {
+        "title": "L'histoire de Tonton-le-Voltigeur",
+        "authors": [
+          "Beatrix Potter"
+        ],
+        "publisher": "Frederick Warne Publishers",
+        "publishedDate": "1978-01-01",
+        "description": "Les écrits de Beatrix Potter ont fait le bonheur de nombreux enfants. Des histoires gentilles à l'illustration traditionaliste. Le format de ces volumes bien reliés les rend facilement manipulables par les enfants qui commencent à lire. Le temps, mieux que quiconque, a critiqué cet auteur animalier dont les volumes ont paru au début du siècle. A lire ou à conter.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "0723220484"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9780723220480"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 59,
+        "printType": "BOOK",
+        "categories": [
+          "Children's literature, French"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "language": "en",
+        "previewLink": "http://books.google.fr/books?id=Bc3TNQAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=3&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=Bc3TNQAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/L_histoire_de_Tonton_le_Voltigeur.html?hl=&id=Bc3TNQAACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=Bc3TNQAACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Les écrits de Beatrix Potter ont fait le bonheur de nombreux enfants."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "1S5WwgEACAAJ",
+      "etag": "zTYvAMhsq94",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/1S5WwgEACAAJ",
+      "volumeInfo": {
+        "title": "Histoire de Toto le Minet",
+        "authors": [
+          "Beatrix Potter"
+        ],
+        "publishedDate": "1950*",
+        "description": "Tom Kitten and his two sisters succeed in divesting themselves of their good clothes and getting dirty when sent outside to be out of the way while their mother prepares for guests.",
+        "industryIdentifiers": [
+          {
+            "type": "OTHER",
+            "identifier": "OCLC:262717910"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 59,
+        "printType": "BOOK",
+        "categories": [
+          "Brothers and sisters"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "language": "en",
+        "previewLink": "http://books.google.fr/books?id=1S5WwgEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=4&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=1S5WwgEACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Histoire_de_Toto_le_Minet.html?hl=&id=1S5WwgEACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=1S5WwgEACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Tom Kitten and his two sisters succeed in divesting themselves of their good clothes and getting dirty when sent outside to be out of the way while their mother prepares for guests."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "A2Q8AAAACAAJ",
+      "etag": "8urOMKerIP0",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/A2Q8AAAACAAJ",
+      "volumeInfo": {
+        "title": "L'histoire de Noisy-Noisette",
+        "authors": [
+          "Beatrix Potter"
+        ],
+        "publisher": "Frederick Warne Publishers",
+        "publishedDate": "1973-01-01",
+        "description": "Squirrel Nutkin would rather ask an old owl riddles than gather nuts with the other squirrels.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "0723206546"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9780723206545"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 58,
+        "printType": "BOOK",
+        "categories": [
+          "Noise"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "language": "en",
+        "previewLink": "http://books.google.fr/books?id=A2Q8AAAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&cd=5&source=gbs_api",
+        "infoLink": "http://books.google.fr/books?id=A2Q8AAAACAAJ&dq=intitle:Histoire+de+Pierre+Lapin%2Binauthor:Beatrix+Potter&hl=&as_pt=BOOKS&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/L_histoire_de_Noisy_Noisette.html?hl=&id=A2Q8AAAACAAJ"
+      },
+      "saleInfo": {
+        "country": "FR",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "FR",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=A2Q8AAAACAAJ&hl=&as_pt=BOOKS&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Squirrel Nutkin would rather ask an old owl riddles than gather nuts with the other squirrels."
+      }
+    }
+  ]
+}
