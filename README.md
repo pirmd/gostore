@@ -24,8 +24,9 @@ To get a flavor of available commands:
       can also manually edit the metadata before saving them in the store;
     - `export`: copy requested record to the given location (usually your
       ebook-reader for eupb);
-    - `list`: search the store for existing matching records. Search query is
-      based on [bleve](https://blevesearch.com/) and adopt its
+    - `list`: list records from the store. It accepts wildcards pattern.
+    - `search`: search the store for existing matching records. Search query
+      is based on [bleve](https://blevesearch.com/) and adopt its
       [query](https://blevesearch.com/docs/Query-String-Query/) language;
     - `info`: get the information known about the given record;
     - `edit`: offer the user to edit information stored about the given

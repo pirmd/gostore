@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0] - 2020-08-20
+## Added
+- Add sorting support.
+- Add a new module that makes sure no duplicates are already in the store
+  before importing.
+## Modified
+- Refactor github.com/pirmd/gostore/media/books
+- Refactor github.com/pirmd/gostore/store to differentiate ReadXxx functions
+  from SearchXxx functions. The latter fetching record's ID whereas the former
+  returns the corresponding records.
+
 ## [0.4.0] - 2020-07-14
 ## Added
 - Add support to import/delete/list/edit multiple files or records at once.
