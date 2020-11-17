@@ -138,14 +138,14 @@ import:
           fields: [ Comment ]
       
     # dehtmlizer is a modules that removes any html tags from a media metadata.
-    # It can optionally convert the html taging into another idioms (like
+    # It can optionally convert the html tagging into another idioms (like
     # markdown)
     - name: dehtmlizer
       config: &dehtmlizer
           # fields is the list of metadata fields to clean from html tags
           fields: [ Description ]
 
-          # outputstyle is the iodiom in which html tagging is converted to.
+          # outputstyle is the idiom in which html tagging is converted to.
           # Available formats are plain text (default) or markdown
           outputstyle: markdown
           
@@ -153,7 +153,7 @@ import:
     # collection before importing it.
     - name: dupfinder
       config:
-      # similarityLevel is the similarity level use to detect dupplicate.
+      # similarityLevel is the similarity level use to detect duplicate.
       # similarityLevel: 1
           
     # checker is a module that verifies that a metadata set has a good quality
@@ -189,11 +189,11 @@ import:
           # - tmplExec: execute a template text
           # - tmplFile: execute a template stored in a file
           # - ext: get file extension
-          # - sanitizePath: replace special chars that don'tusually work well when
+          # - sanitizePath: replace special chars that don't usually work well when
           #   use in path name
           # - nospace: get rid of spaces
           #
-          # It is also possible to define intermediate sub-tmeplates and re-use
+          # It is also possible to define intermediate sub-templates and re-use
           # them.
           namingschemes:
               author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
