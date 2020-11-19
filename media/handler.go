@@ -43,12 +43,6 @@ type Handler interface {
 	// consistency...). Quality level is to be based on a 0 to 100 scale (0:
 	// worse, 100: perfect).
 	CheckMetadata(Metadata) int
-
-	// IDCard returns an identity card  of a given media, notably to support
-	// query operation looking after this media. An identity is made of two
-	// parts, one that capture metadata that shall be unique, one that captures
-	// metadata that can be similar but pointing to the same media.
-	IDCard(Metadata) ([][2]string, [][2]string)
 }
 
 // Handlers represent the list of known media handlers.

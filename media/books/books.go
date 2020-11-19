@@ -1,8 +1,6 @@
 package books
 
 import (
-	"strconv"
-
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/media/books/googlebooks"
 
@@ -49,32 +47,6 @@ func (bh *bookHandler) CheckMetadata(mdata media.Metadata) int {
 	}
 
 	return lvl
-}
-
-func (bh *bookHandler) IDCard(mdata media.Metadata) (exact [][2]string, similar [][2]string) {
-	if isbn, ok := mdata["ISBN"].(string); ok {
-		exact = append(exact, [2]string{"ISBN", isbn})
-	}
-
-	if title, ok := mdata["Title"].(string); ok {
-		similar = append(similar, [2]string{"Title", title})
-	}
-	if serie, ok := mdata["Serie"].(string); ok {
-		similar = append(similar, [2]string{"Serie", serie})
-	}
-	if seriePosition, ok := mdata["SeriePosition"].(int); ok {
-		similar = append(similar, [2]string{"SeriePosition", strconv.Itoa(seriePosition)})
-	}
-	if authors, ok := mdata["Authors"].([]string); ok {
-		for _, a := range authors {
-			similar = append(similar, [2]string{"Authors", a})
-		}
-	}
-	if publisher, ok := mdata["Publisher"].(string); ok {
-		similar = append(similar, [2]string{"Publisher", publisher})
-	}
-
-	return
 }
 
 func mdata2vol(mdata media.Metadata) *googlebooks.VolumeInfo {

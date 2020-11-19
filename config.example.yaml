@@ -84,7 +84,7 @@ ui:
     # Templates follow golang text/template specification.
     # Stored metadata can be retrieved using their field name. List of known
     # fields can be obtained using `gostore fields`.
-    # Extensions are  made available to simplify common operations:
+    # Extensions to template idiom are available to simplify common operations:
     # - tmpl: execute a sub-template by name
     # - tmplExec: execute a template text
     # - tmplFile: execute a template stored in a file
@@ -153,8 +153,18 @@ import:
     # collection before importing it.
     - name: dupfinder
       config:
-      # similarityLevel is the similarity level use to detect duplicate.
-      # similarityLevel: 1
+          # DupQueries is a collection of queries templates that identify records'
+          # duplicates.
+          # Extensions to template idiom are available to simplify common operations:
+          # - escape: escape special characters in query phrase or names.
+          # 
+          # Queries, once expanded, should follow https://blevesearch.com/docs/Query-String-Query/
+          dupqueries:
+              - 'ISBN:{{ escape .ISBN }}'
+              - |
+                {{if .Title}}+Title:{{ escape .Title }}~1.2{{end -}}
+                {{range $i, $a := .Authors }} +Authors:{{ escape $a }}~1.2{{end -}}
+                {{if .Publisher}} +Publisher:{{ escape .Publisher }}~1.2{{end -}}
           
     # checker is a module that verifies that a metadata set has a good quality
     # level.
@@ -183,8 +193,7 @@ import:
           # Templates follow golang text/template specification.
           # Stored metadata can be retrieved using their field name. List of known
           # fields can be obtained using `gostore fields`.
-          # Extensions are  made available to simplify common operations:
-          # made available to simplify common operation:
+          # Extensions to template idiom are available to simplify common operations:
           # - tmpl: execute a sub-template by name
           # - tmplExec: execute a template text
           # - tmplFile: execute a template stored in a file
