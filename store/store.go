@@ -270,7 +270,7 @@ func (s *Store) OpenRecord(key string) (vfs.File, error) {
 func (s *Store) SearchQuery(query string) ([]string, error) {
 	s.log.Printf("Search records for '%s'", query)
 
-	keys, err := s.idx.Search(query)
+	keys, err := s.idx.SearchQuery(query)
 	if err != nil {
 		return nil, err
 	}
@@ -294,14 +294,16 @@ func (s *Store) SearchGlob(pattern string) ([]string, error) {
 	return keys, nil
 }
 
-// SearchFields returns the Records' keys that match the provided fields value.
-// Fields values are given as a slice whose first item is the field name and
-// second is the field matching value.  Queries are executed with the given
-// level of fuzziness.
-func (s *Store) SearchFields(fields [][2]string, fuzziness int) ([]string, error) {
-	s.log.Printf("Search records for FIELDS='%#v' with FUZZY=%d", fields, fuzziness)
+// SearchFields returns the Records' keys that match the provided list of
+// fields names/values with given fuzziness.
+func (s *Store) SearchFields(fuzziness int, fields ...string) ([]string, error) {
+	s.log.Printf("Search records for FIELDS='%#v'", fields)
 
-	keys, err := s.idx.SearchFields(fields, fuzziness)
+	if len(fields)%2 == 1 {
+		panic("store.SearchFields: odd argument count")
+	}
+
+	keys, err := s.idx.SearchFields(fuzziness, fields...)
 	if err != nil {
 		return nil, err
 	}

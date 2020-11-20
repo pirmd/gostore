@@ -39,7 +39,7 @@ func populateIdx(tb testing.TB, idx *storeidx) (keys []string) {
 	return
 }
 
-func TestIndexSearch(t *testing.T) {
+func TestIndexSearchQuery(t *testing.T) {
 	idx, cleanFn := setupIdx(t)
 	defer cleanFn()
 
@@ -70,15 +70,78 @@ func TestIndexSearch(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			out, err := idx.Search(tc.in)
+			out, err := idx.SearchQuery(tc.in)
 			if err != nil {
 				t.Errorf("Search for %s failed: %s", tc.in, err)
 			}
 
-			if failure := verify.Equal(out, tc.out); failure != nil {
+			if failure := verify.EqualSliceWithoutOrder(out, tc.out); failure != nil {
 				t.Errorf("Search for %s failed:\n%v", tc.in, failure)
 			}
 		})
+	}
+}
+
+func TestIndexSearchFields(t *testing.T) {
+	idx, cleanFn := setupIdx(t)
+	defer cleanFn()
+
+	idx.Mapping.DefaultAnalyzer = fr.AnalyzerName
+	keys := populateIdx(t, idx)
+
+	testCases := []struct {
+		in  []string
+		out []string
+	}{
+		{[]string{"Authors", "Charles-Michel de l'Épée"}, []string{keys[12]}},
+		{[]string{"Authors", "Victor"}, []string{keys[2], keys[3]}},
+		{[]string{"Authors", "McLeod"}, []string{keys[5], keys[6]}},
+		{[]string{"Authors", "McLeod", "Title", "épaules"}, []string{keys[6]}},
+		{[]string{"Authors", "Trump"}, []string{keys[7], keys[11], keys[12]}},
+	}
+
+	for _, tc := range testCases {
+		out, err := idx.SearchFields(0, tc.in...)
+		if err != nil {
+			t.Errorf("Search for %v failed: %s", tc.in, err)
+		}
+
+		if failure := verify.EqualSliceWithoutOrder(out, tc.out); failure != nil {
+			t.Errorf("Search for %v failed:\n%v", tc.in, failure)
+		}
+	}
+}
+
+func TestIndexMatchFields(t *testing.T) {
+	idx, cleanFn := setupIdx(t)
+	defer cleanFn()
+
+	idx.Mapping.DefaultAnalyzer = fr.AnalyzerName
+	keys := populateIdx(t, idx)
+
+	testCases := []struct {
+		in   []string
+		outK []string
+		outF map[string][]interface{}
+	}{
+		{[]string{"Authors", "Victor"}, []string{keys[2], keys[3]}, map[string][]interface{}{"Authors": {"Victor", "Victor Hugo"}}},
+		{[]string{"Authors", "McLeod", "Title", "épaules"}, []string{keys[6]}, map[string][]interface{}{"Authors": {"McLeod"}, "Title": {"Garder sa tête sur les épaules"}}},
+		{[]string{"Authors", "Trump"}, []string{keys[7], keys[11], keys[12]}, map[string][]interface{}{"Authors": {"Trump", "D. Trump", "Donald Trump"}}},
+	}
+
+	for _, tc := range testCases {
+		outK, outF, err := idx.MatchFields(0, tc.in...)
+		if err != nil {
+			t.Errorf("MatchFields for %v failed: %s", tc.in, err)
+		}
+
+		if failure := verify.EqualSliceWithoutOrder(outK, tc.outK); failure != nil {
+			t.Errorf("MatchFields for %v failed:\n%v", tc.in, failure)
+		}
+
+		if failure := verify.Equal(outF, tc.outF); failure != nil {
+			t.Errorf("MatchFields for %v failed:\n%v", tc.in, failure)
+		}
 	}
 }
 

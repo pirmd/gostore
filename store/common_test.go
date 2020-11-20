@@ -7,7 +7,7 @@ var (
 		{"Title": "Les misérables", "Authors": []string{"Victor Hugo"}, "PublicationDate": 1862, "Read": true},
 		{"Title": "Le nettoyage pour les nuls", "Authors": []string{"Victor"}, "PublicationDate": 1990, "Read": false},
 		{"Title": "Songe d'une nuit d'été", "Authors": []string{"W. Shakespear"}, "PublicationDate": 1595, "Read": true},
-		{"Title": "Guère épée", "Authors": []string{"McLeod"}, "PublicationDate": 1986, "Read": false},
+		{"Title": "Guère épée", "Authors": []string{"McLeod"}, "PublicationDate": 1986, "Read": true},
 		{"Title": "Garder sa tête sur les épaules", "Authors": []string{"McLeod"}, "PublicationDate": 1987, "Read": false},
 		{"Title": "Being great again", "Authors": []string{"Trump"}, "PublicationDate": 2021, "Read": false},
 		{"Title": "Mes recettes de foie gras", "Authors": []string{"Donald Duck"}, "PublicationDate": 2004, "Read": false},

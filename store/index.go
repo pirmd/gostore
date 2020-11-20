@@ -158,52 +158,56 @@ func (s *storeidx) Delete(key string) error {
 	return s.idx.Delete(key)
 }
 
-// Search looks for Records' keys registered in the Index that match the query.
+// SearchQuery looks for Records' keys that match the query string.
 // The query follows bleve's query syntax (http://blevesearch.com/docs/Query-String-Query/)
-func (s *storeidx) Search(query string) ([]string, error) {
-	q := bleve.NewQueryStringQuery(query)
-	searchRequest := bleve.NewSearchRequest(q)
-
-	results, err := s.idx.Search(searchRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	var keys []string
-	for _, r := range results.Hits {
-		keys = append(keys, r.ID)
-	}
-	return keys, nil
+func (s *storeidx) SearchQuery(queryString string) ([]string, error) {
+	q := bleve.NewQueryStringQuery(queryString)
+	req := bleve.NewSearchRequest(q)
+	return s.search(req)
 }
 
-// SearchFields looks for Records' keys registered in the Index that match the
-// provided fields value. Fields values are given as a slice whose first item
-// is the field name and second is the field matching value.
-// Queries are executed with the given level of fuzziness.
-func (s *storeidx) SearchFields(fields [][2]string, fuzziness int) ([]string, error) {
-	var queries []query.Query
-	for _, fieldval := range fields {
-		field, match := fieldval[0], fieldval[1]
-		q := bleve.NewMatchQuery(match)
-		q.SetField(field)
-		q.SetFuzziness(fuzziness)
-		queries = append(queries, q)
+// SearchFields looks for Records' keys that match the provided list of fields
+// name/value with the given fuzziness.
+func (s *storeidx) SearchFields(fuzziness int, fields ...string) ([]string, error) {
+	r := s.newFieldsSearchRequest(fuzziness, fields...)
+	return s.search(r)
+}
+
+// MatchFields looks for Records' fields that match the provided list of
+// field/value with given fuzziness.
+// MatchFields returns for the found Record the matching values of the provided
+// fields.
+func (s *storeidx) MatchFields(fuzziness int, fields ...string) (keys []string, values map[string][]interface{}, err error) {
+	req := s.newFieldsSearchRequest(fuzziness, fields...)
+
+	for i := 0; i < len(fields); i += 2 {
+		req.Fields = append(req.Fields, fields[i])
 	}
+	req.IncludeLocations = true
 
-	q := bleve.NewConjunctionQuery(queries...)
-
-	searchRequest := bleve.NewSearchRequest(q)
-
-	results, err := s.idx.Search(searchRequest)
+	results, err := s.idx.Search(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	var keys []string
+	values = make(map[string][]interface{}, len(results.Hits))
 	for _, r := range results.Hits {
 		keys = append(keys, r.ID)
+
+		for field, locations := range r.Locations {
+			for _, l := range locations {
+				for _, pos := range l {
+					if val, ok := r.Fields[field].([]interface{}); ok {
+						values[field] = append(values[field], val[pos.ArrayPositions[0]])
+					} else {
+						values[field] = append(values[field], r.Fields[field])
+					}
+				}
+			}
+		}
 	}
-	return keys, nil
+
+	return
 }
 
 // Walk iterates over all storeidx items and call walkFn for each item.
@@ -274,5 +278,37 @@ func (s *storeidx) matchAll() ([]string, error) {
 		}
 	}
 
+	return keys, nil
+}
+
+func (s *storeidx) newFieldsSearchRequest(fuzziness int, fields ...string) *bleve.SearchRequest {
+	if len(fields)%2 == 1 {
+		panic("store.MatchFields: odd argument count")
+	}
+
+	var queries []query.Query
+	for i := 0; i < len(fields); i += 2 {
+		field, match := fields[i], fields[i+1]
+		q := bleve.NewMatchQuery(match)
+		q.SetField(field)
+		q.SetFuzziness(fuzziness)
+
+		queries = append(queries, q)
+	}
+
+	q := bleve.NewConjunctionQuery(queries...)
+	return bleve.NewSearchRequest(q)
+}
+
+func (s *storeidx) search(req *bleve.SearchRequest) ([]string, error) {
+	results, err := s.idx.Search(req)
+	if err != nil {
+		return nil, err
+	}
+
+	var keys []string
+	for _, r := range results.Hits {
+		keys = append(keys, r.ID)
+	}
 	return keys, nil
 }
