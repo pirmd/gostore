@@ -167,14 +167,24 @@ func (s *storeidx) SearchQuery(queryString string) ([]string, error) {
 }
 
 // SearchFields looks for Records' keys that match the provided list of fields
-// name/value with the given fuzziness.
+// name/value with the given fuzziness:
+// . < 0: an exact term search is perform
+// .   0: the input text is analyzed first. An attempt is made to use the same
+//        analyzer that was used when the field was indexed.
+// . > 0: the input text is analysed first, the match is done with the given
+//        level of fuzziness.
 func (s *storeidx) SearchFields(fuzziness int, fields ...string) ([]string, error) {
 	r := s.newFieldsSearchRequest(fuzziness, fields...)
 	return s.search(r)
 }
 
 // MatchFields looks for Records' fields that match the provided list of
-// field/value with given fuzziness.
+// field/value with given fuzziness:
+// . < 0: an exact term search is perform
+// .   0: the input text is analyzed first. An attempt is made to use the same
+//        analyzer that was used when the field was indexed.
+// . > 0: the input text is analysed first, the match is done with the given
+//        level of fuzziness.
 // MatchFields returns for the found Record the matching values of the provided
 // fields.
 func (s *storeidx) MatchFields(fuzziness int, fields ...string) (keys []string, values map[string][]interface{}, err error) {
@@ -289,10 +299,18 @@ func (s *storeidx) newFieldsSearchRequest(fuzziness int, fields ...string) *blev
 	var queries []query.Query
 	for i := 0; i < len(fields); i += 2 {
 		field, match := fields[i], fields[i+1]
-		q := bleve.NewMatchQuery(match)
-		q.SetField(field)
-		q.SetFuzziness(fuzziness)
 
+		if fuzziness < 0 {
+			q := bleve.NewTermQuery(match)
+			q.SetField(field)
+			queries = append(queries, q)
+
+			continue
+		}
+
+		q := bleve.NewMatchQuery(match)
+		q.SetFuzziness(fuzziness)
+		q.SetField(field)
 		queries = append(queries, q)
 	}
 

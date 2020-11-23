@@ -294,8 +294,13 @@ func (s *Store) SearchGlob(pattern string) ([]string, error) {
 	return keys, nil
 }
 
-// SearchFields returns the Records' keys that match the provided list of
-// fields names/values with given fuzziness.
+// SearchFields looks for Records' keys that match the provided list of fields
+// name/value with the given fuzziness:
+// . < 0: an exact term search is perform
+// .   0: the input text is analyzed first. An attempt is made to use the same
+//        analyzer that was used when the field was indexed.
+// . > 0: the input text is analysed first, the match is done with the given
+//        level of fuzziness.
 func (s *Store) SearchFields(fuzziness int, fields ...string) ([]string, error) {
 	s.log.Printf("Search records for FIELDS='%#v'", fields)
 
@@ -310,6 +315,31 @@ func (s *Store) SearchFields(fuzziness int, fields ...string) ([]string, error) 
 
 	s.log.Printf("Found records: %+v", keys)
 	return keys, nil
+}
+
+// MatchFields looks for Records' fields that match the provided list of
+// field/value with given fuzziness:
+// . < 0: an exact term search is perform
+// .   0: the input text is analyzed first. An attempt is made to use the same
+//        analyzer that was used when the field was indexed.
+// . > 0: the input text is analysed first, the match is done with the given
+//        level of fuzziness.
+// MatchFields returns for the found Record the matching values of the provided
+// fields.
+func (s *Store) MatchFields(fuzziness int, fields ...string) (keys []string, values map[string][]interface{}, err error) {
+	s.log.Printf("Search records and values for FIELDS='%#v'", fields)
+
+	if len(fields)%2 == 1 {
+		panic("store.MatchFields: odd argument count")
+	}
+
+	keys, values, err = s.idx.MatchFields(fuzziness, fields...)
+	if err != nil {
+		return
+	}
+
+	s.log.Printf("Found records: %+v with matching fields: %+v", keys, values)
+	return
 }
 
 // Update replaces an existing Store's record. Update will fail if the new
