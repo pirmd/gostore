@@ -119,11 +119,11 @@ func testImport(t *testing.T, gs *testGostore) {
 		}
 
 		if failure := verify.MatchStdoutGolden(t.Name(), stdout); failure != nil {
-			t.Errorf("Import output is not as expected.\n%v", failure)
+			t.Fatalf("Import output is not as expected.\n%v", failure)
 		}
 
 		if gs.store.IsDirty() {
-			t.Errorf("Collection is inconsistent")
+			t.Fatalf("Collection is inconsistent")
 		}
 	})
 
