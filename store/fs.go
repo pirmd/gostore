@@ -47,7 +47,7 @@ func (s *storefs) Exists(path string) (bool, error) {
 // Put will happily erase and replace any existing file previously
 // found at Record's path, if any.
 func (s *storefs) Put(r *Record, src io.Reader) error {
-	if err := s.fs.Import(src, r.key); err != nil {
+	if err := s.fs.Copy(src, r.Key()); err != nil {
 		return err
 	}
 	return nil
@@ -61,7 +61,7 @@ func (s *storefs) Get(path string) (vfs.File, error) {
 
 // Move moves a Record in the storefs
 func (s *storefs) Move(oldpath string, r *Record) error {
-	if err := s.fs.Move(oldpath, r.key); err != nil {
+	if err := s.fs.Move(oldpath, r.Key()); err != nil {
 		return err
 	}
 	return nil

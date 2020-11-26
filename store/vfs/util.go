@@ -20,10 +20,10 @@ func (vfs *VFS) Exists(path string) (bool, error) {
 	return false, err
 }
 
-// Import copies a Reader content to a file within the vfs.
+// Copy copies a Reader content to a file within the vfs.
 // dst file and its parent folders are create if they don't exist yet
-// Add does not prevent nor warn if dst is already existing
-func (vfs *VFS) Import(src io.Reader, dst string) (err error) {
+// Copy does not prevent nor warn if dst is already existing
+func (vfs *VFS) Copy(src io.Reader, dst string) (err error) {
 	err = vfs.MkdirAll(filepath.Dir(dst), 0777)
 	if err != nil {
 		return
