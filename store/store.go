@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pirmd/gostore/store/vfs"
 	"github.com/pirmd/gostore/util"
 )
 
@@ -108,11 +107,25 @@ func (s *Store) Close() error {
 	return err.Err()
 }
 
-// Create creates a new record in the Store. Create does not replace existing
-// Record (you have to use Update for that) but will replace partially existing
-// records resulting from an inconsistent state of the Store (e.g. file exists
-// but entry in db does not)
-func (s *Store) Create(r *Record, file io.Reader) error {
+// Create creates a new record then inserts it in the Store.
+// Create does not replace existing Record (you have to use Update for that)
+// but will replace partially existing records resulting from an inconsistent
+// state of the Store (e.g. file exists but entry in db does not).
+func (s *Store) Create(key string, data map[string]interface{}, f Reader) (*Record, error) {
+	r := NewRecord(key, data)
+	r.SetFile(f)
+
+	if err := s.Insert(r); err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+// Insert inserts a new record in the Store.
+// It does not replace existing Record (you have to use Update for that) but
+// will replace partially existing records resulting from an inconsistent state
+// of the Store (e.g. file exists but entry in db does not)
+func (s *Store) Insert(r *Record) error {
 	s.log.Printf("Adding new record to store '%s'", r.Key())
 
 	exists, err := s.Exists(r.Key())
@@ -137,8 +150,8 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 		return err
 	}
 
-	s.log.Printf("Import new media file into store's fs")
-	if err := s.fs.Put(r, file); err != nil {
+	s.log.Printf("Import new record's content into store's fs")
+	if err := s.fs.Put(r); err != nil {
 		if e := s.db.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 		}
@@ -259,10 +272,12 @@ func (s *Store) ReadQuery(query string) (Records, error) {
 	return result, nil
 }
 
-// OpenRecord opens the record corresponding to the given key for reading.
-func (s *Store) OpenRecord(key string) (vfs.File, error) {
-	s.log.Printf("Open record '%s' from storage", key)
-	return s.fs.Get(key)
+// OpenRecord opens the Record corresponding to the given key for reading.
+// If Record's Key is absolute, store will look for Record's content from the
+// host file-system, other wise it get it from store's storage.
+func (s *Store) OpenRecord(r *Record) (io.ReadCloser, error) {
+	s.log.Printf("Open record '%s' from storage", r.Key())
+	return s.fs.Get(r.Key())
 }
 
 // SearchQuery returns the Records' keys that match the given search query. The
@@ -285,7 +300,7 @@ func (s *Store) SearchQuery(query string) ([]string, error) {
 func (s *Store) SearchGlob(pattern string) ([]string, error) {
 	s.log.Printf("Search records for ID='%s'", pattern)
 
-	keys, err := s.fs.Search(pattern)
+	keys, err := s.fs.SearchGlob(pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -357,12 +372,12 @@ func (s *Store) Update(key string, r *Record) error {
 		}
 	}
 
-	s.log.Printf("Updating record in store's db")
+	s.log.Printf("Updating record in store's database")
 	if err := s.db.Put(r); err != nil {
 		return err
 	}
 
-	s.log.Printf("Updating record in store's idx")
+	s.log.Printf("Updating record in store's index")
 	if err := s.idx.Put(r); err != nil {
 		if e := s.db.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
@@ -370,20 +385,20 @@ func (s *Store) Update(key string, r *Record) error {
 		return err
 	}
 
-	if r.Key() != key {
-		s.log.Printf("Import new media file into store's fs")
-		if err := s.fs.Move(key, r); err != nil {
-			if e := s.db.Delete(r.Key()); e != nil {
-				err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
-			}
-
-			if e := s.idx.Delete(r.Key()); e != nil {
-				err = fmt.Errorf("%s\nFail to clean idx after error: %s", err, e)
-			}
-
-			return err
+	s.log.Printf("Update record in store's file-system")
+	if err := s.fs.Update(key, r); err != nil {
+		if e := s.db.Delete(r.Key()); e != nil {
+			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 		}
 
+		if e := s.idx.Delete(r.Key()); e != nil {
+			err = fmt.Errorf("%s\nFail to clean idx after error: %s", err, e)
+		}
+
+		return err
+	}
+
+	if r.Key() != key {
 		errDel := new(util.MultiErrors)
 
 		s.log.Printf("Clean old entry '%s' in the store's db", key)

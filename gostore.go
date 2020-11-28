@@ -270,7 +270,7 @@ func (gs *Gostore) Export(dstFolder string, pattern []string) error {
 	for _, r := range records {
 		gs.log.Printf("Exporting '%s'", r.Key())
 
-		if err := gs.export(r.Key(), dstFolder); err != nil {
+		if err := gs.export(r, dstFolder); err != nil {
 			exportErr.Add(fmt.Errorf("exporting '%s' failed: %s", r.Key(), err))
 			continue
 		}
@@ -367,24 +367,30 @@ func (gs *Gostore) glob(pattern []string) (store.Records, error) {
 }
 
 func (gs *Gostore) insert(path string) (*store.Record, error) {
+	r := store.NewRecord(filepath.Base(path), nil)
+
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
+	r.SetFile(f)
+
+	//XXX: Clean me -> read metadata into a module
 	mdataFromFile, err := media.ReadMetadata(f)
 	if err != nil {
 		return nil, err
 	}
-	r := store.NewRecord(filepath.Base(path), mdataFromFile)
+
+	r.SetData(mdataFromFile)
 
 	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return nil, err
 	}
 
 	if !gs.pretend {
-		if err := gs.store.Create(r, f); err != nil {
+		if err := gs.store.Insert(r); err != nil {
 			return nil, err
 		}
 	}
@@ -410,10 +416,10 @@ func (gs *Gostore) update(r *store.Record, mdata map[string]interface{}) error {
 	return nil
 }
 
-func (gs *Gostore) export(key, dstFolder string) (err error) {
-	dstPath := filepath.Join(dstFolder, key)
+func (gs *Gostore) export(r *store.Record, dstFolder string) (err error) {
+	dstPath := filepath.Join(dstFolder, r.Key())
 
-	f, err := gs.store.OpenRecord(key)
+	f, err := gs.store.OpenRecord(r)
 	if err != nil {
 		return err
 	}

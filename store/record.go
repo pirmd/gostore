@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -15,6 +16,7 @@ const (
 type Record struct {
 	key   string
 	value *value
+	file  Reader
 }
 
 // NewRecord creates a Record.
@@ -80,6 +82,25 @@ func (r *Record) Del(k string) {
 	r.value.Del(k)
 }
 
+// File returns the file attached to a Record. It rewinds the Record's file to
+// its start before returning it.  File is nil if Record's as no known attached
+// file.  File is usually needed to reference source media file of a record
+// before having it inserted or updated in the store.
+func (r *Record) File() Reader {
+	// take benefit of r.file being a Seeker to rewind to the start and allow
+	// several chain reading of r (to chain modules for example)
+	if r.file != nil {
+		r.file.Seek(0, io.SeekStart)
+	}
+
+	return r.file
+}
+
+// SetFile sets Record's file
+func (r *Record) SetFile(f Reader) {
+	r.file = f
+}
+
 // Records represents a collection of Record
 type Records []*Record
 
@@ -113,6 +134,14 @@ func (r Records) Flatted() (v []map[string]interface{}) {
 		v = append(v, i.Flatted())
 	}
 	return
+}
+
+// Reader is an interface that wraps all io Read methods that are usually
+// need to play with media files.
+type Reader interface {
+	io.Reader
+	io.ReaderAt
+	io.Seeker
 }
 
 // value represents a set of information recorded in the store

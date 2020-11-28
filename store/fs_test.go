@@ -32,7 +32,10 @@ func TestFSPut(t *testing.T) {
 	_ = fs.Open() //No need to check for error, (root path is tstDir and we know it is available)
 
 	for _, k := range tstCases {
-		if err := fs.Put(NewRecord(k, nil), verify.MockROFile("")); err != nil {
+		tr := NewRecord(k, nil)
+		tr.SetFile(verify.MockROFile(""))
+
+		if err := fs.Put(tr); err != nil {
 			t.Fatalf("Fail to add %v: %v", k, err)
 		}
 	}
@@ -68,7 +71,7 @@ func TestFSWalk(t *testing.T) {
 	}
 }
 
-func TestFSSearch(t *testing.T) {
+func TestFSSearchGlob(t *testing.T) {
 	tstDir, err := verify.NewTestFolder(t.Name())
 	if err != nil {
 		t.Fatalf("Fail to create test folder: %v", err)
@@ -80,7 +83,7 @@ func TestFSSearch(t *testing.T) {
 
 	tstDir.Populate(tstCases)
 
-	out, err := fs.Search("file*.txt")
+	out, err := fs.SearchGlob("file*.txt")
 	if err != nil {
 		t.Fatalf("Walking through fs failed: %v", err)
 	}
@@ -138,7 +141,10 @@ func TestFSForbiddenPath(t *testing.T) {
 
 	t.Run("Test Put()", func(t *testing.T) {
 		for _, tc := range tstCasesUnauthorized {
-			if err := fs.Put(NewRecord(tc, nil), verify.MockROFile("")); err != os.ErrPermission {
+			tr := NewRecord(tc, nil)
+			tr.SetFile(verify.MockROFile(""))
+
+			if err := fs.Put(tr); err != os.ErrPermission {
 				t.Errorf("Succeed to create '%v' that is forbidden", tc)
 			}
 		}

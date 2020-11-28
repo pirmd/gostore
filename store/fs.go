@@ -22,7 +22,7 @@ func newFS(path string, validFn func(string) bool) *storefs {
 	}
 }
 
-// Open opens a new fs for use
+// Open opens a new fs for use.
 func (s *storefs) Open() error {
 	if err := os.MkdirAll(s.path, 0777); err != nil {
 		return err
@@ -32,51 +32,58 @@ func (s *storefs) Open() error {
 	return nil
 }
 
-// Close cleanly closes a storefs
+// Close cleanly closes a storefs.
 func (s *storefs) Close() error {
 	return nil
 }
 
-// Exists checks whether a path is present in the storefs
+// Exists checks whether a path is present in the storefs.
 func (s *storefs) Exists(path string) (bool, error) {
 	return s.fs.Exists(path)
 }
 
-// Put imports a Record into the storefs
-//
+// Put imports a Record into the storefs.
 // Put will happily erase and replace any existing file previously
 // found at Record's path, if any.
-func (s *storefs) Put(r *Record, src io.Reader) error {
-	if err := s.fs.Copy(src, r.Key()); err != nil {
-		return err
-	}
-	return nil
+func (s *storefs) Put(r *Record) error {
+	return s.fs.Copy(r.File(), r.Key())
 }
 
-// Get returns an os.File for reading to the Record's file corresponding to the
-// given key
-func (s *storefs) Get(path string) (vfs.File, error) {
-	return s.fs.Open(path)
+// Get returns a vfs.File for reading to the Record's file corresponding to the
+// given key.
+// If Record's Key is absolute, store will look for Record's content from the
+// host file-system, other wise it get it from store's storage.
+func (s *storefs) Get(key string) (io.ReadCloser, error) {
+	return s.fs.Open(key)
 }
 
-// Move moves a Record in the storefs
-func (s *storefs) Move(oldpath string, r *Record) error {
-	if err := s.fs.Move(oldpath, r.Key()); err != nil {
-		return err
+// Update updates an existing Record in the storefs.
+func (s *storefs) Update(oldkey string, r *Record) error {
+	if r.File() != nil {
+		s.Put(r)
+		if oldkey != r.Key() {
+			s.Delete(oldkey)
+		}
 	}
-	return nil
+
+	return s.Move(oldkey, r)
+}
+
+// Move moves a Record in the storefs.
+func (s *storefs) Move(oldkey string, r *Record) error {
+	return s.fs.Move(oldkey, r.Key())
 }
 
 // Delete removes a record from the storefs as well as its parent directories if empty
-// If path does not exist, Delete exits without error
-func (s *storefs) Delete(path string) error {
-	if err := s.fs.Remove(path); err != nil {
+// If key does not exist, Delete exits without error.
+func (s *storefs) Delete(key string) error {
+	if err := s.fs.Remove(key); err != nil {
 		return err
 	}
 
 	for {
-		path = filepath.Dir(path)
-		if err := s.fs.Remove(path); err != nil {
+		key = filepath.Dir(key)
+		if err := s.fs.Remove(key); err != nil {
 			break
 		}
 	}
@@ -85,7 +92,7 @@ func (s *storefs) Delete(path string) error {
 
 // Walk iterates over all storefs items and call walkFn for each item. Errors
 // that happen during walkFn execution will not stop the execution of Walk but
-// are captured and will be returned once Walk is over
+// are captured and will be returned once Walk is over.
 func (s *storefs) Walk(walkFn func(string) error) error {
 	errWalk := new(util.MultiErrors)
 
@@ -110,9 +117,9 @@ func (s *storefs) Walk(walkFn func(string) error) error {
 	return errWalk.Err()
 }
 
-// Search looks for the records from storefs whose path matches the given pattern.
+// SearchGlob looks for the records from storefs whose path matches the given pattern.
 // Under the hood the pattern matching follows the same behaviour than filepath.Match.
-func (s *storefs) Search(pattern string) (matches []string, err error) {
+func (s *storefs) SearchGlob(pattern string) (matches []string, err error) {
 	err = s.Walk(func(path string) error {
 		matched, err := filepath.Match(pattern, path)
 		if err != nil {
