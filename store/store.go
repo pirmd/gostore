@@ -115,7 +115,7 @@ func (s *Store) Close() error {
 func (s *Store) Create(r *Record, file io.Reader) error {
 	s.log.Printf("Adding new record to store '%s'", r.Key())
 
-	exists, err := s.Exists(r.key)
+	exists, err := s.Exists(r.Key())
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 
 	s.log.Printf("Register new record in store's idx")
 	if err := s.idx.Put(r); err != nil {
-		if e := s.db.Delete(r.key); e != nil {
+		if e := s.db.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 		}
 
@@ -139,11 +139,11 @@ func (s *Store) Create(r *Record, file io.Reader) error {
 
 	s.log.Printf("Import new media file into store's fs")
 	if err := s.fs.Put(r, file); err != nil {
-		if e := s.db.Delete(r.key); e != nil {
+		if e := s.db.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 		}
 
-		if e := s.idx.Delete(r.key); e != nil {
+		if e := s.idx.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean idx after error: %s", err, e)
 		}
 
@@ -315,8 +315,8 @@ func (s *Store) SearchFields(fields [][2]string, fuzziness int) ([]string, error
 func (s *Store) Update(key string, r *Record) error {
 	s.log.Printf("Updating record '%s' to '%s'", key, r.Key())
 
-	if r.key != key {
-		exists, err := s.Exists(r.key)
+	if r.Key() != key {
+		exists, err := s.Exists(r.Key())
 		if err != nil {
 			return err
 		}
@@ -332,20 +332,20 @@ func (s *Store) Update(key string, r *Record) error {
 
 	s.log.Printf("Updating record in store's idx")
 	if err := s.idx.Put(r); err != nil {
-		if e := s.db.Delete(r.key); e != nil {
+		if e := s.db.Delete(r.Key()); e != nil {
 			err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 		}
 		return err
 	}
 
-	if r.key != key {
+	if r.Key() != key {
 		s.log.Printf("Import new media file into store's fs")
 		if err := s.fs.Move(key, r); err != nil {
-			if e := s.db.Delete(r.key); e != nil {
+			if e := s.db.Delete(r.Key()); e != nil {
 				err = fmt.Errorf("%s\nFail to clean db after error: %s", err, e)
 			}
 
-			if e := s.idx.Delete(r.key); e != nil {
+			if e := s.idx.Delete(r.Key()); e != nil {
 				err = fmt.Errorf("%s\nFail to clean idx after error: %s", err, e)
 			}
 
