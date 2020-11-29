@@ -107,14 +107,14 @@ ui:
             media: |
                 {{ range $i, $r := . -}}
                 {{ if $i }}{{ printf "\n\n" }}{{ end -}}
-                {{ get $r "Name" "Title" "?*" "CreatedAt" "UpdatedAt" | bold | bycol -}}
+                {{ get $r "Name" "Title" "?*" "Type" "?QALevel" "?SourceHash" "CreatedAt" "UpdatedAt" | bold | bycol -}}
                 {{ end -}}
 
             book: |
                 {{ range $i, $r := . -}}
                 {{ if .Serie }}{{ extend . "SerieName" (tmplExec "{{.Serie}} {{.SeriePosition}}" .)}}{{ end -}}
                 {{ if $i }}{{ printf "\n\n" }}{{ end -}}
-                {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "CreatedAt" "UpdatedAt" | bold | bycol -}}
+                {{ get $r "Name" "Title" "?SubTitle" "?SerieName" "!Serie" "!SeriePosition" "Authors" "Description" "?*" "Type" "?QALevel" "?SourceHash" "CreatedAt" "UpdatedAt" | bold | bycol -}}
                 {{ end -}}
 
         json:
@@ -128,6 +128,14 @@ ui:
 # Modules are run in the provided order.
 # List of modules is available using `gostore config`.
 import:
+    # hasher computes a checksum-based signature for the record's file and make
+    # sure it does not already exist in the store.
+    - name: hasher
+      config:
+         # HashMethod specifies the hash algorithm to use.
+         # Available methods are: md5, sha1, sha256. Default to md5
+         #HashMethod: md5
+
     # fetcher a module that retrieves metadata from online databases.
     - name: fetcher
       
