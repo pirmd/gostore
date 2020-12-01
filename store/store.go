@@ -62,12 +62,11 @@ func New(path string, opts ...Option) (*Store, error) {
 
 // Open opens a Store for use
 func (s *Store) Open() error {
-	s.log.Printf("Opening store's filesystem")
+	s.log.Printf("Opening store")
 	if err := s.fs.Open(); err != nil {
 		return err
 	}
 
-	s.log.Printf("Opening store's database")
 	if err := s.db.Open(); err != nil {
 		if e := s.fs.Close(); e != nil {
 			err = fmt.Errorf("%s\nClose store's filesystem failed: %s", err, e)
@@ -75,7 +74,6 @@ func (s *Store) Open() error {
 		return err
 	}
 
-	s.log.Printf("Opening store's Index")
 	if err := s.idx.Open(); err != nil {
 		if e := s.fs.Close(); e != nil {
 			err = fmt.Errorf("%s\nClose store's filesystem failed: %s", err, e)
@@ -91,19 +89,18 @@ func (s *Store) Open() error {
 
 // Close cleanly closes a Store
 func (s *Store) Close() error {
+	s.log.Printf("Closing store")
+
 	err := new(util.MultiErrors)
 
-	s.log.Printf("Closing store's filesystem")
 	if e := s.fs.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's filesystem: %s", e))
 	}
 
-	s.log.Printf("Closing store's database")
 	if e := s.db.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's database: %s", e))
 	}
 
-	s.log.Printf("Closing store's index")
 	if e := s.idx.Close(); e != nil {
 		err.Add(fmt.Errorf("fail to close store's index: %s", e))
 	}
