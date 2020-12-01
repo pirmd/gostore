@@ -129,6 +129,7 @@ type value struct {
 func newValue(data map[string]interface{}) *value {
 	val := &value{
 		CreatedAt: timestamper(),
+		Data:      make(map[string]interface{}),
 	}
 	val.SetData(data)
 	return val
