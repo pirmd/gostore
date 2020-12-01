@@ -129,6 +129,7 @@ type value struct {
 func newValue(data map[string]interface{}) *value {
 	val := &value{
 		CreatedAt: timestamper(),
+		UpdatedAt: timestamper(),
 		Data:      make(map[string]interface{}),
 	}
 	val.SetData(data)
@@ -145,7 +146,6 @@ func (val *value) SetData(data map[string]interface{}) {
 	for k, v := range data {
 		val.Set(k, v)
 	}
-	val.UpdatedAt = timestamper()
 }
 
 // GetData returns stored data
@@ -174,16 +174,20 @@ func (val *value) Get(key string) interface{} {
 // Set adds a new (key, value).
 func (val *value) Set(k string, v interface{}) {
 	val.Data[k] = v
+	val.UpdatedAt = timestamper()
 }
 
 // SetIfExists updates a value if already exists.
 func (val *value) SetIfExists(k string, v interface{}) {
 	if _, exists := val.Data[k]; exists {
-		val.Data[k] = v
+		val.Set(k, v)
 	}
 }
 
 // Del removes a (key, value).
 func (val *value) Del(k string) {
-	delete(val.Data, k)
+	if _, exists := val.Data[k]; exists {
+		delete(val.Data, k)
+		val.UpdatedAt = timestamper()
+	}
 }
