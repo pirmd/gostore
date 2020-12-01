@@ -136,6 +136,10 @@ import:
          # Available methods are: md5, sha1, sha256. Default to md5
          #HashMethod: md5
 
+    # mdatareader reads metadata from a media file and populates the
+    # corresponding record's values.
+    - name : mdatareader     
+      
     # fetcher a module that retrieves metadata from online databases.
     - name: fetcher
       

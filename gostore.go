@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/modules"
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui"
@@ -367,23 +366,14 @@ func (gs *Gostore) glob(pattern []string) (store.Records, error) {
 }
 
 func (gs *Gostore) insert(path string) (*store.Record, error) {
-	r := store.NewRecord(filepath.Base(path), nil)
-
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
+	r := store.NewRecord(filepath.Base(path), nil)
 	r.SetFile(f)
-
-	//XXX: Clean me -> read metadata into a module
-	mdataFromFile, err := media.ReadMetadata(f)
-	if err != nil {
-		return nil, err
-	}
-
-	r.SetData(mdataFromFile)
 
 	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ import (
 	_ "github.com/pirmd/gostore/modules/dupfinder"
 	_ "github.com/pirmd/gostore/modules/fetcher"
 	_ "github.com/pirmd/gostore/modules/hasher"
+	_ "github.com/pirmd/gostore/modules/mdatareader"
 	_ "github.com/pirmd/gostore/modules/normalizer"
 	_ "github.com/pirmd/gostore/modules/organizer"
 	_ "github.com/pirmd/gostore/modules/scrubber"
