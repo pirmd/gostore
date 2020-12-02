@@ -7,7 +7,7 @@ import (
 var (
 	// reSerieGuesser is a collection of regexp to extract series information
 	// from title/subtitles.
-	// It should be made of 3 named capturing groups (title, serie, serie number).
+	// It should be made of 3 named capturing groups (title, serie, seriePos).
 	reSerieGuesser = []*regexp.Regexp{
 		regexp.MustCompile(`^(?P<title>.+)\s\((?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)\)$`),
 		regexp.MustCompile(`^(?P<title>.+)\s-\s(?P<serie>.+?)\s(?i:#|Series |n°|)(?P<seriePos>\d+)$`),

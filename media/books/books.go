@@ -1,12 +1,15 @@
 package books
 
 import (
+	"strconv"
+
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/media/books/googlebooks"
 
 	"github.com/pirmd/gostore/util"
 )
 
+// bookHandler offers generic functions helpful for any e-book handlers.
 type bookHandler struct{}
 
 func (bh *bookHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, error) {
@@ -18,6 +21,10 @@ func (bh *bookHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, er
 	var res []media.Metadata
 	for _, vi := range found {
 		res = append(res, vol2mdata(vi))
+	}
+
+	for _, mdata := range res {
+		bh.CleanMetadata(mdata)
 	}
 
 	return res, nil
@@ -49,6 +56,50 @@ func (bh *bookHandler) CheckMetadata(mdata media.Metadata) int {
 	return lvl
 }
 
+func (bh *bookHandler) CleanMetadata(mdata media.Metadata) {
+	episode, serie, seriePos := mdata["SerieEpisode"], mdata["Serie"], mdata["SeriePosition"]
+
+	if _, exist := mdata["Title"]; exist {
+		e, s, p := GuessSerie(mdata["Title"].(string))
+		episode, serie, seriePos = firstNonZero(episode, e), firstNonZero(serie, s), firstNonZero(seriePos, p)
+	}
+
+	if _, exist := mdata["SubTitle"]; exist {
+		e, s, p := GuessSerie(mdata["SubTitle"].(string))
+		episode, serie, seriePos = firstNonZero(episode, e), firstNonZero(serie, s), firstNonZero(seriePos, p)
+	}
+
+	if !util.IsZero(serie) {
+		mdata["Serie"] = serie
+
+		mdata["SeriePosition"] = seriePos
+
+		if pos, ok := seriePos.(string); ok {
+			if nb, err := strconv.Atoi(pos); err == nil {
+				mdata["SeriePosition"] = nb
+			}
+		}
+
+		mdata["SerieEpisode"] = episode
+	}
+
+	if date, exist := mdata["PublishedDate"]; exist {
+		if d, ok := date.(string); ok {
+			if stamp, err := util.ParseTime(d); err == nil {
+				mdata["PublishedDate"] = stamp
+			}
+		}
+	}
+
+	if pages, exist := mdata["PageCount"]; exist {
+		if p, ok := pages.(string); ok {
+			if nb, err := strconv.Atoi(p); err == nil {
+				mdata["PageCount"] = nb
+			}
+		}
+	}
+}
+
 func mdata2vol(mdata media.Metadata) *googlebooks.VolumeInfo {
 	vi := &googlebooks.VolumeInfo{}
 
@@ -74,26 +125,21 @@ func mdata2vol(mdata media.Metadata) *googlebooks.VolumeInfo {
 func vol2mdata(vi *googlebooks.VolumeInfo) media.Metadata {
 	mdata := make(media.Metadata)
 
-	title, serie, seriePos := GuessSerie(vi.Title)
-	subtitle := vi.SubTitle
-	if len(serie) == 0 {
-		subtitle, serie, seriePos = GuessSerie(vi.SubTitle)
+	if len(vi.Title) > 0 {
+		mdata["Title"] = vi.Title
 	}
 
-	mdata["Title"] = title
-
-	if len(subtitle) > 0 {
-		mdata["SubTitle"] = subtitle
+	if len(vi.SubTitle) > 0 {
+		mdata["SubTitle"] = vi.SubTitle
 	}
 
-	if len(serie) > 0 {
-		mdata["Serie"] = serie
-		mdata["SeriePosition"] = seriePos
+	if len(vi.Authors) > 0 {
+		mdata["Authors"] = vi.Authors
 	}
 
-	mdata["Authors"] = vi.Authors
-
-	mdata["Description"] = vi.Description
+	if len(vi.Description) > 0 {
+		mdata["Description"] = vi.Description
+	}
 
 	if len(vi.Subject) > 0 {
 		mdata["Subject"] = vi.Subject
@@ -104,11 +150,7 @@ func vol2mdata(vi *googlebooks.VolumeInfo) media.Metadata {
 	}
 
 	if len(vi.PublishedDate) > 0 {
-		if stamp, err := util.ParseTime(vi.PublishedDate); err != nil {
-			mdata["PublishedDate"] = vi.PublishedDate
-		} else {
-			mdata["PublishedDate"] = stamp
-		}
+		mdata["PublishedDate"] = vi.PublishedDate
 	}
 
 	if vi.PageCount > 0 {
@@ -126,4 +168,11 @@ func vol2mdata(vi *googlebooks.VolumeInfo) media.Metadata {
 	}
 
 	return mdata
+}
+
+func firstNonZero(a, b interface{}) interface{} {
+	if util.IsZero(a) {
+		return b
+	}
+	return a
 }

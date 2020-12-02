@@ -1,8 +1,6 @@
 package books
 
 import (
-	"github.com/pirmd/gostore/util"
-
 	"github.com/pirmd/epub"
 	"github.com/pirmd/gostore/media"
 )
@@ -31,6 +29,9 @@ func (mh *epubHandler) ReadMetadata(f media.File) (media.Metadata, error) {
 
 	mdata := epub2mdata(epubData)
 	mdata[media.TypeField] = mh.Type()
+
+	mh.bookHandler.CleanMetadata(mdata)
+
 	return mdata, nil
 }
 
@@ -60,7 +61,6 @@ func epub2mdata(epubData *epub.Metadata) media.Metadata {
 	for _, id := range epubData.Identifier {
 		if id.ID == "isbn" {
 			mdata["ISBN"] = id.Value
-			break
 		}
 	}
 
@@ -70,11 +70,7 @@ func epub2mdata(epubData *epub.Metadata) media.Metadata {
 
 	for _, d := range epubData.Date {
 		if d.Event == "publication" {
-			if stamp, err := util.ParseTime(d.Stamp); err != nil {
-				mdata["PublishedDate"] = d.Stamp
-			} else {
-				mdata["PublishedDate"] = stamp
-			}
+			mdata["PublishedDate"] = d.Stamp
 		}
 	}
 
