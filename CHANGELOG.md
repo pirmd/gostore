@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0] - 2020-12-02
+## Added
+- Add 'normalizer' module that intends to keep given Fields consistent across all collection's records.
+- Add 'hasher' module that computes a checksum of a file and checks that it was not already imported.
+- Add 'mdatareader' module that read metadata from a file.
+## Modified
+- Update dupfinder module to allow customized search pattern for duplicates chasing.
+
 ## [0.5.0] - 2020-08-20
 ## Added
 - Add sorting support.
