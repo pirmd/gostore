@@ -30,14 +30,17 @@ type Config struct {
 	Fields []string
 
 	// SimilarityLevel is the measure of similarity that is accepted
-	// between two records. Default to 1.
+	// between two records.
+	// .   0: the input text is analyzed first. An attempt is made to use the same
+	//        analyzer that was used when the field was indexed.
+	// . > 0: the input text is analysed first, the match is done with the given
+	//        level of fuzziness.
+	// Default to 0.
 	SimilarityLevel int
 }
 
 func newConfig() *Config {
-	return &Config{
-		SimilarityLevel: 1,
-	}
+	return &Config{}
 }
 
 type normalizer struct {
@@ -64,29 +67,45 @@ func (n *normalizer) ProcessRecord(r *store.Record) error {
 		switch value := r.Get(field).(type) {
 		case nil:
 
-		// TODO: not sure why 'case []string, []interface{}:' is not working ->
-		// Duplicate []string and []interface{} cases
 		case []string:
-			for i := range value {
-				normVal, err := n.normalize(field, value[i])
+			uniqueValue := make(map[string]struct{})
+			for _, v := range value {
+				normVal, err := n.normalize(field, v)
 				if err != nil {
 					return fmt.Errorf("module '%s': fail to normalize: %v", moduleName, err)
 				}
 				if normVal != nil {
-					value[i] = normVal.(string)
+					uniqueValue[normVal.(string)] = struct{}{}
+				} else {
+					uniqueValue[v] = struct{}{}
 				}
 			}
 
+			normValue := []string{}
+			for k := range uniqueValue {
+				normValue = append(normValue, k)
+			}
+			r.Set(field, normValue)
+
 		case []interface{}:
-			for i := range value {
-				normVal, err := n.normalize(field, value[i])
+			uniqueValue := make(map[interface{}]struct{})
+			for _, v := range value {
+				normVal, err := n.normalize(field, v)
 				if err != nil {
 					return fmt.Errorf("module '%s': fail to normalize: %v", moduleName, err)
 				}
 				if normVal != nil {
-					value[i] = normVal
+					uniqueValue[normVal] = struct{}{}
+				} else {
+					uniqueValue[v] = struct{}{}
 				}
 			}
+
+			normValue := []interface{}{}
+			for k := range uniqueValue {
+				normValue = append(normValue, k)
+			}
+			r.Set(field, normValue)
 
 		case interface{}:
 			normVal, err := n.normalize(field, value)

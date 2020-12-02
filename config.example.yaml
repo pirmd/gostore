@@ -198,11 +198,16 @@ import:
           # Fields is the list of fields where you expect normalization to happen.
           # Normalisation is only working for fields featuring strings (or list of
           # strings) like Authors, Publisher...
-          fields: [ Authors, Publisher ]
+          fields: [ Authors, Publisher, Subject ]
 
           # SimilarityLevel is the measure of similarity that is accepted
           # between two records. Default to 1.
-          # SimilarityLevel: 1
+          # .   0: the input text is analyzed first. An attempt is made to use the same
+          #        analyzer that was used when the field was indexed.
+          # . > 0: the input text is analysed first, the match is done with the given
+          #        level of fuzziness.
+          # Default to 0.
+          # SimilarityLevel: 0
     
     # organizer is a module that rationalizes the name of a media based on its
     # metadata values
