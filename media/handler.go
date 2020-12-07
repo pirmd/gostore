@@ -43,7 +43,17 @@ type Handler interface {
 	// consistency...). Quality level is to be based on a 0 to 100 scale (0:
 	// worse, 100: perfect).
 	CheckMetadata(Metadata) int
+
+	// ProcessContent processes a media File by applying a processing function
+	// to its content and feedbacking the result to the given io.Writer.
+	// It accepts a set of filters should the processing only apply to a subset
+	// of the media.File content, should media be made of several parts (like a
+	// zip archive).
+	ProcessContent(io.Writer, File, ProcessingFunc, ...func(string) bool) error
 }
+
+// ProcessingFunc is a function that processes a media.File.
+type ProcessingFunc func(io.Writer, io.Reader) error
 
 // Handlers represent the list of known media handlers.
 type Handlers []Handler

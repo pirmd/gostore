@@ -73,3 +73,17 @@ func CheckMetadata(mdata Metadata) int {
 
 	return mh.CheckMetadata(mdata)
 }
+
+// ProcessContent processes a media File by applying a processing function
+// to its content and feedbacking the result to the given io.Writer.
+// It accepts a set of filters should the processing only apply to a subset
+// of the media.File content, should media be made of several parts (like a
+// zip archive).
+func ProcessContent(w io.Writer, f File, procFn ProcessingFunc, filters ...func(string) bool) error {
+	mh, err := handlers.ForReader(f)
+	if err != nil {
+		return err
+	}
+
+	return mh.ProcessContent(w, f, procFn, filters...)
+}

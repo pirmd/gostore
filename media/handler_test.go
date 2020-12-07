@@ -1,6 +1,7 @@
 package media
 
 import (
+	"io"
 	"testing"
 )
 
@@ -27,6 +28,10 @@ func (mh *mockHandler) FetchMetadata(mdata Metadata) ([]Metadata, error) {
 
 func (mh *mockHandler) CheckMetadata(mdata Metadata) int {
 	return 100
+}
+
+func (mh *mockHandler) ProcessContent(w io.Writer, f File, procFn ProcessingFunc, filters ...func(string) bool) error {
+	return procFn(w, f)
 }
 
 func (mh *mockHandler) IDCard(mdata Metadata) (exact [][2]string, similar [][2]string) {
