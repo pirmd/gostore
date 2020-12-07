@@ -9,7 +9,9 @@ type MultiErrors []error
 
 // Add adds a new error to the non-blocking error collection
 func (c *MultiErrors) Add(err error) {
-	*c = append(*c, err)
+	if err != nil {
+		*c = append(*c, err)
+	}
 }
 
 // Error concatenates all errors in the collection. It allows to satisfy error
