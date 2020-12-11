@@ -33,7 +33,7 @@ func TestFSPut(t *testing.T) {
 
 	for _, k := range tstCases {
 		tr := NewRecord(k, nil)
-		tr.SetFile(verify.MockROFile(""))
+		tr.SetFile(newMockROFile(""))
 
 		if err := fs.Put(tr); err != nil {
 			t.Fatalf("Fail to add %v: %v", k, err)
@@ -142,7 +142,7 @@ func TestFSForbiddenPath(t *testing.T) {
 	t.Run("Test Put()", func(t *testing.T) {
 		for _, tc := range tstCasesUnauthorized {
 			tr := NewRecord(tc, nil)
-			tr.SetFile(verify.MockROFile(""))
+			tr.SetFile(newMockROFile(""))
 
 			if err := fs.Put(tr); err != os.ErrPermission {
 				t.Errorf("Succeed to create '%v' that is forbidden", tc)

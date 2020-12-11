@@ -1,7 +1,6 @@
 package store
 
 import (
-	"io"
 	"os"
 	"path/filepath"
 
@@ -53,7 +52,7 @@ func (s *storefs) Put(r *Record) error {
 // given key.
 // If Record's Key is absolute, store will look for Record's content from the
 // host file-system, other wise it get it from store's storage.
-func (s *storefs) Get(key string) (io.ReadCloser, error) {
+func (s *storefs) Get(key string) (ReadCloser, error) {
 	return s.fs.Open(key)
 }
 

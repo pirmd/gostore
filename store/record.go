@@ -16,7 +16,7 @@ const (
 type Record struct {
 	key   string
 	value *value
-	file  Reader
+	file  ReadCloser
 }
 
 // NewRecord creates a Record.
@@ -86,7 +86,7 @@ func (r *Record) Del(k string) {
 // its start before returning it.  File is nil if Record's as no known attached
 // file.  File is usually needed to reference source media file of a record
 // before having it inserted or updated in the store.
-func (r *Record) File() Reader {
+func (r *Record) File() ReadCloser {
 	// take benefit of r.file being a Seeker to rewind to the start and allow
 	// several chain reading of r (to chain modules for example)
 	if r.file != nil {
@@ -97,7 +97,7 @@ func (r *Record) File() Reader {
 }
 
 // SetFile sets Record's file
-func (r *Record) SetFile(f Reader) {
+func (r *Record) SetFile(f ReadCloser) {
 	r.file = f
 }
 
@@ -136,12 +136,13 @@ func (r Records) Flatted() (v []map[string]interface{}) {
 	return
 }
 
-// Reader is an interface that wraps all io Read methods that are usually
+// ReadCloser is an interface that wraps all io Read methods that are usually
 // need to play with media files.
-type Reader interface {
+type ReadCloser interface {
 	io.Reader
 	io.ReaderAt
 	io.Seeker
+	io.Closer
 }
 
 // value represents a set of information recorded in the store

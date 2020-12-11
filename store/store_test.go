@@ -37,7 +37,7 @@ func setupStore(tb testing.TB) (*Store, func()) {
 
 func populateStore(tb testing.TB, s *Store) (keys []string) {
 	for _, td := range testData {
-		r, err := s.Create(buildKey(td), td, verify.MockROFile(""))
+		r, err := s.Create(buildKey(td), td, newMockROFile(""))
 		if err != nil {
 			tb.Fatalf("Fail to add %v: %s", td, err)
 		}
@@ -71,7 +71,7 @@ func TestCreateAndRead(t *testing.T) {
 
 	t.Run("Cannot create an already existing record", func(t *testing.T) {
 		for _, tc := range testData {
-			if _, err := s.Create(buildKey(tc), tc, verify.MockROFile("")); err == nil {
+			if _, err := s.Create(buildKey(tc), tc, newMockROFile("")); err == nil {
 				t.Errorf("Managed to add %v that already exists in the store", tc)
 			}
 		}
@@ -83,7 +83,7 @@ func TestCreateAndRead(t *testing.T) {
 				t.Fatalf("Fail to delete '%s' from database: %v", keys[i], err)
 			}
 
-			if _, err := s.Create(keys[i], testData[i], verify.MockROFile("")); err != nil {
+			if _, err := s.Create(keys[i], testData[i], newMockROFile("")); err != nil {
 				t.Errorf("Fail to create %s:%v: %v", keys[i], testData[i], err)
 			}
 		}

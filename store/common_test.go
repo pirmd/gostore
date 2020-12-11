@@ -1,5 +1,9 @@
 package store
 
+import (
+	"strings"
+)
+
 var (
 	testData = []map[string]interface{}{
 		{"Title": "Le cinquième élément", "Authors": []string{"Luc"}, "PublicationDate": 1997, "Read": true},
@@ -21,3 +25,17 @@ var (
 		return m["Authors"].([]string)[0] + "/" + m["Title"].(string) + ".tst"
 	}
 )
+
+type mockROFile struct {
+	*strings.Reader
+}
+
+func (f *mockROFile) Close() error {
+	return nil
+}
+
+func newMockROFile(s string) ReadCloser {
+	return &mockROFile{
+		Reader: strings.NewReader(s),
+	}
+}

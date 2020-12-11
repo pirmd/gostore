@@ -3,7 +3,6 @@ package store
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"path/filepath"
@@ -111,7 +110,7 @@ func (s *Store) Close() error {
 // Create does not replace existing Record (you have to use Update for that)
 // but will replace partially existing records resulting from an inconsistent
 // state of the Store (e.g. file exists but entry in db does not).
-func (s *Store) Create(key string, data map[string]interface{}, f Reader) (*Record, error) {
+func (s *Store) Create(key string, data map[string]interface{}, f ReadCloser) (*Record, error) {
 	r := NewRecord(key, data)
 	r.SetFile(f)
 
@@ -275,7 +274,7 @@ func (s *Store) ReadQuery(query string) (Records, error) {
 // OpenRecord opens the Record corresponding to the given key for reading.
 // If Record's Key is absolute, store will look for Record's content from the
 // host file-system, other wise it get it from store's storage.
-func (s *Store) OpenRecord(r *Record) (io.ReadCloser, error) {
+func (s *Store) OpenRecord(r *Record) (ReadCloser, error) {
 	s.log.Printf("Open record '%s' from storage", r.Key())
 	return s.fs.Get(r.Key())
 }
