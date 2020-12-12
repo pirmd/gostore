@@ -50,10 +50,10 @@ type normalizer struct {
 	fuzziness int
 }
 
-func newNormalizer(cfg *Config, logger *log.Logger, store *store.Store) (modules.Module, error) {
+func newNormalizer(cfg *Config, logger *log.Logger, storer *store.Store) (modules.Module, error) {
 	return &normalizer{
 		log:       logger,
-		store:     store,
+		store:     storer,
 		fields:    cfg.Fields,
 		fuzziness: cfg.SimilarityLevel,
 	}, nil
@@ -68,53 +68,50 @@ func (n *normalizer) ProcessRecord(r *store.Record) error {
 		case nil:
 
 		case []string:
-			uniqueValue := make(map[string]struct{})
+			var normValues []string
+
+			uniqueValues := make(map[interface{}]struct{})
 			for _, v := range value {
 				normVal, err := n.normalize(field, v)
 				if err != nil {
 					return fmt.Errorf("module '%s': fail to normalize: %v", moduleName, err)
 				}
-				if normVal != nil {
-					uniqueValue[normVal.(string)] = struct{}{}
-				} else {
-					uniqueValue[v] = struct{}{}
+
+				if _, exist := uniqueValues[normVal]; exist {
+					continue
 				}
+
+				normValues = append(normValues, normVal.(string))
+				uniqueValues[normVal] = struct{}{}
 			}
 
-			normValue := []string{}
-			for k := range uniqueValue {
-				normValue = append(normValue, k)
-			}
-			r.Set(field, normValue)
+			r.Set(field, normValues)
 
 		case []interface{}:
-			uniqueValue := make(map[interface{}]struct{})
+			var normValues []interface{}
+
+			uniqueValues := make(map[interface{}]struct{})
 			for _, v := range value {
 				normVal, err := n.normalize(field, v)
 				if err != nil {
 					return fmt.Errorf("module '%s': fail to normalize: %v", moduleName, err)
 				}
-				if normVal != nil {
-					uniqueValue[normVal] = struct{}{}
-				} else {
-					uniqueValue[v] = struct{}{}
-				}
-			}
 
-			normValue := []interface{}{}
-			for k := range uniqueValue {
-				normValue = append(normValue, k)
+				if _, exist := uniqueValues[normVal]; exist {
+					continue
+				}
+
+				normValues = append(normValues, normVal)
+				uniqueValues[normVal] = struct{}{}
 			}
-			r.Set(field, normValue)
+			r.Set(field, normValues)
 
 		case interface{}:
 			normVal, err := n.normalize(field, value)
 			if err != nil {
 				return fmt.Errorf("module '%s': fail to normalize: %v", moduleName, err)
 			}
-			if normVal != nil {
-				r.Set(field, normVal)
-			}
+			r.Set(field, normVal)
 
 		default:
 			return fmt.Errorf("module '%s': fail to normalize field %s: incorrect type (%T)", moduleName, field, value)
@@ -125,7 +122,7 @@ func (n *normalizer) ProcessRecord(r *store.Record) error {
 }
 
 // normalize tries to find pre-existing similar field value in the store.
-// Return the normed value, empty string otherwise.
+// Return the original value if nothing is found.
 func (n *normalizer) normalize(field string, value interface{}) (interface{}, error) {
 	n.log.Printf("module '%s': normalizing %s=%+v", moduleName, field, value)
 
@@ -155,7 +152,7 @@ func (n *normalizer) normalize(field string, value interface{}) (interface{}, er
 	}
 
 	n.log.Printf("module '%s': no similar candidates found. Keep initial value.", moduleName)
-	return nil, nil
+	return value, nil
 }
 
 // NewFromRawConfig creates a new module from a raw configuration.
