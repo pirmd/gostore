@@ -183,13 +183,14 @@ import:
     - name: checker
       config: &checker
           # fieldName is the name of the metadata's field to store the quality
-          # level assessment.
-          fieldName: QALevel
+          # assessment's result.
+          # Default to: QAFindings
+          fieldName: QAFindings
 
-          # minLevel is the minimum allowed level. Any level below this threshold
-          # will result in an error aborting operation. Default to 0 (all quality
-          # level is accepted)
-          minLevel: 30
+          # MaxFindings is the maximum allowed number of QA findings before the
+          # quality check fails
+          # Default to: 0 (disabled)
+          maxFindings: 0 
 
     # normalizer is a module that proposes normalized field values based
     # on already similar existing records' values.

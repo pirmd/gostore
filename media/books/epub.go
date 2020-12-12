@@ -3,9 +3,12 @@ package books
 import (
 	"archive/zip"
 	"io"
+	"io/ioutil"
+	"path/filepath"
 
 	"github.com/pirmd/epub"
 	"github.com/pirmd/gostore/media"
+	"github.com/pirmd/gostore/media/books/sanitizer"
 	"github.com/pirmd/gostore/util"
 )
 
@@ -97,6 +100,16 @@ NextFile:
 	}
 
 	return procErr.Err()
+}
+
+func (mh *epubHandler) Check(mdata media.Metadata, f media.File) (findings map[string]string, err error) {
+	findings, err = mh.bookHandler.Check(mdata, f)
+
+	if err := mh.ProcessContent(ioutil.Discard, f, sanitizer.EPUB.Sanitize, func(s string) bool { return filepath.Ext(s) != ".html" }); err != nil {
+		findings["Content"] = err.Error()
+	}
+
+	return
 }
 
 func epub2mdata(epubData *epub.Metadata) media.Metadata {

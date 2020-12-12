@@ -21,44 +21,57 @@ var (
 
 // Config defines the different module's options.
 type Config struct {
-	// FieldName is the name of the metadata field where to store checker
-	// outcome. Default to: QALevel.
+	// FieldName is the name of the metadata's field to store the quality
+	// assessment's result.
+	// Default to: QAFindings
 	FieldName string
-	// MinLevel is the minimum allowed level. Any level below this threshold
-	// will result in an error aborting operation. Default to 0 (all quality
-	// level is accepted).
-	MinLevel int
+
+	// MaxFindings is the maximum allowed number of QA findings before the quality check
+	// fails.
+	// Default to: 0 (disabled)
+	MaxFindings int
 }
 
 func newConfig() *Config {
 	return &Config{
-		FieldName: "QALevel",
+		FieldName: "QAFindings",
 	}
 }
 
 type checker struct {
-	log *log.Logger
+	log   *log.Logger
+	store *store.Store
 
-	field    string
-	minLevel int
+	field string
+	max   int
 }
 
-func newChecker(cfg *Config, logger *log.Logger) (modules.Module, error) {
+func newChecker(cfg *Config, logger *log.Logger, storer *store.Store) (modules.Module, error) {
 	return &checker{
-		log:      logger,
-		field:    cfg.FieldName,
-		minLevel: cfg.MinLevel,
+		log:   logger,
+		store: storer,
+		field: cfg.FieldName,
+		max:   cfg.MaxFindings,
 	}, nil
 }
 
 // ProcessRecord completes a record's metadata with a quality level.
 func (c *checker) ProcessRecord(r *store.Record) error {
 	c.log.Printf("Module '%s': assess quality level", moduleName)
-	lvl := media.CheckMetadata(r.Data())
-	r.Set(c.field, lvl)
 
-	if lvl < c.minLevel {
-		return fmt.Errorf("module '%s': minimum level of quality is not reached (got %d, min %d)", moduleName, lvl, c.minLevel)
+	issues, err := c.check(r)
+	if err != nil {
+		return fmt.Errorf("module '%s': fail to assess quality level: %v", moduleName, err)
+	}
+
+	if c.max > 0 && len(issues) > c.max {
+		return fmt.Errorf("module '%s': minimum level of quality is not reached (got %d, min %d): %s", moduleName, len(issues), c.max, issues)
+	}
+
+	if len(issues) > 0 {
+		r.Set(c.field, issues)
+	} else {
+		r.Del(c.field)
 	}
 
 	return nil
@@ -73,7 +86,21 @@ func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (mod
 		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
 	}
 
-	return newChecker(cfg, env.Logger)
+	return newChecker(cfg, env.Logger, env.Store)
+}
+
+func (c *checker) check(r *store.Record) (map[string]string, error) {
+	if r.File() != nil {
+		return media.Check(r.Data(), r.File())
+	}
+
+	f, err := c.store.OpenRecord(r)
+	if err != nil {
+		return nil, err
+	}
+	f.Close()
+
+	return media.Check(r.Data(), f)
 }
 
 func init() {

@@ -62,16 +62,16 @@ func FetchMetadata(mdata Metadata) ([]Metadata, error) {
 	return mh.FetchMetadata(mdata)
 }
 
-// CheckMetadata assesses the quality level of a set of metadata on a 0 to 100
-// scale (0: very bad, 100: perfect). If the provided metadata is of unknown
-// type, returns 0.
-func CheckMetadata(mdata Metadata) int {
+// Check reviews a media metadata and content to capture possible quality issues.
+// Quality issues are organised by Metadata Field using "Content" as the
+// special field name for issues about the media.File content itself.
+func Check(mdata Metadata, f File) (map[string]string, error) {
 	mh, err := handlers.ForMetadata(mdata)
 	if err != nil {
-		return 0
+		return nil, err
 	}
 
-	return mh.CheckMetadata(mdata)
+	return mh.Check(mdata, f)
 }
 
 // ProcessContent processes a media File by applying a processing function

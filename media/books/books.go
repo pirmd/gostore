@@ -30,30 +30,25 @@ func (bh *bookHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, er
 	return res, nil
 }
 
-func (bh *bookHandler) CheckMetadata(mdata media.Metadata) int {
-	lvl := 100
+func (bh *bookHandler) Check(mdata media.Metadata, f media.File) (findings map[string]string, err error) {
+	findings = make(map[string]string)
 
 	if util.IsZero(mdata["Title"]) {
-		lvl = 0
+		findings["Title"] = "missing"
 	}
 
 	if util.IsZero(mdata["Authors"]) {
-		lvl -= 50
+		findings["Authors"] = "missing"
 	}
 
 	if util.IsZero(mdata["Description"]) {
-		lvl -= 20
+		findings["Description"] = "missing"
 	}
 
 	if util.IsZero(mdata["Publisher"]) {
-		lvl -= 10
+		findings["Publisher"] = "missing"
 	}
-
-	if lvl < 0 {
-		lvl = 0
-	}
-
-	return lvl
+	return
 }
 
 func (bh *bookHandler) CleanMetadata(mdata media.Metadata) {

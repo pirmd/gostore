@@ -26,8 +26,8 @@ func (mh *mockHandler) FetchMetadata(mdata Metadata) ([]Metadata, error) {
 	return []Metadata{mdata}, nil
 }
 
-func (mh *mockHandler) CheckMetadata(mdata Metadata) int {
-	return 100
+func (mh *mockHandler) Check(mdata Metadata, f File) (findings map[string]string, err error) {
+	return make(map[string]string), nil
 }
 
 func (mh *mockHandler) ProcessContent(w io.Writer, f File, procFn ProcessingFunc, filters ...func(string) bool) error {

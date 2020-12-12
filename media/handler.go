@@ -39,10 +39,10 @@ type Handler interface {
 	// internet data base) that corresponds to the provided known data.
 	FetchMetadata(Metadata) ([]Metadata, error)
 
-	// CheckMetadata assesses the quality level of the Metadata (completeness,
-	// consistency...). Quality level is to be based on a 0 to 100 scale (0:
-	// worse, 100: perfect).
-	CheckMetadata(Metadata) int
+	// Check reviews a media metadata and content to capture possible quality issues.
+	// Quality issues are organised by Metadata Field using "Content" as the
+	// special field name for issues about the media.File content itself.
+	Check(Metadata, File) (map[string]string, error)
 
 	// ProcessContent processes a media File by applying a processing function
 	// to its content and feedbacking the result to the given io.Writer.

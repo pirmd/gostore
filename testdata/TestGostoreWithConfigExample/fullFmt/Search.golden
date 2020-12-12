@@ -1,19 +1,3 @@
-[1mName[22m          Arthur Conan Doyle - The Adventures of Sherlock Holmes.epub
-[1mTitle[22m         The Adventures of Sherlock Holmes                          
-[1mAuthors[22m       [Arthur Conan Doyle]                                       
-[1mDescription[22m   A collection of Sherlock Holmes mystery adventures.        
-[1mISBN[22m          9781853260339                                              
-[1mLanguage[22m      en                                                         
-[1mPageCount[22m     446                                                        
-[1mPublishedDate[22m 1992-01-01                                                 
-[1mPublisher[22m     Wordsworth Editions                                        
-[1mSubject[22m       [Fiction]                                                  
-[1mType[22m          book/epub                                                  
-[1mQALevel[22m       100                                                        
-[1mSourceHash[22m    f3106872f6f288c3287a401ab1934d28                           
-[1mCreatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                            
-[1mUpdatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                            
-
 [1mName[22m          Lewis Carroll - Alices Adventures in Wonderland  Through the      
               Looking-glass.epub                                                
 [1mTitle[22m         Alice's Adventures in Wonderland & Through the Looking-glass      
@@ -43,9 +27,287 @@
 [1mPageCount[22m     263                                                               
 [1mPublishedDate[22m 1993-01-01                                                        
 [1mPublisher[22m     Wordsworth Editions                                               
+[1mQAFindings[22m    map[Content:Unsafe tag (meta) in '<meta name="generator"          
+              content="HTML Tidy for Linux (vers 7 December 2008), see          
+              www.w3.org"'.                                                     
+              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
+              name="linkgenerator"'.                                            
+              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
+              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced pgheader">...</div>'                          
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
+              #link2HCH0001" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
+              #link2HCH0002" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
+              #link2HCH0003" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
+              #link2HCH0004" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
+              #link2HCH0005" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-1.htm.html
+              #link2HCH0006" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-1.htm.html
+              #link2HCH0007" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-1.htm.html
+              #link2HCH0008" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-2.htm.html
+              #link2HCH0009" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-2.htm.html
+              #link2HCH0010" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-3.htm.html
+              #link2HCH0011" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-3.htm.html
+              #link2HCH0012" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
+              name="linkgenerator"'.                                            
+              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
+              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
+              name="linkgenerator"'.                                            
+              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
+              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
+              name="linkgenerator"'.                                            
+              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
+              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced">...</div>'                                   
+              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
+              class="pgmonospaced pgheader">...</div>']                         
 [1mSubject[22m       [Fiction]                                                         
 [1mType[22m          book/epub                                                         
-[1mQALevel[22m       100                                                               
 [1mSourceHash[22m    88064cdbcfb6cc3f93783e4ed963df10                                  
+[1mCreatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                                   
+[1mUpdatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                                   
+
+[1mName[22m          Arthur Conan Doyle - The Adventures of Sherlock Holmes.epub       
+[1mTitle[22m         The Adventures of Sherlock Holmes                                 
+[1mAuthors[22m       [Arthur Conan Doyle]                                              
+[1mDescription[22m   A collection of Sherlock Holmes mystery adventures.               
+[1mISBN[22m          9781853260339                                                     
+[1mLanguage[22m      en                                                                
+[1mPageCount[22m     446                                                               
+[1mPublishedDate[22m 1992-01-01                                                        
+[1mPublisher[22m     Wordsworth Editions                                               
+[1mQAFindings[22m    map[Content:Unsafe tag (meta) in '<meta name="generator"          
+              content="HTML Tidy for Linux (vers 7 December 2008), see          
+              www.w3.org"'.                                                     
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe attr (cellpadding=2) in '<table class="bold"               
+              cellpadding="2" cellspacing="2" summary="Table of                 
+              Contents">...</table>'                                            
+              Unsafe attr (cellspacing=2) in '<table class="bold"               
+              cellpadding="2" cellspacing="2" summary="Table of                 
+              Contents">...</table>'                                            
+              Unsafe attr (summary=Table of Contents) in '<table class="bold"   
+              cellpadding="2" cellspacing="2" summary="Table of                 
+              Contents">...</table>'                                            
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-1.ht
+              m.html#id_1" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-2.ht
+              m.html#id_2" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-3.ht
+              m.html#id_3" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-3.ht
+              m.html#id_4" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-4.ht
+              m.html#id_5" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-5.ht
+              m.html#id_6" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-6.ht
+              m.html#id_7" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-7.ht
+              m.html#id_8" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-8.ht
+              m.html#id_9" class="pginternal"                                   
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-9.ht
+              m.html#id_10" class="pginternal"                                  
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-10.h
+              tm.html#id_11" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
+              href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-11.h
+              tm.html#id_12" class="pginternal"                                 
+              tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.                                                
+              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
+              for Linux (vers 7 December 2008), see www.w3.org"'.               
+              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
+              content="application/xhtml+xml; charset=utf-8"'.                  
+              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
+              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
+              name="generator"'.]                                               
+[1mSubject[22m       [Fiction]                                                         
+[1mType[22m          book/epub                                                         
+[1mSourceHash[22m    f3106872f6f288c3287a401ab1934d28                                  
 [1mCreatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                                   
 [1mUpdatedAt[22m     Sat, 17 Jan 1976 05:42:05 +0100                                   
