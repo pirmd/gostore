@@ -30,8 +30,8 @@ func (bh *bookHandler) FetchMetadata(mdata media.Metadata) ([]media.Metadata, er
 	return res, nil
 }
 
-func (bh *bookHandler) Check(mdata media.Metadata, f media.File) (findings map[string]string, err error) {
-	findings = make(map[string]string)
+func (bh *bookHandler) Check(mdata media.Metadata, f media.File) (map[string]string, error) {
+	findings := make(map[string]string)
 
 	if util.IsZero(mdata["Title"]) {
 		findings["Title"] = "missing"
@@ -48,7 +48,8 @@ func (bh *bookHandler) Check(mdata media.Metadata, f media.File) (findings map[s
 	if util.IsZero(mdata["Publisher"]) {
 		findings["Publisher"] = "missing"
 	}
-	return
+
+	return findings, nil
 }
 
 func (bh *bookHandler) CleanMetadata(mdata media.Metadata) {

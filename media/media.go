@@ -74,16 +74,13 @@ func Check(mdata Metadata, f File) (map[string]string, error) {
 	return mh.Check(mdata, f)
 }
 
-// ProcessContent processes a media File by applying a processing function
-// to its content and feedbacking the result to the given io.Writer.
-// It accepts a set of filters should the processing only apply to a subset
-// of the media.File content, should media be made of several parts (like a
-// zip archive).
-func ProcessContent(w io.Writer, f File, procFn ProcessingFunc, filters ...func(string) bool) error {
+// WalkContent walks the media.File content, calling for each
+// media.File sub-set the provided WalkFunc.
+func WalkContent(f File, walkFn WalkFunc) error {
 	mh, err := handlers.ForReader(f)
 	if err != nil {
 		return err
 	}
 
-	return mh.ProcessContent(w, f, procFn, filters...)
+	return mh.WalkContent(f, walkFn)
 }

@@ -1,7 +1,6 @@
 package media
 
 import (
-	"io"
 	"testing"
 )
 
@@ -30,8 +29,8 @@ func (mh *mockHandler) Check(mdata Metadata, f File) (findings map[string]string
 	return make(map[string]string), nil
 }
 
-func (mh *mockHandler) ProcessContent(w io.Writer, f File, procFn ProcessingFunc, filters ...func(string) bool) error {
-	return procFn(w, f)
+func (mh *mockHandler) WalkContent(f File, walkFn WalkFunc) error {
+	return walkFn("mock", f, nil)
 }
 
 func (mh *mockHandler) IDCard(mdata Metadata) (exact [][2]string, similar [][2]string) {

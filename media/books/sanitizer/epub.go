@@ -34,6 +34,7 @@ var (
 		atom.Img:        append([]string{"height", "src", "width"}, globalHTMLAttr...),
 		atom.Li:         globalHTMLAttr,
 		atom.Link:       {"href", "rel=stylesheet", "type=text/css"},
+		atom.Meta:       append([]string{"charset", "content", "name"}, globalHTMLAttr...),
 		atom.Ol:         globalHTMLAttr,
 		atom.P:          globalHTMLAttr,
 		atom.S:          globalHTMLAttr,

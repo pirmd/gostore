@@ -27,15 +27,8 @@
 [1mPageCount[22m     263                                                               
 [1mPublishedDate[22m 1993-01-01                                                        
 [1mPublisher[22m     Wordsworth Editions                                               
-[1mQAFindings[22m    map[Content:Unsafe tag (meta) in '<meta name="generator"          
-              content="HTML Tidy for Linux (vers 7 December 2008), see          
-              www.w3.org"'.                                                     
-              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
-              name="linkgenerator"'.                                            
-              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
-              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
-              Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
-              class="pgmonospaced pgheader">...</div>'                          
+[1mQAFindings[22m    map[Content:Unsafe attr (xml:space=preserve) in '<div             
+              xml:space="preserve" class="pgmonospaced pgheader">...</div>'     
               Unsafe attr (tag={http://www.w3.org/1999/xhtml}a) in '<a          
               href="@public@vhost@g@gutenberg@html@files@11@11-h@11-h-0.htm.html
               #link2HCH0001" class="pginternal"                                 
@@ -94,12 +87,6 @@
               class="pgmonospaced">...</div>'                                   
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
-              name="linkgenerator"'.                                            
-              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
-              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
@@ -112,22 +99,10 @@
               class="pgmonospaced">...</div>'                                   
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
-              name="linkgenerator"'.                                            
-              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
-              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta content="pg2html (binary v0.17)"      
-              name="linkgenerator"'.                                            
-              Unsafe tag (meta) in '<meta name="generator" content="Ebookmaker  
-              0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"'. 
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
               class="pgmonospaced">...</div>'                                   
               Unsafe attr (xml:space=preserve) in '<div xml:space="preserve"    
@@ -157,21 +132,12 @@
 [1mPageCount[22m     446                                                               
 [1mPublishedDate[22m 1992-01-01                                                        
 [1mPublisher[22m     Wordsworth Editions                                               
-[1mQAFindings[22m    map[Content:Unsafe tag (meta) in '<meta name="generator"          
-              content="HTML Tidy for Linux (vers 7 December 2008), see          
-              www.w3.org"'.                                                     
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
+[1mQAFindings[22m    map[Content:Unsafe attr (http-equiv=Content-Type) in '<meta       
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
               Unsafe attr (cellpadding=2) in '<table class="bold"               
               cellpadding="2" cellspacing="2" summary="Table of                 
               Contents">...</table>'                                            
@@ -229,83 +195,39 @@
               href="@public@vhost@g@gutenberg@html@files@1661@1661-h@1661-h-11.h
               tm.html#id_12" class="pginternal"                                 
               tag="{http://www.w3.org/1999/xhtml}a">...</a>'                    
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.                                                
-              Unsafe tag (meta) in '<meta name="generator" content="HTML Tidy   
-              for Linux (vers 7 December 2008), see www.w3.org"'.               
-              Unsafe tag (meta) in '<meta http-equiv="Content-Type"             
-              content="application/xhtml+xml; charset=utf-8"'.                  
-              Unsafe tag (meta) in '<meta content="Ebookmaker 0.4.0a5 by        
-              Marcello Perathoner &lt;webmaster@gutenberg.org&gt;"              
-              name="generator"'.]                                               
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"'                                                   
+              Unsafe attr (http-equiv=Content-Type) in '<meta                   
+              http-equiv="Content-Type" content="application/xhtml+xml;         
+              charset=utf-8"']                                                  
 [1mSubject[22m       [Fiction]                                                         
 [1mType[22m          book/epub                                                         
 [1mSourceHash[22m    f3106872f6f288c3287a401ab1934d28                                  

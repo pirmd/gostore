@@ -39,21 +39,19 @@ type Handler interface {
 	// internet data base) that corresponds to the provided known data.
 	FetchMetadata(Metadata) ([]Metadata, error)
 
-	// Check reviews a media metadata and content to capture possible quality issues.
-	// Quality issues are organised by Metadata Field using "Content" as the
-	// special field name for issues about the media.File content itself.
+	// Check reviews a media's metadata and content to capture possible quality
+	// issues.  Quality issues are organised by Metadata Field using "Content"
+	// as the special field name for issues about the media.File content
+	// itself.
 	Check(Metadata, File) (map[string]string, error)
 
-	// ProcessContent processes a media File by applying a processing function
-	// to its content and feedbacking the result to the given io.Writer.
-	// It accepts a set of filters should the processing only apply to a subset
-	// of the media.File content, should media be made of several parts (like a
-	// zip archive).
-	ProcessContent(io.Writer, File, ProcessingFunc, ...func(string) bool) error
+	// WalkContent walks the media.File content, calling for each
+	// media.File sub-set the provided WalkFunc.
+	WalkContent(File, WalkFunc) error
 }
 
-// ProcessingFunc is a function that processes a media.File.
-type ProcessingFunc func(io.Writer, io.Reader) error
+// WalkFunc is the type of the function called by WalkContent.
+type WalkFunc func(string, io.Reader, error) error
 
 // Handlers represent the list of known media handlers.
 type Handlers []Handler

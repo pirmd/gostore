@@ -3,7 +3,6 @@ package books
 import (
 	"archive/zip"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 
 	"github.com/pirmd/epub"
@@ -42,7 +41,40 @@ func (mh *epubHandler) ReadMetadata(f media.File) (media.Metadata, error) {
 	return mdata, nil
 }
 
-func (mh *epubHandler) ProcessContent(w io.Writer, f media.File, procFn media.ProcessingFunc, filters ...func(string) bool) error {
+func (mh *epubHandler) Check(mdata media.Metadata, f media.File) (map[string]string, error) {
+	findings, err := mh.bookHandler.Check(mdata, f)
+	if err != nil {
+		return nil, err
+	}
+
+	scanErr := new(util.MultiErrors)
+	if err := mh.WalkContent(f, func(path string, r io.Reader, err error) error {
+		if filepath.Ext(path) != ".html" {
+			return nil
+		}
+
+		if err != nil {
+			scanErr.Add(err)
+			return nil
+		}
+
+		if err := sanitizer.EPUB.Scan(r); err != nil {
+			scanErr.Add(err)
+		}
+
+		return nil
+	}); err != nil {
+		scanErr.Add(err)
+	}
+
+	if scanErr.Err() != nil {
+		findings["Content"] = scanErr.Error()
+	}
+
+	return findings, nil
+}
+
+func (mh *epubHandler) WalkContent(f media.File, walkFn media.WalkFunc) error {
 	sz, err := getSize(f)
 	if err != nil {
 		return err
@@ -53,63 +85,18 @@ func (mh *epubHandler) ProcessContent(w io.Writer, f media.File, procFn media.Pr
 		return err
 	}
 
-	zipw := zip.NewWriter(w)
-	defer func() {
-		cerr := zipw.Close()
-		if err == nil {
-			err = cerr
-		}
-	}()
-
-	procErr := &util.MultiErrors{}
-
-NextFile:
 	for _, f := range r.File {
 		rf, err := f.Open()
-		if err != nil {
-			procErr.Add(err)
-			continue
-		}
-		defer rf.Close()
-
-		header, err := zip.FileInfoHeader(f.FileInfo())
-		if err != nil {
-			procErr.Add(err)
-			continue
-		}
-		header.Name = f.Name
-		wf, err := zipw.CreateHeader(header)
-		if err != nil {
-			procErr.Add(err)
-			continue
+		if err == nil {
+			defer rf.Close()
 		}
 
-		for _, filter := range filters {
-			if filter(f.Name) {
-				_, err = io.Copy(wf, rf)
-				if err != nil {
-					procErr.Add(err)
-				}
-				continue NextFile
-			}
-		}
-
-		if err := procFn(wf, rf); err != nil {
-			procErr.Add(err)
+		if err := walkFn(f.Name, rf, err); err != nil {
+			return err
 		}
 	}
 
-	return procErr.Err()
-}
-
-func (mh *epubHandler) Check(mdata media.Metadata, f media.File) (findings map[string]string, err error) {
-	findings, err = mh.bookHandler.Check(mdata, f)
-
-	if err := mh.ProcessContent(ioutil.Discard, f, sanitizer.EPUB.Sanitize, func(s string) bool { return filepath.Ext(s) != ".html" }); err != nil {
-		findings["Content"] = err.Error()
-	}
-
-	return
+	return nil
 }
 
 func epub2mdata(epubData *epub.Metadata) media.Metadata {
