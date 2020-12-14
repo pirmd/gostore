@@ -49,6 +49,16 @@ func (bh *bookHandler) Check(mdata media.Metadata, f media.File) (map[string]str
 		findings["Publisher"] = "missing"
 	}
 
+	if util.IsZero(mdata["Serie"]) && (util.IsNotZero(mdata["SeriePosition"]) || util.IsNotZero(mdata["SerieEpisode"])) {
+		findings["Serie"] = "incomplete serie information"
+	}
+	if util.IsZero(mdata["SeriePosition"]) && (util.IsNotZero(mdata["Serie"]) || util.IsNotZero(mdata["SerieEpisode"])) {
+		findings["SeriePosition"] = "incomplete serie information"
+	}
+	if util.IsZero(mdata["SerieEpisode"]) && (util.IsNotZero(mdata["Serie"]) || util.IsNotZero(mdata["SeriePosition"])) {
+		findings["SerieEpisode"] = "incomplete serie information"
+	}
+
 	return findings, nil
 }
 
