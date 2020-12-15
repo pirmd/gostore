@@ -171,40 +171,8 @@ func (gs *Gostore) ListQuery(query string, sortBy []string) error {
 	return nil
 }
 
-// Edit updates an existing record from the collection
+// Edit updates a set of records.
 func (gs *Gostore) Edit(pattern []string) error {
-	records, err := gs.glob(pattern)
-	if err != nil {
-		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
-	}
-
-	var editErr util.MultiErrors
-	for _, r := range records {
-		gs.log.Printf("Editing '%s'", r.Key())
-
-		mdata, err := gs.ui.Edit(r.Data())
-		if err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", r.Key(), err))
-			continue
-		}
-
-		if err := gs.update(r, mdata); err != nil {
-			editErr.Add(fmt.Errorf("editing '%s' failed: %s", r.Key(), err))
-			continue
-		}
-
-		records = append(records, r)
-	}
-
-	if len(records) != 0 {
-		gs.ui.PrettyPrint(records.Flatted()...)
-	}
-
-	return editErr.Err()
-}
-
-// MultiEdit updates a set of records at once.
-func (gs *Gostore) MultiEdit(pattern []string) error {
 	records, err := gs.glob(pattern)
 	if err != nil {
 		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
@@ -214,7 +182,7 @@ func (gs *Gostore) MultiEdit(pattern []string) error {
 		return nil
 	}
 
-	mdata, err := gs.ui.MultiEdit(records.Data())
+	mdata, err := gs.ui.Edit(records.Data())
 	if err != nil {
 		return fmt.Errorf("editing '%s' failed: %s", pattern, err)
 	}

@@ -6,15 +6,11 @@ import (
 
 // Config describes configuration for User Interface
 type Config struct {
+	*editorConfig
+
 	// Auto is the flag that switches between automatic or manual actions when
 	// editing or merging records' attributes
 	Auto bool
-
-	// EditorCmd contains the command line to open a text editor
-	EditorCmd string
-
-	// MergerCmd contains the command line to open a text merger
-	MergerCmd string
 
 	// OutputFormat selects the style of output to format records when printing
 	// them.
@@ -25,9 +21,10 @@ type Config struct {
 	Formatters map[string]map[string]string
 }
 
-// NewConfig create a new Config
+// NewConfig creates a new Config
 func NewConfig() *Config {
 	return &Config{
+		editorConfig: newEditorConfig(),
 		OutputFormat: "name",
 		Formatters: map[string]map[string]string{
 			"name": {
@@ -64,8 +61,10 @@ func NewFromConfig(cfg *Config) (*CLI, error) {
 	}
 
 	if !cfg.Auto {
-		ui.editor = cfg.EditorCmd
-		ui.merger = cfg.MergerCmd
+		var err error
+		if ui.editor, err = newEditor(cfg.editorConfig); err != nil {
+			return nil, err
+		}
 	}
 
 	return ui, nil

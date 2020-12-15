@@ -26,9 +26,7 @@ var (
 
 // CLI is a user interface built for the command-line.
 type CLI struct {
-	editor string
-	merger string
-
+	editor   *editor
 	style    style.Styler
 	printers *template.Template
 }
@@ -67,31 +65,38 @@ func (ui *CLI) PrettyDiff(mediaL, mediaR map[string]interface{}) {
 	ui.PrettyPrint(deltaL)
 }
 
-// Edit fires-up a new editor to modify a map
-func (ui *CLI) Edit(m map[string]interface{}) (map[string]interface{}, error) {
-	if len(ui.editor) > 0 {
-		return editAsJSON(m, ui.editor)
+// Edit fires-up a new editor to modify a slice of maps
+func (ui *CLI) Edit(m []map[string]interface{}) ([]map[string]interface{}, error) {
+	med := []map[string]interface{}{}
+
+	if ui.editor == nil {
+		for i := range m {
+			med[i] = make(map[string]interface{}, len(m[i]))
+			for k, v := range m[i] {
+				med[i][k] = v
+			}
+		}
+		return med, nil
 	}
 
-	return m, nil
-}
-
-// MultiEdit fires-up a new editor to modify a set of maps
-func (ui *CLI) MultiEdit(m []map[string]interface{}) ([]map[string]interface{}, error) {
-	if len(ui.editor) > 0 {
-		return multiEditAsJSON(m, ui.editor)
+	if err := ui.editor.Edit(m, med); err != nil {
+		return nil, err
 	}
-
-	return m, nil
+	return med, nil
 }
 
 // Merge fires-up a new editor to merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
-	if len(ui.merger) > 0 {
-		return mergeAsJSON(m, n, ui.merger)
+	if ui.editor == nil {
+		return mergeMaps(m, n)
 	}
 
-	return mergeMaps(m, n)
+	med := make(map[string]interface{})
+	if err := ui.editor.Merge(m, n, med); err != nil {
+		return nil, err
+	}
+
+	return med, nil
 }
 
 func (ui *CLI) print(medias ...map[string]interface{}) string {

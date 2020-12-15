@@ -1,17 +1,17 @@
-.TH GOSTORE 1 2020-08-06
+.TH GOSTORE 1 2020-12-16
 
 .SH Name
 .PP
-gostore - A command-line minimalist media collection manager.
+gostore  - A command-line minimalist media collection manager.
 
 .SH Synopsis
 .PP
-\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBhelp\fP
-\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBversion\fP
+\fBgostore\fP \fBhelp\fP
+\fBgostore\fP \fBversion\fP
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBimport\fP \fImedia\fP ...
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBlist\fP [--\fBsort\fP=\fISORT\fP,...,\fISORT\fP] [\fIname\fP ...]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBsearch\fP [--\fBsort\fP=\fISORT\fP,...,\fISORT\fP] \fIquery\fP
-\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBedit\fP [--\fBmulti-edit\fP] [--\fBimport-orphans\fP] [\fIname\fP ...]
+\fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBedit\fP [\fIname\fP ...]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBdelete\fP [\fIname\fP ...]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBexport\fP [\fIname\fP ...] [\fIdst\fP]
 \fBgostore\fP [--\fBverbose\fP] [--\fBdebug\fP] [--\fBroot\fP=\fIROOT\fP] [--\fBpretend\fP] [--\fBauto\fP] [--\fBstyle\fP=\fISTYLE\fP] \fBcheck\fP [--\fBdelete-ghosts\fP] [--\fBdelete-orphans\fP] [--\fBimport-orphans\fP]
@@ -60,7 +60,7 @@ List and retrieve information about collection's records. If no pattern is provi
 \fB\fBsearch\fP [<flags>] \fIquery\fP\fP
 Search the collection's records matching the given query.
 .TP
-\fB\fBedit\fP [<flags>] [\fIname\fP ...]\fP
+\fB\fBedit\fP [\fIname\fP ...]\fP
 Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.
 .TP
 \fB\fBdelete\fP [\fIname\fP ...]\fP

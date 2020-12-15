@@ -1,13 +1,11 @@
 # NAME
 
-gostore - A command-line minimalist media collection manager.
+gostore  - A command-line minimalist media collection manager.
 
 # SYNOPSIS
 
-__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
-[--__auto__] [--__style__=*STYLE*] __help__
-__gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
-[--__auto__] [--__style__=*STYLE*] __version__
+__gostore__ __help__
+__gostore__ __version__
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
 [--__auto__] [--__style__=*STYLE*] __import__ *media* ...
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
@@ -17,8 +15,7 @@ __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__]
 [--__auto__] [--__style__=*STYLE*] __search__ [--__sort__=*SORT*,...,*SORT*] 
 *query*
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
-[--__auto__] [--__style__=*STYLE*] __edit__ [--__multi-edit__] 
-[--__import-orphans__] [*name* ...]
+[--__auto__] [--__style__=*STYLE*] __edit__ [*name* ...]
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
 [--__auto__] [--__style__=*STYLE*] __delete__ [*name* ...]
 __gostore__ [--__verbose__] [--__debug__] [--__root__=*ROOT*] [--__pretend__] 
@@ -78,7 +75,7 @@ provided, list all records of the collection.
 __search__ [<flags>] *query*
 :Search the collection's records matching the given query.
 
-__edit__ [<flags>] [*name* ...]
+__edit__ [*name* ...]
 :Edit an existing record from the collection using user defined's editor. If 
 flag '--auto' is used, edition is skipped and nothing happens.
 

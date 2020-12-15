@@ -168,23 +168,9 @@ func newApp(cfg *Config) *clapp.Command {
 		},
 	})
 
-	var multiEdit bool
 	cmd.SubCommands.Add(&clapp.Command{
 		Name:  "edit",
 		Usage: "Edit an existing record from the collection using user defined's editor. If flag '--auto' is used, edition is skipped and nothing happens.",
-
-		Flags: clapp.Flags{
-			{
-				Name:  "multi-edit",
-				Usage: "Edit multiple records at once instead of individually. Make sure when editing to not modify records order not do delete or add one.",
-				Var:   &multiEdit,
-			},
-			{
-				Name:  "import-orphans",
-				Usage: "Delete any database entry that does not correspond to an existing file in the store's filesystem (so called ghost record)",
-				Var:   &cfg.ImportOrphans,
-			},
-		},
 
 		Args: clapp.Args{
 			recordIDsArg,
@@ -196,13 +182,6 @@ func newApp(cfg *Config) *clapp.Command {
 				return err
 			}
 			defer gs.Close()
-
-			if multiEdit {
-				if err := gs.MultiEdit(recordIDs); err != nil {
-					return err
-				}
-				return nil
-			}
 
 			if err := gs.Edit(recordIDs); err != nil {
 				return err

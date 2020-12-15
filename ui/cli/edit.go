@@ -13,156 +13,111 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// editAsJSON fires-up an editor to modify the provided map using its JSON
-// form.
-func editAsJSON(m map[string]interface{}, cmdEditor string) (map[string]interface{}, error) {
-	j, err := json.MarshalIndent(m, "", "  ")
-	if err != nil {
-		return nil, err
-	}
+type editorConfig struct {
+	// EditorCmd is the stanza to invoke the editor.
+	// The command is specified using fmt.Printf template format, expecting one
+	// "%s" argument standing for the filename to edit.
+	EditorCmd string
 
-	buf, err := edit(j, cmdEditor, ".json")
-	if err != nil {
-		return nil, err
-	}
+	// MergerCmd is the stanza to invoke the merger.
+	// The command is specified using fmt.Printf template format, expecting two
+	// "%s" arguments standing for the filenames to merge.
+	MergerCmd string
 
-	var edited map[string]interface{}
-	err = json.Unmarshal(buf, &edited)
-	if err != nil {
-		return nil, err
-	}
-
-	return edited, nil
+	// Idiom is the format used to edit or merge data using the editor.
+	// Supported idioms: json
+	// Default to json.
+	Idiom string
 }
 
-// multiEditAsJSON fires-up an editor to modify the provided maps using their
-// JSON form.
-func multiEditAsJSON(m []map[string]interface{}, cmdEditor string) ([]map[string]interface{}, error) {
-	j, err := json.MarshalIndent(m, "", "  ")
-	if err != nil {
-		return nil, err
+func newEditorConfig() *editorConfig {
+	return &editorConfig{
+		Idiom: "json",
 	}
-
-	buf, err := edit(j, cmdEditor, ".json")
-	if err != nil {
-		return nil, err
-	}
-
-	var edited []map[string]interface{}
-	err = json.Unmarshal(buf, &edited)
-	if err != nil {
-		return nil, err
-	}
-
-	return edited, nil
 }
 
-// mergeAsJSON fires-up an editor to merge the provided maps using their JSON
-// form.
-func mergeAsJSON(left, right map[string]interface{}, cmdMerger string) (map[string]interface{}, error) {
-	l, err := json.MarshalIndent(left, "", "  ")
-	if err != nil {
-		return nil, err
-	}
+type editor struct {
+	editorCmd string
+	mergerCmd string
 
-	r, err := json.MarshalIndent(right, "", "  ")
-	if err != nil {
-		return nil, err
-	}
-
-	bufL, _, err := merge(l, r, cmdMerger, ".json")
-	if err != nil {
-		return nil, err
-	}
-
-	var merged map[string]interface{}
-	err = json.Unmarshal(bufL, &merged)
-	if err != nil {
-		return nil, err
-	}
-
-	return merged, nil
+	marshal   func(interface{}) ([]byte, error)
+	unmarshal func([]byte, interface{}) error
+	// filepattern is a pattern of the temporary file used during edition operation.
+	// The pattern follows ioutil.TempFile pattern rule.
+	// It is usually helpful to select a meaningful extension to benefit of
+	// the editor syntax functions.
+	filepattern string
+	// comment is the list of marker recognized as introducing a comment. Any
+	// line starting with one of these marker will be ignored.
+	comment []byte
 }
 
-// edit spans an editor to modify the input text and feedbacks the result.
-func edit(data []byte, cmdEditor string, filetype string) ([]byte, error) {
-	if len(cmdEditor) == 0 {
-		return data, nil
+func newEditor(cfg *editorConfig) (*editor, error) {
+	ed := &editor{
+		editorCmd: cfg.EditorCmd,
+		mergerCmd: cfg.MergerCmd,
 	}
 
-	tmpfile, err := data2file(data, filetype)
-	if err != nil {
-		return nil, err
+	switch cfg.Idiom {
+	case "json":
+		ed.marshal = func(v interface{}) ([]byte, error) { return json.MarshalIndent(v, "", "  ") }
+		ed.unmarshal = json.Unmarshal
+		ed.filepattern = "*.json"
+		ed.comment = []byte{'#'}
+	default:
+		return nil, fmt.Errorf("%s is an unknown edition idiom (support: json)", cfg.Idiom)
 	}
 
-	cmdArgs, err := parseCmd(cmdEditor, tmpfile)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse editor command line '%s': %s", cmdEditor, err)
-	}
-
-	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
-	ed.Stdout = os.Stdout
-	ed.Stdin = os.Stdin
-	ed.Stderr = os.Stderr
-	err = ed.Run()
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := file2data(tmpfile)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	return ed, nil
 }
 
-// merge spans an editor to merge the input text and feedbacks the result.
-func merge(left, right []byte, cmdMerger string, filetype string) ([]byte, []byte, error) {
-	if len(cmdMerger) == 0 {
-		return left, right, nil
-	}
-
-	tmpfileL, err := data2file(left, filetype)
+func (ed *editor) Edit(v, edited interface{}) error {
+	tmpfile, err := ed.data2file(v)
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
-	tmpfileR, err := data2file(right, filetype)
+	if err := run(ed.editorCmd, tmpfile); err != nil {
+		return err
+	}
+
+	if err := ed.file2data(tmpfile, &edited); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ed *editor) Merge(l, r, merged interface{}) error {
+	tmpfileL, err := ed.data2file(l)
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
-	cmdArgs, err := parseCmd(cmdMerger, tmpfileL, tmpfileR)
+	tmpfileR, err := ed.data2file(r)
 	if err != nil {
-		return nil, nil, fmt.Errorf("cannot parse merger command line '%s': %s", cmdMerger, err)
+		return err
 	}
 
-	ed := exec.Command(cmdArgs[0], cmdArgs[1:]...)
-	ed.Stdout = os.Stdout
-	ed.Stdin = os.Stdin
-	ed.Stderr = os.Stderr
-	err = ed.Run()
-	if err != nil {
-		return nil, nil, err
+	if err := run(ed.mergerCmd, tmpfileL, tmpfileR); err != nil {
+		return err
 	}
 
-	bodyL, err := file2data(tmpfileL)
-	if err != nil {
-		return nil, nil, err
+	if err := ed.file2data(tmpfileL, &merged); err != nil {
+		return err
 	}
 
-	bodyR, err := file2data(tmpfileR)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return bodyL, bodyR, nil
+	return nil
 }
 
 // data2file copy the content of data to a temporary text file
-func data2file(data []byte, filetype string) (string, error) {
-	tmpfile, err := ioutil.TempFile("", "*"+filetype)
+func (ed *editor) data2file(v interface{}) (string, error) {
+	data, err := ed.marshal(v)
+	if err != nil {
+		return "", err
+	}
+
+	tmpfile, err := ioutil.TempFile("", ed.filepattern)
 	if err != nil {
 		return "", err
 	}
@@ -184,12 +139,12 @@ func data2file(data []byte, filetype string) (string, error) {
 
 // file2data reads back the content of a temp file and deletes it whatever
 // happens. file2data strips comments line.
-func file2data(name string) ([]byte, error) {
+func (ed *editor) file2data(name string, v interface{}) error {
 	defer func() { os.Remove(name) }()
 
 	f, err := os.Open(name)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer f.Close()
 
@@ -197,25 +152,31 @@ func file2data(name string) ([]byte, error) {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Bytes()
-		if !bytes.HasPrefix(line, []byte{'#'}) {
+		if !bytes.HasPrefix(line, ed.comment) {
 			data = append(data, line...)
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return nil, err
+		return err
 	}
 
-	return data, nil
+	if err := ed.unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// parseCmd parses a command-line
-func parseCmd(cmdline string, args ...interface{}) ([]string, error) {
-	c := fmt.Sprintf(cmdline, args...)
-
-	cmd, err := shellquote.Split(c)
+func run(cmdfmt string, args ...interface{}) error {
+	cmdline, err := shellquote.Split(fmt.Sprintf(cmdfmt, args...))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return cmd, nil
+	cmd := exec.Command(cmdline[0], cmdline[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
