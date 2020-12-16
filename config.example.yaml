@@ -64,7 +64,7 @@ ui:
     editorcmd: $EDITOR "%s"
           
     # mergercmd contains the invocation stanza to fire-up a text editor
-    # allowing the user to mergel two set of metadata.
+    # allowing the user to merge two sets of metadata.
     # mergecmd accepts two argument which is the name of files to be merged.
     # mergecmd can rely on environment variable.
     # If mergercmd is not set, metadata manual modification is skipped.
@@ -177,6 +177,7 @@ import:
                 {{if .Title}}+Title:{{ escape .Title }}~1.2{{end -}}
                 {{range $i, $a := .Authors }} +Authors:{{ escape $a }}~1.2{{end -}}
                 {{if .Publisher}} +Publisher:{{ escape .Publisher }}~1.2{{end -}}
+              - '{{if and .Serie .SeriePosition}}+Serie:{{ escape .Serie }} +SeriePosition:{{ escape .SeriePosition }}{{end -}}'
           
     # checker is a module that verifies that a metadata set has a good quality
     # level.
