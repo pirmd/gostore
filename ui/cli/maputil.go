@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pirmd/text/diff"
+
 	"github.com/pirmd/gostore/util"
 )
 
@@ -164,6 +166,57 @@ func get(m map[string]interface{}, key string) string {
 	return ""
 }
 
+type changeLevel int
+
+const (
+	noChange changeLevel = iota
+	minorChange
+	majorChange
+
+	minorChangeThreshold = 0.8
+)
+
+func (lvl *changeLevel) Set(l changeLevel) {
+	if (*lvl) < l {
+		(*lvl) = l
+	}
+}
+
+func (lvl changeLevel) String() string {
+	return [...]string{"NoChange", "MinorChange", "MajorChange"}[lvl]
+}
+
+func hasChanged(l, r map[string]interface{}) (lvl changeLevel) {
+	for k := range l {
+		if _, exists := r[k]; !exists {
+			lvl.Set(minorChange)
+			continue
+		}
+
+		valL, valR := get(l, k), get(r, k)
+		change := diff.Patience(valL, valR, diff.ByWords, diff.ByRunes)
+
+		switch s := float32(sameLen(change)) / float32(maxLen(valL, valR)); {
+		case s == 1.0:
+			lvl.Set(noChange)
+		case s > minorChangeThreshold:
+			lvl.Set(minorChange)
+		default:
+			lvl.Set(majorChange)
+		}
+	}
+
+	for k := range r {
+		if _, exists := l[k]; exists {
+			continue
+		}
+
+		lvl.Set(majorChange)
+	}
+
+	return
+}
+
 func hasValue(k string, maps ...map[string]interface{}) bool {
 	for _, m := range maps {
 		if util.IsZero(m[k]) {
@@ -182,4 +235,26 @@ func isInSlice(s string, slice []string) bool {
 		}
 	}
 	return false
+}
+
+func sameLen(delta diff.Delta) int {
+	if result, isResult := delta.(diff.Result); isResult {
+		var same int
+		for _, d := range result {
+			same += sameLen(d)
+		}
+		return same
+	}
+
+	if delta.Type() == diff.IsSame {
+		return len(delta.Value())
+	}
+	return 0
+}
+
+func maxLen(a, b string) int {
+	if len(a) > len(b) {
+		return len(a)
+	}
+	return len(b)
 }

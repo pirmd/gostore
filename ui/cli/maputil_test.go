@@ -46,3 +46,32 @@ func TestGetKeys(t *testing.T) {
 		}
 	}
 }
+
+func TestHasChanged(t *testing.T) {
+	tstCases := []struct {
+		inL, inR map[string]interface{}
+		want     changeLevel
+	}{
+		{
+			inL:  map[string]interface{}{"Title": "Hello World!"},
+			inR:  map[string]interface{}{"Title": "Hello World!"},
+			want: noChange,
+		},
+		{
+			inL:  map[string]interface{}{"Title": "Hello World!"},
+			inR:  map[string]interface{}{"Title": "Hello world"},
+			want: minorChange,
+		},
+		{
+			inL:  map[string]interface{}{"Title": "Hello World!"},
+			inR:  map[string]interface{}{"Title": "Hello folks!"},
+			want: majorChange,
+		},
+	}
+
+	for _, tc := range tstCases {
+		if got := hasChanged(tc.inL, tc.inR); got != tc.want {
+			t.Errorf("Change between %v and %v. Got: %s. Want: %s", tc.inL, tc.inR, got, tc.want)
+		}
+	}
+}

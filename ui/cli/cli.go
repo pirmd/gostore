@@ -85,10 +85,20 @@ func (ui *CLI) Edit(m []map[string]interface{}) ([]map[string]interface{}, error
 	return med, nil
 }
 
-// Merge fires-up a new editor to merge m and n
+// Merge merges n into m. If result presents major differences with n, it
+// fires-up a new editor to manually merge m and n
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
+	automerged, err := mergeMaps(m, n)
+	if err != nil {
+		return nil, err
+	}
+
 	if ui.editor == nil {
-		return mergeMaps(m, n)
+		return automerged, nil
+	}
+
+	if hasChanged(automerged, n) != majorChange {
+		return automerged, nil
 	}
 
 	med := make(map[string]interface{})
