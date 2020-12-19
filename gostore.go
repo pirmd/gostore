@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pirmd/gostore/modules"
+	"github.com/pirmd/gostore/module"
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui"
 	"github.com/pirmd/gostore/ui/cli"
@@ -26,8 +26,8 @@ type Gostore struct {
 	importOrphans bool
 	store         *store.Store
 	ui            ui.UserInterfacer
-	importModules []modules.Module
-	updateModules []modules.Module
+	importModules []module.Module
+	updateModules []module.Module
 }
 
 func newGostore(cfg *Config) (*Gostore, error) {
@@ -61,23 +61,12 @@ func newGostore(cfg *Config) (*Gostore, error) {
 		return nil, err
 	}
 
-	env := &modules.Environment{Logger: gs.log, UI: gs.ui, Store: gs.store}
-	for _, module := range cfg.Import {
-		m, err := modules.New(module.Name, module.Config, env)
-		if err != nil {
-			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
-		}
-
-		gs.importModules = append(gs.importModules, m)
+	if gs.importModules, err = gs.newModules(cfg.Import); err != nil {
+		return nil, err
 	}
 
-	for _, module := range cfg.Update {
-		m, err := modules.New(module.Name, module.Config, env)
-		if err != nil {
-			return nil, fmt.Errorf("cannot create module '%s': %v", module.Name, err)
-		}
-
-		gs.updateModules = append(gs.updateModules, m)
+	if gs.updateModules, err = gs.newModules(cfg.Update); err != nil {
+		return nil, err
 	}
 
 	return gs, nil
@@ -343,7 +332,7 @@ func (gs *Gostore) insert(path string) (*store.Record, error) {
 	r := store.NewRecord(filepath.Base(path), nil)
 	r.SetFile(f)
 
-	if err := modules.ProcessRecord(r, gs.importModules); err != nil {
+	if err := gs.processRecord(r, gs.importModules...); err != nil {
 		return nil, err
 	}
 
@@ -361,7 +350,7 @@ func (gs *Gostore) update(r *store.Record, mdata map[string]interface{}) error {
 
 	r.SetData(mdata)
 
-	if err := modules.ProcessRecord(r, gs.updateModules); err != nil {
+	if err := gs.processRecord(r, gs.updateModules...); err != nil {
 		return err
 	}
 
@@ -402,4 +391,40 @@ func (gs *Gostore) export(r *store.Record, dstFolder string) (err error) {
 
 	_, err = io.Copy(w, f)
 	return
+}
+
+func (gs *Gostore) newModules(modCfg []*module.Config) ([]module.Module, error) {
+	env := &module.Environment{Logger: gs.log, Store: gs.store}
+
+	mods := []module.Module{}
+	for _, cfg := range modCfg {
+		mod, err := module.New(cfg, env)
+		if err != nil {
+			return nil, err
+		}
+
+		mods = append(mods, mod)
+	}
+
+	return mods, nil
+}
+
+func (gs *Gostore) processRecord(r *store.Record, mods ...module.Module) error {
+	for _, mod := range mods {
+		mdata := r.Data()
+
+		if err := mod.Process(r); err != nil {
+			return err
+		}
+
+		if util.HasMajorChanges(r.Data(), mdata) {
+			m, err := gs.ui.Merge(r.Data(), mdata)
+			if err != nil {
+				return err
+			}
+			r.SetData(m)
+		}
+	}
+
+	return nil
 }

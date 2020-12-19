@@ -4,7 +4,7 @@ import (
 	"os"
 
 	_ "github.com/pirmd/gostore/media/books"
-	_ "github.com/pirmd/gostore/modules/all"
+	_ "github.com/pirmd/gostore/module/all"
 )
 
 func main() {

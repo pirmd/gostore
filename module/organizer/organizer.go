@@ -3,13 +3,11 @@ package organizer
 import (
 	"bytes"
 	"errors"
-	"fmt"
-	"log"
 	"path/filepath"
 	"text/template"
 
 	"github.com/pirmd/gostore/media"
-	"github.com/pirmd/gostore/modules"
+	"github.com/pirmd/gostore/module"
 	"github.com/pirmd/gostore/store"
 )
 
@@ -18,7 +16,7 @@ const (
 )
 
 var (
-	_ modules.Module = (*organizer)(nil) // Makes sure that we implement modules.Module interface.
+	_ module.Module = (*organizer)(nil) // Makes sure that we implement module.Module interface.
 
 	// DefaultNamingScheme is the name of the default NamingSchemes.
 	DefaultNamingScheme = media.DefaultType
@@ -34,8 +32,7 @@ var (
 	ErrEmptyName = errors.New(moduleName + ": generated name is empty")
 )
 
-// Config defines the different module's options.
-type Config struct {
+type config struct {
 	// NamingSchemes defines, for each record's type, the templates to rename a
 	// record according to its attribute.  You can define a default naming
 	// scheme for all record's type not defined in NamingSchemes using the
@@ -43,24 +40,28 @@ type Config struct {
 	NamingSchemes map[string]string
 }
 
-func newConfig() *Config {
-	return &Config{
+func newConfig() module.Factory {
+	return &config{
 		NamingSchemes: map[string]string{
 			DefaultNamingScheme: "{{ .Name }}",
 		},
 	}
 }
 
+func (cfg *config) NewModule(env *module.Environment) (module.Module, error) {
+	return newOrganizer(cfg, env)
+}
+
 type organizer struct {
-	log *log.Logger
+	*module.Environment
 
 	namers *template.Template
 }
 
-func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
+func newOrganizer(cfg *config, env *module.Environment) (*organizer, error) {
 	o := &organizer{
-		log:    logger,
-		namers: template.New("organizer"),
+		Environment: env,
+		namers:      template.New("organizer"),
 	}
 	o.namers.Funcs(o.funcmap())
 
@@ -73,8 +74,8 @@ func newOrganizer(cfg *Config, logger *log.Logger) (*organizer, error) {
 	return o, nil
 }
 
-// ProcessRecord modifies the record's name to match a standardized naming scheme.
-func (o *organizer) ProcessRecord(r *store.Record) error {
+// Process modifies the record's name to match a standardized naming scheme.
+func (o *organizer) Process(r *store.Record) error {
 	name, err := o.name(r.Flatted())
 	if err != nil {
 		return err
@@ -87,7 +88,7 @@ func (o *organizer) ProcessRecord(r *store.Record) error {
 	//name should be relative to the collection's root
 	name = filepath.ToSlash(filepath.Clean("/" + name))[1:]
 
-	o.log.Printf("Module '%s': renaming '%s' to '%s'", moduleName, r.Key(), name)
+	o.Logger.Printf("Module '%s': renaming '%s' to '%s'", moduleName, r.Key(), name)
 	r.SetKey(name)
 	return nil
 }
@@ -123,18 +124,6 @@ func (o *organizer) namerFor(m map[string]interface{}) *template.Template {
 	return o.namers.Lookup(DefaultNamingScheme)
 }
 
-// NewFromRawConfig creates a new module from a raw configuration.
-func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (modules.Module, error) {
-	env.Logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
-	cfg := newConfig()
-
-	if err := rawcfg.Unmarshal(cfg); err != nil {
-		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
-	}
-
-	return newOrganizer(cfg, env.Logger)
-}
-
 func init() {
-	modules.Register(moduleName, NewFromRawConfig)
+	module.Register(moduleName, newConfig)
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/pirmd/gostore/modules"
+	"github.com/pirmd/gostore/module"
 	"github.com/pirmd/gostore/store"
 	"github.com/pirmd/gostore/ui/cli"
 )
@@ -41,15 +41,15 @@ type Config struct {
 	UI *cli.Config
 
 	// Import list of actions to apply when importing a record
-	Import []*moduleConfig
+	Import []*module.Config
 
 	// Update list of actions to apply when importing a record
-	Update []*moduleConfig
+	Update []*module.Config
 }
 
-// Modules lists available modules.
+// Modules lists available module.
 func (cfg *Config) Modules() []string {
-	return modules.List()
+	return module.List()
 }
 
 // Analyzers lists available analyzers for indexing records.
@@ -73,26 +73,4 @@ func newConfig() *Config {
 		Store: store.NewConfig(),
 		UI:    cli.NewConfig(),
 	}
-}
-
-type moduleConfig struct {
-	Name   string
-	Config *rawYAMLConfig
-}
-
-type rawYAMLConfig struct {
-	unmarshal func(interface{}) error
-}
-
-func (cfg *rawYAMLConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	cfg.unmarshal = unmarshal
-	return nil
-}
-
-func (cfg *rawYAMLConfig) Unmarshal(v interface{}) error {
-	if cfg == nil {
-		return nil
-	}
-
-	return cfg.unmarshal(v)
 }

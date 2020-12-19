@@ -12,6 +12,7 @@ import (
 
 	"github.com/pirmd/gostore/media"
 	"github.com/pirmd/gostore/ui"
+	"github.com/pirmd/gostore/util"
 )
 
 const (
@@ -70,39 +71,27 @@ func (ui *CLI) Edit(m []map[string]interface{}) ([]map[string]interface{}, error
 	med := []map[string]interface{}{}
 
 	if ui.editor == nil {
-		for i := range m {
-			med[i] = make(map[string]interface{}, len(m[i]))
-			for k, v := range m[i] {
-				med[i][k] = v
-			}
+		for _, s := range m {
+			med = append(med, util.CopyMap(s))
 		}
 		return med, nil
 	}
 
-	if err := ui.editor.Edit(m, med); err != nil {
+	if err := ui.editor.Edit(m, &med); err != nil {
 		return nil, err
 	}
 	return med, nil
 }
 
-// Merge merges n into m. If result presents major differences with n, it
-// fires-up a new editor to manually merge m and n
+// Merge spawns an editor that displays two maps and highlight their diff to
+// facilitate change inspection and merge operation between them.
 func (ui *CLI) Merge(m, n map[string]interface{}) (map[string]interface{}, error) {
-	automerged, err := mergeMaps(m, n)
-	if err != nil {
-		return nil, err
-	}
-
 	if ui.editor == nil {
-		return automerged, nil
-	}
-
-	if hasChanged(automerged, n) != majorChange {
-		return automerged, nil
+		return util.CopyMap(m), nil
 	}
 
 	med := make(map[string]interface{})
-	if err := ui.editor.Merge(m, n, med); err != nil {
+	if err := ui.editor.Merge(m, n, &med); err != nil {
 		return nil, err
 	}
 

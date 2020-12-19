@@ -130,119 +130,116 @@ ui:
 import:
     # hasher computes a checksum-based signature for the record's file and make
     # sure it does not already exist in the store.
-    - name: hasher
-      config:
-         # HashMethod specifies the hash algorithm to use.
-         # Available methods are: md5, sha1, sha256. Default to md5
-         #HashMethod: md5
+    - module: hasher
+      # HashMethod specifies the hash algorithm to use.
+      # Available methods are: md5, sha1, sha256. Default to md5
+      #HashMethod: md5
 
     # mdatareader reads metadata from a media file and populates the
     # corresponding record's values.
-    - name : mdatareader     
+    - module: mdatareader     
       
     # fetcher a module that retrieves metadata from online databases.
-    - name: fetcher
+    - module: fetcher
       
-    # scrubber is a module that removes any fields a media metadata.
-    - name: scrubber
-      config: &scrubber
-          # fields is the list of metadata fields to scrub
-          fields: [ Comment ]
+    # scrubber is a module that removes any fields from a media metadata.
+    - &scrubber
+      module: scrubber
+      # fields is the list of metadata fields to scrub
+      fields: [ Comment ]
       
     # dehtmlizer is a modules that removes any html tags from a media metadata.
     # It can optionally convert the html tagging into another idioms (like
     # markdown)
-    - name: dehtmlizer
-      config: &dehtmlizer
-          # fields is the list of metadata fields to clean from html tags
-          fields: [ Description ]
+    - &dehtmlizer 
+      module: dehtmlizer
+      # fields is the list of metadata fields to clean from html tags
+      fields: [ Description ]
 
-          # outputstyle is the idiom in which html tagging is converted to.
-          # Available formats are plain text (default) or markdown
-          outputstyle: markdown
+      # outputstyle is the idiom in which html tagging is converted to.
+      # Available formats are plain text (default) or markdown
+      outputstyle: markdown
           
     # dupfinder is a module that checks whether a record is already in the
     # collection before importing it.
-    - name: dupfinder
-      config:
-          # DupQueries is a collection of queries templates that identify records'
-          # duplicates.
-          # Extensions to template idiom are available to simplify common operations:
-          # - escape: escape special characters in query phrase or names.
-          # 
-          # Queries, once expanded, should follow https://blevesearch.com/docs/Query-String-Query/
-          dupqueries:
-              - 'ISBN:{{ escape .ISBN }}'
-              - |
-                {{if .Title}}+Title:{{ escape .Title }}~1.2{{end -}}
-                {{range $i, $a := .Authors }} +Authors:{{ escape $a }}~1.2{{end -}}
-                {{if .Publisher}} +Publisher:{{ escape .Publisher }}~1.2{{end -}}
-              - '{{if and .Serie .SeriePosition}}+Serie:{{ escape .Serie }} +SeriePosition:{{ escape .SeriePosition }}{{end -}}'
-          
+    - module: dupfinder
+      # DupQueries is a collection of queries templates that identify records'
+      # duplicates.
+      # Extensions to template idiom are available to simplify common operations:
+      # - escape: escape special characters in query phrase or names.
+      # 
+      # Queries, once expanded, should follow https://blevesearch.com/docs/Query-String-Query/
+      dupqueries:
+          - 'ISBN:{{ escape .ISBN }}'
+          - |
+              {{if .Title}}+Title:{{ escape .Title }}~1.2{{end -}}
+              {{range $i, $a := .Authors }} +Authors:{{ escape $a }}~1.2{{end -}}
+              {{if .Publisher}} +Publisher:{{ escape .Publisher }}~1.2{{end -}}
+          - '{{if and .Serie .SeriePosition}}+Serie:{{ escape .Serie }} +SeriePosition:{{ escape .SeriePosition }}{{end -}}'
+
     # checker is a module that verifies that a metadata set has a good quality
     # level.
-    - name: checker
-      config: &checker
-          # fieldName is the name of the metadata's field to store the quality
-          # assessment's result.
-          # Default to: QAFindings
-          fieldName: QAFindings
+    - &checker 
+      module: checker
+      # fieldName is the name of the metadata's field to store the quality
+      # assessment's result.
+      # Default to: QAFindings
+      fieldName: QAFindings
 
-          # MaxFindings is the maximum allowed number of QA findings before the
-          # quality check fails
-          # Default to: 0 (disabled)
-          maxFindings: 0 
+      # maxFindings is the maximum allowed number of QA findings before the
+      # quality check fails
+      # Default to: 0 (disabled)
+      maxFindings: 0 
 
     # normalizer is a module that proposes normalized field values based
     # on already similar existing records' values.
-    - name: normalizer
-      config:
-          # Fields is the list of fields where you expect normalization to happen.
-          # Normalisation is only working for fields featuring strings (or list of
-          # strings) like Authors, Publisher...
-          fields: [ Authors, Publisher, Subject ]
+    - module: normalizer
+      # Fields is the list of fields where you expect normalization to happen.
+      # Normalisation is only working for fields featuring strings (or list of
+      # strings) like Authors, Publisher...
+      fields: [ Authors, Publisher, Subject ]
 
-          # SimilarityLevel is the measure of similarity that is accepted
-          # between two records. Default to 1.
-          # .   0: the input text is analyzed first. An attempt is made to use the same
-          #        analyzer that was used when the field was indexed.
-          # . > 0: the input text is analysed first, the match is done with the given
-          #        level of fuzziness.
-          # Default to 0.
-          # SimilarityLevel: 0
-    
+      # SimilarityLevel is the measure of similarity that is accepted
+      # between two records. Default to 1.
+      # .   0: the input text is analyzed first. An attempt is made to use the same
+      #        analyzer that was used when the field was indexed.
+      # . > 0: the input text is analysed first, the match is done with the given
+      #        level of fuzziness.
+      # Default to 0.
+      # SimilarityLevel: 0
+
     # organizer is a module that rationalizes the name of a media based on its
     # metadata values
-    - name: organizer
-      config: &organizer
-          # namingschemes is a collection of templates to define a media name
-          # based on its metadata values.
-          #
-          # Different naming schemes can be adopted based on the media's type.
-          # Fall-back templates or generic template can be defined using the
-          # "media" keyword.
-          # 
-          # Templates follow golang text/template specification.
-          # Stored metadata can be retrieved using their field name. List of known
-          # fields can be obtained using `gostore fields`.
-          # Extensions to template idiom are available to simplify common operations:
-          # - tmpl: execute a sub-template by name
-          # - tmplExec: execute a template text
-          # - tmplFile: execute a template stored in a file
-          # - ext: get file extension
-          # - sanitizePath: replace special chars that don't usually work well when
-          #   use in path name
-          # - nospace: get rid of spaces
-          #
-          # It is also possible to define intermediate sub-templates and re-use
-          # them.
-          namingschemes:
-              author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
-              serie:  "{{if .Serie}}{{.Serie}} {{.SeriePosition}}{{end}}"
-              book: |
-                    {{ $a := (tmpl "author" .) -}}
-                    {{ $s := (tmpl "serie" .)  -}}
-                    {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name) | sanitizePath -}}
+    - &organizer 
+      module: organizer
+      # namingschemes is a collection of templates to define a media name
+      # based on its metadata values.
+      #
+      # Different naming schemes can be adopted based on the media's type.
+      # Fall-back templates or generic template can be defined using the
+      # "media" keyword.
+      # 
+      # Templates follow golang text/template specification.
+      # Stored metadata can be retrieved using their field name. List of known
+      # fields can be obtained using `gostore fields`.
+      # Extensions to template idiom are available to simplify common operations:
+      # - tmpl: execute a sub-template by name
+      # - tmplExec: execute a template text
+      # - tmplFile: execute a template stored in a file
+      # - ext: get file extension
+      # - sanitizePath: replace special chars that don't usually work well when
+      #   use in path name
+      # - nospace: get rid of spaces
+      #
+      # It is also possible to define intermediate sub-templates and re-use
+      # them.
+      namingschemes:
+          author: "{{if .Authors}}{{index .Authors 0}}{{end}}"
+          serie:  "{{if .Serie}}{{.Serie}} {{.SeriePosition}}{{end}}"
+          book: |
+                {{ $a := (tmpl "author" .) -}}
+                {{ $s := (tmpl "serie" .)  -}}
+                {{ print (or $a "unknown") (and $s (printf " - [%s]" $s)) " - " .Title (ext .Name) | sanitizePath -}}
 
 
 
@@ -250,18 +247,7 @@ import:
 # step. Modules are run in the provided order.
 # List of modules is available using `gostore config`.
 update:
-    - name: scrubber
-      config:
-          <<: *scrubber
-
-    - name: dehtmlizer
-      config:
-        <<: *dehtmlizer
-
-    - name: organizer
-      config:
-          <<: *organizer
-
-    - name: checker
-      config:
-          <<: *checker
+    - *scrubber
+    - *dehtmlizer
+    - *organizer
+    - *checker

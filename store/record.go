@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"time"
+
+	"github.com/pirmd/gostore/util"
 )
 
 const (
@@ -53,6 +55,13 @@ func (r *Record) Data() map[string]interface{} {
 // SetData replaces Record's content with the given information.
 func (r *Record) SetData(data map[string]interface{}) {
 	r.value.SetData(data)
+}
+
+// MergeData completes and replaces Record's content with given data (data values
+// are copied and supersede record's existing values. Record's values not in
+// data are kept as is).
+func (r *Record) MergeData(data map[string]interface{}) {
+	r.value.MergeData(data)
 }
 
 // Flatted returns all Record's data in a single flat map including Record's Key
@@ -166,25 +175,26 @@ func newValue(data map[string]interface{}) *value {
 	return val
 }
 
-// SetData replaces user-supplied value.
-func (val *value) SetData(data map[string]interface{}) {
-	if fmt.Sprint(val.Data) == fmt.Sprint(data) {
-		return
-	}
-
-	val.Data = make(map[string]interface{})
-	for k, v := range data {
-		val.Set(k, v)
-	}
-}
-
 // GetData returns stored data
 func (val *value) GetData() map[string]interface{} {
-	data := make(map[string]interface{})
-	for k, v := range val.Data {
-		data[k] = v
+	return util.CopyMap(val.Data)
+}
+
+// SetData replaces record's user-supplied value.
+func (val *value) SetData(data map[string]interface{}) {
+	val.Data = make(map[string]interface{})
+	val.MergeData(data)
+}
+
+// MergeData completes and replaces stored data with data content (data values
+// are copied and supersede record's existing values. Record's values not in
+// data are kept as is).
+func (val *value) MergeData(data map[string]interface{}) {
+	for k, v := range data {
+		val.Data[k] = v
 	}
-	return data
+
+	val.UpdatedAt = timestamper()
 }
 
 // Flatted returns all information stored in value, both user-supplied data
@@ -203,6 +213,10 @@ func (val *value) Get(key string) interface{} {
 
 // Set adds a new (key, value).
 func (val *value) Set(k string, v interface{}) {
+	if fmt.Sprint(val.Data[k]) == fmt.Sprint(v) {
+		return
+	}
+
 	val.Data[k] = v
 	val.UpdatedAt = timestamper()
 }

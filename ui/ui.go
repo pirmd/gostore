@@ -11,9 +11,10 @@ type UserInterfacer interface {
 	// PrettyDiff displays provided maps, highlighting their differences
 	PrettyDiff(map[string]interface{}, map[string]interface{})
 
-	// Edit spawns an editor dialog to modified provided map
+	// Edit spawns an editor to modify the given map.
 	Edit([]map[string]interface{}) ([]map[string]interface{}, error)
 
-	// Merge spawns a dialog to merge two maps into one
+	// Merge spawns an editor that displays two maps and highlight their diff to
+	// facilitate change inspection and merge operation between them.
 	Merge(map[string]interface{}, map[string]interface{}) (map[string]interface{}, error)
 }

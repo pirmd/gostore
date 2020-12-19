@@ -62,7 +62,7 @@ func NewFromConfig(cfg *Config) (*CLI, error) {
 
 	if !cfg.Auto {
 		var err error
-		if ui.editor, err = newEditor(cfg.editorConfig); err != nil {
+		if ui.editor, err = newEditorFromConfig(cfg.editorConfig); err != nil {
 			return nil, err
 		}
 	}

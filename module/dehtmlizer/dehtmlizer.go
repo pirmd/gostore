@@ -1,17 +1,11 @@
-// Package dehtmlizer converts text in html format to something more reasonable
-// for metadata like pure text or markdown.
-//
-// dehtmlizer is pretty basic so only a sub-part of html formats are correctly
-// interpreted.
 package dehtmlizer
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/pirmd/style"
 
-	"github.com/pirmd/gostore/modules"
+	"github.com/pirmd/gostore/module"
 	"github.com/pirmd/gostore/store"
 )
 
@@ -20,11 +14,10 @@ const (
 )
 
 var (
-	_ modules.Module = (*dehtmlizer)(nil) // Makes sure that we implement modules.Module interface.
+	_ module.Module = (*dehtmlizer)(nil) // Makes sure that we implement module.Module interface.
 )
 
-// Config defines the different module's options.
-type Config struct {
+type config struct {
 	// Fields lists the record's fields that should be cleaned from any html
 	// tags.
 	// Non-existing fields are silently ignored.
@@ -35,20 +28,29 @@ type Config struct {
 	OutputStyle string
 }
 
-func newConfig() *Config {
-	return &Config{}
+func newConfig() module.Factory {
+	return &config{}
 }
 
+func (cfg *config) NewModule(env *module.Environment) (module.Module, error) {
+	return newDehtmlizer(cfg, env)
+}
+
+// dehtmlizer is a gostore's module that converts text in html format to
+// something more reasonable for metadata like pure text or markdown.
+//
+// dehtmlizer is pretty basic so only a sub-part of html formats are correctly
+// interpreted.
 type dehtmlizer struct {
-	log *log.Logger
+	*module.Environment
 
 	fields      []string
 	outputStyle style.Styler
 }
 
-func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
+func newDehtmlizer(cfg *config, env *module.Environment) (*dehtmlizer, error) {
 	d := &dehtmlizer{
-		log:         logger,
+		Environment: env,
 		fields:      cfg.Fields,
 		outputStyle: style.NewPlaintext(),
 	}
@@ -66,10 +68,10 @@ func newDehtmlizer(cfg *Config, logger *log.Logger) (modules.Module, error) {
 	return d, nil
 }
 
-// ProcessRecord transforms any text in HTML format into markdown,
-func (d *dehtmlizer) ProcessRecord(r *store.Record) error {
+// Process transforms any text in HTML format into markdown,
+func (d *dehtmlizer) Process(r *store.Record) error {
 	for _, field := range d.fields {
-		d.log.Printf("Module '%s': clean field '%s'", moduleName, field)
+		d.Logger.Printf("Module '%s': clean field '%s'", moduleName, field)
 		if err := d.html2txt(r, field); err != nil {
 			return err
 		}
@@ -97,18 +99,6 @@ func (d *dehtmlizer) html2txt(r *store.Record, field string) error {
 	return nil
 }
 
-// NewFromRawConfig creates a new module from a raw configuration.
-func NewFromRawConfig(rawcfg modules.Unmarshaler, env *modules.Environment) (modules.Module, error) {
-	env.Logger.Printf("Module '%s': new module with config '%v'", moduleName, rawcfg)
-	cfg := newConfig()
-
-	if err := rawcfg.Unmarshal(cfg); err != nil {
-		return nil, fmt.Errorf("module '%s': bad configuration: %v", moduleName, err)
-	}
-
-	return newDehtmlizer(cfg, env.Logger)
-}
-
 func init() {
-	modules.Register(moduleName, NewFromRawConfig)
+	module.Register(moduleName, newConfig)
 }

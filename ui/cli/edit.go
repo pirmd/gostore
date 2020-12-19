@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,23 +45,23 @@ type editor struct {
 	// It is usually helpful to select a meaningful extension to benefit of
 	// the editor syntax functions.
 	filepattern string
-	// comment is the list of marker recognized as introducing a comment. Any
-	// line starting with one of these marker will be ignored.
-	comment []byte
 }
 
-func newEditor(cfg *editorConfig) (*editor, error) {
-	ed := &editor{
-		editorCmd: cfg.EditorCmd,
-		mergerCmd: cfg.MergerCmd,
+func newEditor() *editor {
+	return &editor{
+		marshal:     func(v interface{}) ([]byte, error) { return json.MarshalIndent(v, "", "  ") },
+		unmarshal:   json.Unmarshal,
+		filepattern: "*.json",
 	}
+}
+
+func newEditorFromConfig(cfg *editorConfig) (*editor, error) {
+	ed := newEditor()
+	ed.editorCmd = cfg.EditorCmd
+	ed.mergerCmd = cfg.MergerCmd
 
 	switch cfg.Idiom {
-	case "json":
-		ed.marshal = func(v interface{}) ([]byte, error) { return json.MarshalIndent(v, "", "  ") }
-		ed.unmarshal = json.Unmarshal
-		ed.filepattern = "*.json"
-		ed.comment = []byte{'#'}
+	case "", "json": // default
 	default:
 		return nil, fmt.Errorf("%s is an unknown edition idiom (support: json)", cfg.Idiom)
 	}
@@ -142,21 +140,8 @@ func (ed *editor) data2file(v interface{}) (string, error) {
 func (ed *editor) file2data(name string, v interface{}) error {
 	defer func() { os.Remove(name) }()
 
-	f, err := os.Open(name)
+	data, err := ioutil.ReadFile(name)
 	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	data := []byte{}
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		line := scanner.Bytes()
-		if !bytes.HasPrefix(line, ed.comment) {
-			data = append(data, line...)
-		}
-	}
-	if err := scanner.Err(); err != nil {
 		return err
 	}
 
@@ -167,7 +152,13 @@ func (ed *editor) file2data(name string, v interface{}) error {
 	return nil
 }
 
+// run executes a command line provided in fmt.Printf format. If the command
+// lie is empty, run will not fail and do nothing.
 func run(cmdfmt string, args ...interface{}) error {
+	if cmdfmt == "" {
+		return nil
+	}
+
 	cmdline, err := shellquote.Split(fmt.Sprintf(cmdfmt, args...))
 	if err != nil {
 		return err
