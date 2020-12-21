@@ -137,7 +137,7 @@ func get(m map[string]interface{}, key string) string {
 		}
 
 		if !util.IsZero(v) {
-			return fmt.Sprintf("%v", v)
+			return fmt.Sprint(v)
 		}
 	}
 

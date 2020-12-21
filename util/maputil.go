@@ -13,7 +13,7 @@ func Sort(maps []map[string]interface{}, sortBy []string) []map[string]interface
 
 	sort.Slice(sorted, func(i, j int) bool {
 		for _, f := range sortBy {
-			vi, vj := fmt.Sprintf("%v", sorted[i][f]), fmt.Sprintf("%v", sorted[j][f])
+			vi, vj := fmt.Sprint(sorted[i][f]), fmt.Sprint(sorted[j][f])
 
 			if vi == vj {
 				continue
