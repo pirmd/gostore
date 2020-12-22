@@ -16,9 +16,9 @@ const (
 
 // Record represents a Store's record.
 type Record struct {
-	key   string
-	value *value
-	file  ReadCloser
+	*value
+	key  string
+	file ReadCloser
 }
 
 // NewRecord creates a Record.
@@ -39,56 +39,11 @@ func (r *Record) SetKey(key string) {
 	r.key = key
 }
 
-// Value returns a copy of all information known about Record. It contains the
-// information supplied by the end-user as well as information auto-generated
-// during Record's management (like creation/update stamps).
-func (r *Record) Value() map[string]interface{} {
-	return r.value.Flatted()
-}
-
-// Data returns a copy of the end-user supplied information, information
-// auto-managed by the Record are filtered out.
-func (r *Record) Data() map[string]interface{} {
-	return r.value.GetData()
-}
-
-// SetData replaces Record's content with the given information.
-func (r *Record) SetData(data map[string]interface{}) {
-	r.value.SetData(data)
-}
-
-// MergeData completes and replaces Record's content with given data (data values
-// are copied and supersede record's existing values. Record's values not in
-// data are kept as is).
-func (r *Record) MergeData(data map[string]interface{}) {
-	r.value.MergeData(data)
-}
-
 // Flatted returns all Record's data in a single flat map including Record's Key
 func (r *Record) Flatted() map[string]interface{} {
 	flatted := r.Value()
 	flatted[KeyField] = r.key
 	return flatted
-}
-
-// Get retrieves a Record's stored information.
-func (r *Record) Get(k string) interface{} {
-	return r.value.Get(k)
-}
-
-// Set adds/modifies a record's stored information.
-func (r *Record) Set(k string, v interface{}) {
-	r.value.Set(k, v)
-}
-
-// SetIfExists updates a record's stored information if already exists.
-func (r *Record) SetIfExists(k string, v interface{}) {
-	r.value.SetIfExists(k, v)
-}
-
-// Del removes a record's stored information.
-func (r *Record) Del(k string) {
-	r.value.Del(k)
 }
 
 // File returns the file attached to a Record. It rewinds the Record's file to
@@ -160,8 +115,8 @@ type value struct {
 	CreatedAt time.Time
 	// UpdatedAt is the time stamp corresponding to the last record's update
 	UpdatedAt time.Time
-	// Data is a dictionary of all user-supplied data stored in the record
-	Data map[string]interface{}
+	// UserData is a dictionary of all user-supplied data stored in the record
+	UserData map[string]interface{}
 }
 
 // newValue creates a new value
@@ -169,20 +124,20 @@ func newValue(data map[string]interface{}) *value {
 	val := &value{
 		CreatedAt: timestamper(),
 		UpdatedAt: timestamper(),
-		Data:      make(map[string]interface{}),
+		UserData:  make(map[string]interface{}),
 	}
 	val.SetData(data)
 	return val
 }
 
-// GetData returns stored data
-func (val *value) GetData() map[string]interface{} {
-	return util.CopyMap(val.Data)
+// Data returns stored user-supplied data
+func (val *value) Data() map[string]interface{} {
+	return util.CopyMap(val.UserData)
 }
 
-// SetData replaces record's user-supplied value.
+// SetData replaces record's user-supplied data.
 func (val *value) SetData(data map[string]interface{}) {
-	val.Data = make(map[string]interface{})
+	val.UserData = make(map[string]interface{})
 	val.MergeData(data)
 }
 
@@ -191,47 +146,47 @@ func (val *value) SetData(data map[string]interface{}) {
 // data are kept as is).
 func (val *value) MergeData(data map[string]interface{}) {
 	for k, v := range data {
-		val.Data[k] = v
+		val.UserData[k] = v
 	}
 
 	val.UpdatedAt = timestamper()
 }
 
-// Flatted returns all information stored in value, both user-supplied data
+// Value returns all information stored in value, both user-supplied data
 // and automatic managed data like creation/update time.
-func (val *value) Flatted() map[string]interface{} {
-	flatted := val.GetData()
-	flatted["CreatedAt"] = val.CreatedAt
-	flatted["UpdatedAt"] = val.UpdatedAt
-	return flatted
+func (val *value) Value() map[string]interface{} {
+	v := val.Data()
+	v["CreatedAt"] = val.CreatedAt
+	v["UpdatedAt"] = val.UpdatedAt
+	return v
 }
 
 // Get retrieves a (key, value) information stored in a Value.
 func (val *value) Get(key string) interface{} {
-	return val.Data[key]
+	return val.UserData[key]
 }
 
 // Set adds a new (key, value).
 func (val *value) Set(k string, v interface{}) {
-	if fmt.Sprint(val.Data[k]) == fmt.Sprint(v) {
+	if fmt.Sprint(val.UserData[k]) == fmt.Sprint(v) {
 		return
 	}
 
-	val.Data[k] = v
+	val.UserData[k] = v
 	val.UpdatedAt = timestamper()
 }
 
 // SetIfExists updates a value if already exists.
 func (val *value) SetIfExists(k string, v interface{}) {
-	if _, exists := val.Data[k]; exists {
+	if _, exists := val.UserData[k]; exists {
 		val.Set(k, v)
 	}
 }
 
 // Del removes a (key, value).
 func (val *value) Del(k string) {
-	if _, exists := val.Data[k]; exists {
-		delete(val.Data, k)
+	if _, exists := val.UserData[k]; exists {
+		delete(val.UserData, k)
 		val.UpdatedAt = timestamper()
 	}
 }

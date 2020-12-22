@@ -411,18 +411,18 @@ func (gs *Gostore) newModules(modCfg []*module.Config) ([]module.Module, error) 
 
 func (gs *Gostore) processRecord(r *store.Record, mods ...module.Module) error {
 	for _, mod := range mods {
-		mdata := r.Data()
+		olddata := r.Data()
 
 		if err := mod.Process(r); err != nil {
 			return err
 		}
 
-		if util.HasMajorChanges(r.Data(), mdata) {
-			m, err := gs.ui.Merge(r.Data(), mdata)
+		if newdata := r.Data(); util.HasMajorChanges(newdata, olddata) {
+			mdata, err := gs.ui.Merge(newdata, olddata)
 			if err != nil {
 				return err
 			}
-			r.SetData(m)
+			r.SetData(mdata)
 		}
 	}
 
