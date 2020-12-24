@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.0] - 2020-12-24
+## Added
+- Add new logic to detect possible duplicates based on serie information
+- Add logic to detect minor record's modifications to avoid triggering merge
+  dialog each time
+## Modified
+- Update checker module to give details of found issues
+- Update checker module to find possible errors inside epub xhtml
+- Refactor module's API
+- Refactor store.Record
+
 ## [0.6.0] - 2020-12-02
 ## Added
 - Add 'normalizer' module that intends to keep given Fields consistent across all collection's records.
