@@ -39,7 +39,7 @@ store:
     # media files are stored inside this root folder.
     # It can be set at runtime using the '--root=xxx' flag.
     # If root is not set, it defaults to the current working directory.
-    path: /tmp/gostore-test/
+    path: $GOSTORE
 
     # indexingAnalyzer identify the analyzer used to index the media metadata when
     # searching your collection.
